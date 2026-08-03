@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRAPNET — Full Project Chat Summary</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #f4f4f4; color: #111; line-height: 1.7; }
+
+  .header {
+    background: #C0392B; color: white; padding: 36px 40px 28px;
+    border-bottom: 4px solid #922b21;
+  }
+  .header h1 { font-size: 2.4em; letter-spacing: 2px; }
+  .header p  { font-size: 1em; opacity: 0.88; margin-top: 6px; }
+  .header .meta { margin-top: 14px; font-size: 0.85em; opacity: 0.75; }
+
+  .toc {
+    background: #fff; border-left: 4px solid #C0392B;
+    margin: 28px 40px; padding: 20px 28px; border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .toc h2 { color: #C0392B; font-size: 1.1em; margin-bottom: 12px; }
+  .toc ol  { padding-left: 20px; }
+  .toc li  { margin: 4px 0; }
+  .toc a   { color: #1565C0; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  .section {
+    background: #fff; margin: 22px 40px; padding: 28px 32px;
+    border-radius: 8px; box-shadow: 0 1px 5px rgba(0,0,0,0.08);
+  }
+  .section h2 {
+    font-size: 1.25em; color: #C0392B; border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 8px; margin-bottom: 16px;
+  }
+  .section h3 { font-size: 1.05em; color: #1565C0; margin: 18px 0 8px; }
+  .section h4 { font-size: 0.95em; color: #444; margin: 14px 0 6px; }
+  .section p  { margin-bottom: 10px; color: #333; }
+  .section ul, .section ol { padding-left: 22px; margin-bottom: 10px; }
+  .section li { margin: 4px 0; color: #333; }
+
+  .qa-block { margin: 18px 0; }
+  .q {
+    background: #FFF8F8; border-left: 4px solid #C0392B;
+    padding: 10px 16px; border-radius: 0 6px 6px 0;
+    font-weight: bold; color: #7B241C; margin-bottom: 4px;
+    font-size: 0.95em;
+  }
+  .a {
+    background: #F0F4FF; border-left: 4px solid #1565C0;
+    padding: 10px 16px; border-radius: 0 6px 6px 0;
+    color: #1a1a1a; font-size: 0.93em;
+  }
+  .q::before { content: "Sabeer: "; color: #C0392B; }
+  .a::before { content: "Claude: "; color: #1565C0; font-weight: bold; }
+
+  table {
+    width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.9em;
+  }
+  th {
+    background: #C0392B; color: white; padding: 9px 12px; text-align: left;
+  }
+  td { padding: 8px 12px; border-bottom: 1px solid #eee; }
+  tr:nth-child(even) td { background: #fafafa; }
+  tr:hover td { background: #f0f4ff; }
+
+  .badge {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: 0.78em; font-weight: bold; margin: 2px;
+  }
+  .badge-red    { background: #FDEDEC; color: #C0392B; border: 1px solid #C0392B; }
+  .badge-blue   { background: #EBF5FB; color: #1565C0; border: 1px solid #1565C0; }
+  .badge-green  { background: #EAFAF1; color: #1B5E20; border: 1px solid #1B5E20; }
+  .badge-orange { background: #FEF9E7; color: #E65100; border: 1px solid #E65100; }
+  .badge-purple { background: #F5EEF8; color: #6A1B9A; border: 1px solid #6A1B9A; }
+  .badge-grey   { background: #F2F3F4; color: #555;    border: 1px solid #AAA; }
+
+  .highlight {
+    background: #FFFDE7; border: 1px solid #F9A825;
+    padding: 12px 16px; border-radius: 6px; margin: 12px 0;
+    font-size: 0.92em;
+  }
+  .decision {
+    background: #E8F5E9; border: 1px solid #2E7D32;
+    padding: 10px 16px; border-radius: 6px; margin: 10px 0;
+    font-size: 0.9em; color: #1B5E20;
+  }
+  .decision::before { content: "✅ Decision: "; font-weight: bold; }
+
+  .warning {
+    background: #FFF3E0; border: 1px solid #E65100;
+    padding: 10px 16px; border-radius: 6px; margin: 10px 0;
+    font-size: 0.9em; color: #BF360C;
+  }
+  .warning::before { content: "⚠️ Honest Note: "; font-weight: bold; }
+
+  code {
+    background: #f4f4f4; padding: 1px 6px; border-radius: 3px;
+    font-family: monospace; font-size: 0.9em; color: #C0392B;
+  }
+  pre {
+    background: #1e1e1e; color: #d4d4d4; padding: 16px 20px;
+    border-radius: 6px; font-size: 0.85em; overflow-x: auto;
+    margin: 12px 0; line-height: 1.5;
+  }
+
+  .footer {
+    background: #222; color: #aaa; padding: 24px 40px;
+    text-align: center; font-size: 0.85em; margin-top: 40px;
+  }
+
+  @media(max-width:700px){
+    .header, .section, .toc { margin: 12px; padding: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ HEADER -->
+<div class="header">
+  <h1>🔐 TRAPNET</h1>
+  <p>Autonomous Intruder Containment System — Edge-AI | Radar-Vision Fusion | Physical Containment | Resilient Mesh SOS</p>
+  <div class="meta">
+    Sathyabama Institute of Science and Technology &nbsp;|&nbsp; Final Year Project 2025–2026 &nbsp;|&nbsp;
+    Department of Electronics and Communication Engineering &nbsp;|&nbsp; Full Chat Summary
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ TABLE OF CONTENTS -->
+<div class="toc">
+  <h2>📋 Table of Contents</h2>
+  <ol>
+    <li><a href="#s1">Project Genesis — What Was Decided</a></li>
+    <li><a href="#s2">Project Title</a></li>
+    <li><a href="#s3">mmWave Radar — Deep Explanation</a></li>
+    <li><a href="#s4">CCTV Integration — Camera Options</a></li>
+    <li><a href="#s5">Camera Tamper &amp; Offline Resilience</a></li>
+    <li><a href="#s6">SOS Alert System — Like Disaster Management</a></li>
+    <li><a href="#s7">Through-Wall Radar — Honest Assessment</a></li>
+    <li><a href="#s8">Extra Add-ons &amp; Anti-Robbery Features</a></li>
+    <li><a href="#s9">Real World Problems Solved</a></li>
+    <li><a href="#s10">Complete Components List &amp; Budget</a></li>
+    <li><a href="#s11">Block Diagram — Layer Architecture</a></li>
+    <li><a href="#s12">IEEE Literature Survey — 15 Papers</a></li>
+    <li><a href="#s13">PPT Slide Structure</a></li>
+    <li><a href="#s14">Key Decisions Summary</a></li>
+    <li><a href="#s15">Files Generated</a></li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════════════ S1 -->
+<div class="section" id="s1">
+  <h2>1. Project Genesis — What Was Decided</h2>
+
+  <div class="qa-block">
+    <div class="q">I want to do a final year project in embedded systems and IoT but I want to integrate safety and security like CCTV-based technologies. Give me powerful projects at affordable price — not simple motion detection.</div>
+    <div class="a">Recommended SwarmGuard — a distributed edge-AI surveillance network. Multiple ESP32-CAM nodes running TinyML models, ESP-NOW mesh communication, behavior anomaly detection (loitering, direction reversal), MQTT cloud dashboard. Combines 5 domains: Embedded Systems, TinyML, IoT Networking, Computer Vision, Distributed Systems.</div>
+  </div>
+
+  <div class="qa-block">
+    <div class="q">I want the system to physically respond — not just record and alert. Can I add radar or temperature sensor to detect thieves and do practical things?</div>
+    <div class="a">Yes. Core concept shifted to physical containment: mmWave radar detects stationary humans via breathing, solenoid lock traps intruder inside, fog machine blinds them, GSM sends SOS SMS. This separates TRAPNET from every basic student project — "Response" not just "Detection".</div>
+  </div>
+
+  <div class="decision">Final project: TRAPNET — Autonomous Intruder Containment System combining radar + thermal + CCTV vision + physical lock + mesh SOS alert.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ S2 -->
+<div class="section" id="s2">
+  <h2>2. Project Title</h2>
+
+  <h3>Final Selected Title</h3>
+  <div class="highlight">
+    <strong>"TRAPNET — Edge-AI Driven Physical Intrusion Response System with Radar-Vision Fusion and Resilient Mesh Communication"</strong>
+  </div>
+
+  <h3>Title Breakdown</h3>
+  <table>
+    <tr><th>Term</th><th>Meaning</th></tr>
+    <tr><td><strong>TRAPNET</strong></td><td>Traps intruder physically; Net = networked multi-node system</td></tr>
+    <tr><td><strong>Edge-AI Driven</strong></td><td>AI runs locally on ESP32-CAM/Raspberry Pi — no cloud dependency</td></tr>
+    <tr><td><strong>Physical Intrusion Response</strong></td><td>System acts (locks door, fog) — not just detects and notifies</td></tr>
+    <tr><td><strong>Radar-Vision Fusion</strong></td><td>mmWave radar + camera working together for false-positive elimination</td></tr>
+    <tr><td><strong>Resilient Mesh Communication</strong></td><td>ESP-NOW mesh + GSM + SD fallback — survives WiFi/power cut</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════ S3 -->
+<div class="section" id="s3">
+  <h2>3. mmWave Radar — Deep Explanation</h2>
+
+  <h3>What is mmWave?</h3>
+  <p>Millimeter Wave radio signals (1mm–10mm wavelength), operating at 24GHz–77GHz. Your project uses the <strong>HLK-LD2410 (24GHz)</strong> — costs ₹400–450 and fits on a fingernail.</p>
+
+  <h3>How FMCW Works (The Core Trick)</h3>
+  <p>FMCW = Frequency Modulated Continuous Wave. The radar transmits a "chirp" — a signal whose frequency sweeps linearly from 24.000 GHz to 24.250 GHz in ~1 millisecond. When this bounces off a human and returns, the returned signal is slightly behind in frequency. That frequency gap = distance to the human.</p>
+
+  <h3>What It Measures</h3>
+  <table>
+    <tr><th>Parameter</th><th>How It's Measured</th></tr>
+    <tr><td>Distance</td><td>Frequency difference between transmitted vs received chirp</td></tr>
+    <tr><td>Speed (velocity)</td><td>Doppler shift — moving person compresses/stretches the wave</td></tr>
+    <tr><td>Angle/Direction</td><td>Phase difference between multiple antennas (MIMO)</td></tr>
+  </table>
+
+  <h3>The Key Ability — Stationary Human Detection</h3>
+  <p>A thief who freezes motionless — PIR misses them, camera in dark misses them. But even a stationary person is <strong>breathing</strong>. Chest moves ~5mm per breath. The LD2410 detects that 5mm chest movement as a Doppler micro-signature. So even a hidden, frozen intruder is detected.</p>
+
+  <h3>LD2410 UART Output to ESP32</h3>
+  <pre>Target State: MOVING / STATIONARY / NO TARGET
+Movement Distance: 2.4 meters
+Movement Energy: 87 (0–100 confidence)
+Static Distance: 2.4 meters
+Static Energy: 72</pre>
+
+  <h3>Honest Limitations</h3>
+  <ul>
+    <li>Cannot identify WHO the person is — presence only, no face/identity</li>
+    <li>Large animals (dogs/cats) can trigger it</li>
+    <li>Walls weaken the signal — thick brick/RCC blocks it</li>
+    <li>LD2410 gives one zone output — not per-person tracking</li>
+  </ul>
+  <div class="warning">False triggers from fans/AC airflow — fix by setting energy threshold &gt; 40 before triggering lockdown.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ S4 -->
+<div class="section" id="s4">
+  <h2>4. CCTV Integration — Using Your Existing Camera</h2>
+
+  <div class="qa-block">
+    <div class="q">I have a CCTV camera with battery and SD card storage. How to integrate it?</div>
+    <div class="a">Depends on camera type. Three scenarios covered below.</div>
+  </div>
+
+  <h3>Scenario 1 — IP Camera (WiFi or LAN port)</h3>
+  <p>Easiest path. Access live feed via RTSP URL: <code>rtsp://192.168.1.64:554/stream</code>. Raspberry Pi runs OpenCV on the stream for tamper detection and YOLOv8 person tracking.</p>
+
+  <h3>Scenario 2 — Analog CCTV (coaxial cable)</h3>
+  <p>Use EasyCap USB video capture card (₹300–400) to convert analog signal to USB → Raspberry Pi reads it as a normal video feed in OpenCV.</p>
+
+  <h3>Scenario 3 — USB Camera / Webcam</h3>
+  <p>Simplest: plug directly into Raspberry Pi USB port. OpenCV reads it as <code>cv2.VideoCapture(0)</code>.</p>
+
+  <h3>Your Camera's Built-in Battery — Project Value</h3>
+  <div class="decision">Camera stays alive if thief cuts mains power. Combined with 18650 backup on ESP32 side, the entire system survives power cut — this is a genuine IEEE-worthy resilience feature.</div>
+
+  <h3>Your Camera's Built-in SD Card — Project Value</h3>
+  <p>Two independent storage layers: Camera SD (continuous loop recording) + Raspberry Pi SD (event-triggered snapshots). Even if ESP32/Pi is destroyed, camera footage survives.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════ S5 -->
+<div class="section" id="s5">
+  <h2>5. Camera Tamper &amp; Offline Resilience</h2>
+
+  <h3>Problem: What if thief sprays paint on camera?</h3>
+  <p>Implemented in OpenCV software: continuously compare average frame brightness. If brightness suddenly drops to near-zero → <strong>treat it as intrusion trigger, not failure</strong>. Spraying the camera activates lockdown.</p>
+
+  <h3>Problem: What if camera is physically smashed?</h3>
+  <p>Radar doesn't have a lens. You can't spray it. It's a PCB with antennas. Even if camera is completely destroyed, radar still detects breathing, solenoid still locks, GSM still sends SMS.</p>
+
+  <h3>Two-Layer Redundancy Design</h3>
+  <table>
+    <tr><th>Attack</th><th>What TRAPNET Does</th></tr>
+    <tr><td>Spray paint on camera</td><td>Sudden darkness = tamper flag = lockdown triggered</td></tr>
+    <tr><td>Cloth over camera</td><td>Uniform frame = tamper flag</td></tr>
+    <tr><td>Camera smashed</td><td>Radar is sole detector — full response continues</td></tr>
+    <tr><td>WiFi cut / jammed</td><td>GSM + SD card take over — physical actions unaffected</td></tr>
+    <tr><td>Mains power cut</td><td>18650 battery backup keeps system alive 4–6 hours</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════ S6 -->
+<div class="section" id="s6">
+  <h2>6. SOS Alert System — Like Disaster Management</h2>
+
+  <div class="qa-block">
+    <div class="q">I want the SOS to not work through any app or other things. It should work like the disaster management message — an alert sound in a 10–15 metre radius from the robbery place. No app, no internet.</div>
+    <div class="a">Three simultaneous layers using only your existing ESP32.</div>
+  </div>
+
+  <h3>Layer 1 — WiFi Beacon SSID Broadcast</h3>
+  <p>ESP32 uses <code>esp_wifi_80211_tx</code> to inject 802.11 beacon frames. Every phone within 15–30 metres sees the network name instantly in their WiFi list — no app, no pairing, no internet.</p>
+  <pre>All nearby phones see in WiFi list:
+🚨 ROBBERY ALERT - CALL 100
+🚨 TRAPNET ALERT - SHOP 4
+🚨 INTRUDER DETECTED</pre>
+  <p><strong>Open source:</strong> GitHub — <code>spacehuhn/esp32_beaconSpam</code> using <code>esp_wifi_80211_tx</code></p>
+
+  <h3>Layer 2 — BLE Eddystone URL Beacon</h3>
+  <p>ESP32 BLE stack broadcasts Eddystone-URL beacon pointing to a local emergency page. Chrome (Android) and Safari (iOS) show an automatic notification banner — no app required. 10–15 metre radius.</p>
+
+  <h3>Layer 3 — GSM SMS via SIM800L</h3>
+  <p>Sends SMS to owner's number and police number via cellular network. Works with zero WiFi. Unlimited range. Also sends GPS coordinates if the asset (cash box) is moved.</p>
+
+  <h3>Comparison to Government Disaster Alerts</h3>
+  <table>
+    <tr><th>Feature</th><th>Govt Cell Broadcast (NDMA)</th><th>TRAPNET SOS</th></tr>
+    <tr><td>No app needed</td><td>✅</td><td>✅</td></tr>
+    <tr><td>No internet needed</td><td>✅</td><td>✅ (WiFi + BLE + GSM)</td></tr>
+    <tr><td>Alert sound</td><td>✅</td><td>✅ (phone WiFi notification)</td></tr>
+    <tr><td>Geographic radius</td><td>City-wide</td><td>15–30m (your room/shop)</td></tr>
+    <tr><td>Infrastructure needed</td><td>Cell towers</td><td>ESP32 only</td></tr>
+    <tr><td>Cost</td><td>Crores</td><td>₹184 (SIM800L only)</td></tr>
+  </table>
+
+  <h3>Real Problems Faced by Builders (Known in Advance)</h3>
+  <table>
+    <tr><th>Problem</th><th>Fix</th></tr>
+    <tr><td>SIM800L resets at 3.3V</td><td>Use LM2596 buck converter set to 4.1V</td></tr>
+    <tr><td>Beacon SSID truncated to 32 chars</td><td>Set appendspaces = false in spacehuhn library</td></tr>
+    <tr><td>iPhone ignores open network SSIDs (iOS 14+)</td><td>Use BLE Eddystone as backup layer</td></tr>
+    <tr><td>GSM registration delay</td><td>Add 15-second boot delay before system arms</td></tr>
+    <tr><td>ESP32 overheats during continuous beacon</td><td>Activate only on intrusion trigger — not always-on</td></tr>
+  </table>
+
+  <h3>EMC Paper Connection</h3>
+  <p>The IEEE paper you uploaded (Shahin &amp; Younis, LCN 2015) — "Efficient Multi-Group Formation and Communication Protocol for Wi-Fi Direct" — directly inspires the ESP-NOW mesh relay design. The proxy-member concept (a node bridging two groups) maps to your ESP32 nodes relaying alerts across coverage zones.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════ S7 -->
+<div class="section" id="s7">
+  <h2>7. Through-Wall Radar — Honest Assessment</h2>
+
+  <div class="qa-block">
+    <div class="q">Can I add UWB through-wall radar within ₹15,000 budget? I told my professor it's the main point.</div>
+    <div class="a">Honest answer with three critical problems.</div>
+  </div>
+
+  <h3>Real Price of TI IWR1443BOOST (77GHz Radar)</h3>
+  <table>
+    <tr><th>Source</th><th>Price</th></tr>
+    <tr><td>DigiKey (import to India)</td><td>~$299 USD = ₹25,000+</td></tr>
+    <tr><td>AliExpress (clone)</td><td>~$85 USD = ₹7,100</td></tr>
+    <tr><td>Indian distributors (Mouser/Arrow)</td><td>₹22,000–₹28,000</td></tr>
+  </table>
+
+  <h3>Three Critical Problems Beyond Cost</h3>
+  <ol>
+    <li><strong>Needs a PC to process data</strong> — outputs raw ADC point cloud over LVDS/USB. ESP32 cannot handle this data.</li>
+    <li><strong>Deep learning required on top</strong> — just having the board doesn't give you through-wall detection. Needs months of dataset collection + model training.</li>
+    <li><strong>77GHz is WORSE for walls</strong> — Higher frequency = worse wall penetration. True through-wall radar uses lower frequency UWB (3–10GHz), not 77GHz. IWR1443 is the wrong hardware entirely.</li>
+  </ol>
+
+  <h3>What to Tell Your Professor</h3>
+  <div class="highlight">
+    "Sir, through-wall radar requires UWB (3–10GHz) hardware costing ₹40,000+ with dedicated DSP processing — outside student project feasibility. Instead, our system achieves equivalent security coverage through strategic multi-point sensor placement: LD2410 radar nodes at each room entry point eliminate the need for through-wall detection entirely, while providing superior detection reliability within the covered zone."
+  </div>
+  <div class="decision">Drop through-wall claim. Replace with "multi-point perimeter coverage using sensor fusion" — more accurate, more achievable, more impressive to knowledgeable examiners.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ S8 -->
+<div class="section" id="s8">
+  <h2>8. Extra Add-ons &amp; Anti-Robbery Features</h2>
+
+  <h3>Tier 1 — Build It Yourself</h3>
+  <table>
+    <tr><th>Add-on</th><th>What It Stops</th><th>Cost</th><th>How</th></tr>
+    <tr><td>Fog Machine (12V)</td><td>Forces thief retreat — 97% deterrent rate documented</td><td>₹800–1,200</td><td>Mini fog machine + relay triggered by ESP32</td></tr>
+    <tr><td>UV Dye Spray</td><td>Marks thief body — police UV light identifies them</td><td>₹300–400</td><td>12V solenoid valve + UV dye nozzle at exit</td></tr>
+    <tr><td>Vibration Sensor (SW-420)</td><td>Safe drilling, wall break, hammering</td><td>₹40–60</td><td>Stick on safe/locker, digital output to ESP32</td></tr>
+    <tr><td>Panic Button</td><td>Manual staff SOS — fires all 3 alert layers</td><td>₹20</td><td>Momentary push button on ESP32 GPIO interrupt</td></tr>
+  </table>
+
+  <h3>Tier 2 — Buy and Integrate</h3>
+  <table>
+    <tr><th>Add-on</th><th>Purpose</th><th>Cost</th></tr>
+    <tr><td>RC522 RFID Reader</td><td>Two-factor entry auth (removed from final design)</td><td>₹150</td></tr>
+    <tr><td>Glass Break Sensor</td><td>Window smash-and-grab entry detection</td><td>₹200–300</td></tr>
+    <tr><td>NEO-6M GPS Tracker</td><td>Hidden in cash box — sends live location if stolen</td><td>₹350</td></tr>
+  </table>
+
+  <h3>Tier 3 — Conceptually Advanced (IEEE Paper Value)</h3>
+  <ul>
+    <li><strong>Multi-zone radar coverage mapping</strong> — multiple LD2410 sensors triangulate intruder location inside room</li>
+    <li><strong>MLX90640 Thermal Camera</strong> — 32×24 IR pixels, detects body heat in total darkness, I2C to Raspberry Pi, genuine tri-modal sensor fusion</li>
+    <li><strong>Two-factor access verification</strong> — RFID card scan + face recognized by camera before door opens</li>
+  </ul>
+  <div class="decision">RFID reader and tags removed from final project scope as per mam's instruction.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ S9 -->
+<div class="section" id="s9">
+  <h2>9. Real World Problems Solved</h2>
+
+  <table>
+    <tr><th>Problem</th><th>Attack Type</th><th>TRAPNET Solution</th></tr>
+    <tr><td>CCTV only records</td><td>Any theft after hours</td><td>Solenoid lock traps intruder + fog + SMS in &lt;3 sec</td></tr>
+    <tr><td>Camera spray/tamper</td><td>Standard professional thief tactic</td><td>Tamper = trigger; radar takes over as primary</td></tr>
+    <tr><td>Stationary hiding intruder</td><td>Freeze-and-wait tactic</td><td>mmWave detects 5mm breathing movement</td></tr>
+    <tr><td>Internet dependency</td><td>WiFi jammer / cable cut</td><td>GSM cellular + SD card + battery — fully offline</td></tr>
+    <tr><td>Single sensor failure</td><td>Targeted disabling</td><td>3 independent layers — radar + thermal + IR all must be defeated</td></tr>
+    <tr><td>Jewellery shop robbery</td><td>After-hours gold theft</td><td>Lockdown before escape, fog machine, GPS on items</td></tr>
+    <tr><td>ATM kiosk attack</td><td>Motionless attacker inside</td><td>Radar breathing detection in darkness</td></tr>
+    <tr><td>Remote warehouse</td><td>No internet location</td><td>Fully offline GSM + local SD storage</td></tr>
+    <tr><td>Safe/locker drilling</td><td>Tunnel or drill attack</td><td>SW-420 vibration sensor on safe body</td></tr>
+  </table>
+
+  <div class="highlight">
+    84,000+ CCTV cameras deployed across India's Smart Cities — yet theft remains the most prevalent crime and burglary rates stagnant. TRAPNET adds the missing physical response and offline resilience layer.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ S10 -->
+<div class="section" id="s10">
+  <h2>10. Complete Components List &amp; Budget</h2>
+
+  <h3>Phase 1 — Already Owned (₹0)</h3>
+  <table>
+    <tr><th>#</th><th>Component</th><th>Role</th></tr>
+    <tr><td>1</td><td>CCTV Camera (battery + SD)</td><td>Visual capture, tamper detection, local recording</td></tr>
+    <tr><td>2</td><td>ESP32 DevKit V1</td><td>Main coordinator — SOS broadcast, radar read, relay trigger, ESP-NOW mesh</td></tr>
+  </table>
+
+  <h3>Phase 2 — Core Build (₹3,174)</h3>
+  <table>
+    <tr><th>#</th><th>Component</th><th>Specs</th><th>Price</th><th>Buy From</th></tr>
+    <tr><td>3</td><td>HLK-LD2410 mmWave Radar</td><td>24GHz FMCW, 6m range, ±60°, UART</td><td>₹450</td><td>Robu.in</td></tr>
+    <tr><td>4</td><td>SIM800L GSM Module</td><td>Quad-band, needs 4.1V supply</td><td>₹184</td><td>Robokits.co.in</td></tr>
+    <tr><td>5</td><td>12V Solenoid Door Lock</td><td>60kg hold force, power-on locking</td><td>₹350</td><td>Robu.in / Flipkart</td></tr>
+    <tr><td>6</td><td>Raspberry Pi Zero 2W</td><td>1GHz quad-core, 512MB RAM, MicroSD</td><td>₹1,200</td><td>RoboElements</td></tr>
+    <tr><td>7</td><td>2-Channel Relay Module</td><td>10A/250VAC, optocoupler isolated</td><td>₹80</td><td>Ritchie Street Chennai</td></tr>
+    <tr><td>8</td><td>IR Sensor × 2</td><td>Door/window tripwire, 3.3–5V digital</td><td>₹120</td><td>Ritchie Street Chennai</td></tr>
+    <tr><td>9</td><td>18650 Battery Pack</td><td>2×18650 cells, TP4056 charge circuit</td><td>₹250</td><td>Ritchie Street Chennai</td></tr>
+    <tr><td>10</td><td>LM2596 Buck Converter</td><td>12V→4.1V for SIM800L, 3A max</td><td>₹60</td><td>Ritchie Street Chennai</td></tr>
+    <tr><td>11</td><td>MicroSD Card 16GB</td><td>Class 10 UHS-1, Pi OS + model storage</td><td>₹180</td><td>Local mobile shop</td></tr>
+    <tr><td>12</td><td>Wires + PCB + Enclosure</td><td>830pt breadboard, ABS box</td><td>₹300</td><td>Ritchie Street Chennai</td></tr>
+  </table>
+
+  <h3>Phase 3 — Upgrades (₹3,850) — Total ₹7,024</h3>
+  <table>
+    <tr><th>#</th><th>Component</th><th>Why It's Added</th><th>Price</th></tr>
+    <tr><td>13</td><td>MLX90640 Thermal Camera</td><td>3rd sensor layer — body heat in darkness — TinyML on thermal data</td><td>₹1,800</td></tr>
+    <tr><td>14</td><td>NEO-6M GPS Module</td><td>Tracks stolen asset — sends live coordinates via GSM SMS</td><td>₹350</td></tr>
+    <tr><td>15</td><td>SW-420 Vibration Sensor × 2</td><td>Detects safe drilling, wall break — independent of camera/radar</td><td>₹100</td></tr>
+    <tr><td>16</td><td>0.96" OLED Display (I2C)</td><td>Live status HUD — Armed/Disarmed/Zone triggered</td><td>₹200</td></tr>
+    <tr><td>17</td><td>Panic Button</td><td>Staff manual SOS — fires all 3 alert layers instantly</td><td>₹30</td></tr>
+    <tr><td>18</td><td>Mini Fog Machine (12V)</td><td>Physically blinds intruder — 97% documented deterrent rate</td><td>₹1,000</td></tr>
+    <tr><td>19</td><td>Jumper Wires + PCB (extra)</td><td>Additional prototyping for upgrades</td><td>₹370</td></tr>
+  </table>
+
+  <div class="decision">Grand Total: ₹7,024 — Within ₹8,000 budget — ₹976 reserve remaining. RFID module removed from final design.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ S11 -->
+<div class="section" id="s11">
+  <h2>11. Block Diagram — Layer Architecture</h2>
+
+  <p>The block diagram has 4 horizontal layers read top-to-bottom with downward arrows between them:</p>
+
+  <h3>Layer 1 — Sensor Layer</h3>
+  <p>
+    <span class="badge badge-blue">CCTV Camera (Battery+SD)</span>
+    <span class="badge badge-blue">LD2410 mmWave Radar 24GHz</span>
+    <span class="badge badge-blue">MLX90640 Thermal Camera</span>
+    <span class="badge badge-blue">IR Sensor ×2 (Door/Window)</span>
+    <span class="badge badge-blue">SW-420 Vibration Sensor ×2</span>
+    <span class="badge badge-blue">NEO-6M GPS Module</span>
+  </p>
+
+  <h3>Layer 2 — Processing Layer</h3>
+  <p>
+    <span class="badge badge-purple">Raspberry Pi Zero 2W — OpenCV + YOLOv8 + Thermal</span>
+    <span class="badge badge-red">ESP32 DevKit V1 — Coordinator: Fusion + SOS + Relay</span>
+    <span class="badge badge-green">LM2596 Buck Converter</span>
+    <span class="badge badge-green">18650 Battery Pack (4–6hr backup)</span>
+  </p>
+  <p><em>Raspberry Pi and ESP32 communicate bidirectionally via MQTT/Serial.</em></p>
+
+  <h3>Layer 3 — Response Layer</h3>
+  <p>
+    <span class="badge badge-orange">12V Solenoid Door Lock</span>
+    <span class="badge badge-orange">Mini Fog Machine</span>
+    <span class="badge badge-orange">2-Ch Relay Module</span>
+    <span class="badge badge-orange">Panic Button (Manual SOS)</span>
+    <span class="badge badge-orange">OLED Display 0.96"</span>
+    <span class="badge badge-orange">MicroSD 16GB</span>
+  </p>
+
+  <h3>Layer 4 — SOS Alert Layer</h3>
+  <p>
+    <span class="badge badge-green">WiFi Beacon SSID (15–30m)</span>
+    <span class="badge badge-blue">BLE Eddystone URL (10–15m)</span>
+    <span class="badge badge-red">GSM SMS SIM800L (unlimited)</span>
+    <span class="badge badge-purple">ESP-NOW Mesh Relay (multi-node)</span>
+  </p>
+
+  <h3>Block Diagram Files Generated</h3>
+  <ul>
+    <li><code>TRAPNET_BlockDiagram.png</code> — First version (dark theme, detailed)</li>
+    <li><code>TRAPNET_BlockDiagram_v2.png</code> — Simplified clean version (dark theme)</li>
+    <li>PPT Slide 4 — Black and white version (white background, black/grey fills)</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════ S12 -->
+<div class="section" id="s12">
+  <h2>12. IEEE Literature Survey — 15 Papers</h2>
+
+  <p>All from IEEE Xplore (2023–2026) except [15] which is foundational for the EMC mesh relay concept.</p>
+
+  <table>
+    <tr><th>#</th><th>Domain</th><th>Reference</th><th>Research Gap TRAPNET Fills</th></tr>
+    <tr><td>[1]</td><td>mmWave Radar</td><td>Raimondi et al., IEEE Sensors Journal, 2024 — mmDetect</td><td>No physical response or SOS integration</td></tr>
+    <tr><td>[2]</td><td>YOLOv8 Surveillance</td><td>Billah et al., IEEE ICSES, 2024 — YOLOv8 Event Detection</td><td>Camera only, no radar backup, no tamper resilience</td></tr>
+    <tr><td>[3]</td><td>YOLOv8 Intrusion</td><td>Chatterjee et al., IEEE 2024 — YOLOv8 Intrusion Detection</td><td>No offline fallback, no physical containment</td></tr>
+    <tr><td>[4]</td><td>ESP32 AI Surveillance</td><td>Vedrov, IEEE AIoT 2025 — ESP32-CAM + YOLOv8</td><td>No GSM/mesh alert, no radar sensor fusion</td></tr>
+    <tr><td>[5]</td><td>Edge AI on ESP32</td><td>Sensors/IEEE IoT Journal, 2025 — ESP32 Edge Computing</td><td>No GSM fallback, no physical actuation</td></tr>
+    <tr><td>[6]</td><td>mmWave Occupancy</td><td>Hsu et al., IEEE Sensors Journal, 2023 — Indoor Counting</td><td>Counting only — no intrusion response or alert</td></tr>
+    <tr><td>[7]</td><td>mmWave Tracking</td><td>Shen et al., Sensors, 2024 — Fall Detection mmWave</td><td>Healthcare focus — no security response layer</td></tr>
+    <tr><td>[8]</td><td>5G mmWave Detection</td><td>Zhang et al., IEEE JSAC, 2025 — Human Presence via 5G</td><td>5G infrastructure required — not embedded/affordable</td></tr>
+    <tr><td>[9]</td><td>IoT GSM Alert</td><td>IEEE Xplore, 2023 — IoT Home Intruder GSM Alert</td><td>Single sensor, no mesh relay, no WiFi beacon SOS</td></tr>
+    <tr><td>[10]</td><td>IoT Emergency Alert</td><td>IEEE Xplore, 2025 — Compact IoT Safety Device</td><td>No radar, no physical containment</td></tr>
+    <tr><td>[11]</td><td>Anti-Theft IoT</td><td>IEEE Xplore, 2023 — Home Security Anti-Theft</td><td>No offline resilience, no multi-sensor fusion</td></tr>
+    <tr><td>[12]</td><td>IoT GPS+GSM Safety</td><td>IEEE Xplore, 2025 — Women Safety ESP32+GPS+GSM</td><td>Manual activation only — no autonomous detection</td></tr>
+    <tr><td>[13]</td><td>mmWave Passive Intrusion</td><td>Devoti et al., IEEE INFOCOM, 2023 — PASID</td><td>Requires existing mmWave infrastructure (5G APs)</td></tr>
+    <tr><td>[14]</td><td>mmWave + Surveillance</td><td>Han et al., IEEE TMC, 2024 — Surveillance via mmWave</td><td>Requires expensive COTS mmWave + cloud processing</td></tr>
+    <tr><td>[15]</td><td>WiFi Direct Mesh Alert</td><td>Shahin &amp; Younis, IEEE LCN, 2015 — EMC Protocol</td><td>Foundational — proxy-member relay inspires TRAPNET ESP-NOW mesh SOS</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════ S13 -->
+<div class="section" id="s13">
+  <h2>13. PPT Slide Structure</h2>
+
+  <table>
+    <tr><th>Slide</th><th>Title</th><th>Key Content</th></tr>
+    <tr><td>1</td><td>Title Slide</td><td>TRAPNET logo, 6 technology badges, college name, red accent bars top/bottom</td></tr>
+    <tr><td>2</td><td>Introduction &amp; Problem Statement</td><td>4 problems CCTV fails at (numbered cards), red summary bar</td></tr>
+    <tr><td>3</td><td>Literature Survey</td><td>6 domain papers with colored badges, findings, research gaps</td></tr>
+    <tr><td>4</td><td>System Architecture (Block Diagram)</td><td>4-layer pipeline — BLACK AND WHITE version (dark label boxes, grey component boxes)</td></tr>
+    <tr><td>5</td><td>Key Components</td><td>6 components with colored headers, specs, prices</td></tr>
+    <tr><td>6</td><td>SOS Alert System</td><td>4 columns — WiFi beacon, BLE Eddystone, GSM SMS, ESP-NOW mesh</td></tr>
+    <tr><td>7</td><td>How TRAPNET Works</td><td>6-step operation flow with numbered circles</td></tr>
+    <tr><td>8</td><td>Project Budget</td><td>Full table with ₹7,024 total, ₹976 reserve shown</td></tr>
+    <tr><td>9</td><td>Real World Impact</td><td>5 deployment scenarios — problem + TRAPNET solution per row</td></tr>
+    <tr><td>10</td><td>References</td><td>All 15 IEEE papers with DOIs, alternating row shading</td></tr>
+    <tr><td>11</td><td>Conclusion &amp; Future Work</td><td>Two columns — 6 contributions + 6 future extensions</td></tr>
+  </table>
+
+  <h3>Theme</h3>
+  <ul>
+    <li>White background throughout all slides</li>
+    <li>Black / dark grey text for all body content</li>
+    <li>Color used only for headers, borders, and accents</li>
+    <li>Block diagram (Slide 4) is fully black and white — dark label boxes, light grey component boxes, black text</li>
+    <li>Font: Arial throughout</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════ S14 -->
+<div class="section" id="s14">
+  <h2>14. Key Decisions Summary</h2>
+
+  <table>
+    <tr><th>Decision Point</th><th>What Was Decided</th><th>Reason</th></tr>
+    <tr><td>Project type</td><td>Physical containment + SOS — not passive CCTV</td><td>Genuinely novel vs student projects</td></tr>
+    <tr><td>Through-wall radar</td><td>Removed — not feasible at budget</td><td>77GHz is wrong frequency; UWB costs ₹40,000+</td></tr>
+    <tr><td>RFID reader</td><td>Removed from final design</td><td>Mam's instruction</td></tr>
+    <tr><td>Siren/strobe</td><td>Removed</td><td>Sabeer's decision — replaced by fog machine</td></tr>
+    <tr><td>Camera type</td><td>Use existing CCTV (battery + SD)</td><td>Already owned — ₹0 cost</td></tr>
+    <tr><td>ESP32-CAM</td><td>Replaced by existing CCTV + Raspberry Pi</td><td>Better quality, battery+SD already in camera</td></tr>
+    <tr><td>Budget target</td><td>₹7,024 within ₹8,000</td><td>₹976 safety buffer maintained</td></tr>
+    <tr><td>SOS mechanism</td><td>WiFi beacon + BLE + GSM (no app, no internet)</td><td>Like disaster management alerts</td></tr>
+    <tr><td>PPT theme</td><td>White background, black text, colored accents</td><td>Mam's requirement</td></tr>
+    <tr><td>Block diagram</td><td>Black and white only</td><td>Mam's requirement</td></tr>
+    <tr><td>References</td><td>15 IEEE papers (2023–2026)</td><td>Increased from 11 for stronger academic backing</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════ S15 -->
+<div class="section" id="s15">
+  <h2>15. Files Generated in This Chat</h2>
+
+  <table>
+    <tr><th>File</th><th>Format</th><th>Content</th></tr>
+    <tr><td>TRAPNET_Components.xlsx / .png</td><td>Excel + Image</td><td>Core component list with prices, buy locations, roles (dark theme)</td></tr>
+    <tr><td>TRAPNET_v2_Budget.xlsx / .png</td><td>Excel + Image</td><td>Full upgraded budget ₹7,024 with Phase 2 + Phase 3 breakdown</td></tr>
+    <tr><td>TRAPNET_BlockDiagram.png</td><td>PNG</td><td>Detailed block diagram — dark theme (first version)</td></tr>
+    <tr><td>TRAPNET_BlockDiagram_v2.png</td><td>PNG</td><td>Simplified block diagram — dark theme (clean version)</td></tr>
+    <tr><td>TRAPNET_Presentation.pptx</td><td>PowerPoint</td><td>Dark theme PPT — 11 slides (first version)</td></tr>
+    <tr><td>TRAPNET_White.pptx</td><td>PowerPoint</td><td>White theme PPT — 11 slides, 15 references</td></tr>
+    <tr><td>TRAPNET_Final_BW.pptx</td><td>PowerPoint</td><td>White theme PPT — Block diagram slide in black &amp; white</td></tr>
+    <tr><td>TRAPNET_ChatSummary.html</td><td>HTML</td><td>This file — complete chat record</td></tr>
+  </table>
+
+  <h3>Where to Buy — Chennai Summary</h3>
+  <table>
+    <tr><th>Source</th><th>Best For</th></tr>
+    <tr><td>Robu.in (online, delivers to Chennai)</td><td>LD2410 radar, ESP32-CAM, solenoid lock</td></tr>
+    <tr><td>Robokits.co.in (online)</td><td>SIM800L (cheapest at ₹184), ESP32 DevKit</td></tr>
+    <tr><td>RoboElements (online)</td><td>Raspberry Pi Zero 2W</td></tr>
+    <tr><td>ElectronicsComp.in (online)</td><td>MLX90640 thermal camera</td></tr>
+    <tr><td>Ritchie Street, Chennai (physical)</td><td>Relay, IR sensors, wires, PCB, enclosure, LM2596, 18650 battery, OLED</td></tr>
+    <tr><td>Amazon.in</td><td>Fog machine, solenoid lock (alternative), strobe</td></tr>
+    <tr><td>Local mobile shop Chennai</td><td>MicroSD card 16GB</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════ FOOTER -->
+<div class="footer">
+  <p><strong>TRAPNET — Autonomous Intruder Containment System</strong></p>
+  <p>Sathyabama Institute of Science and Technology &nbsp;|&nbsp; Final Year Project 2025–2026</p>
+  <p style="margin-top:8px; font-size:0.8em;">
+    Generated from full Claude chat session &nbsp;|&nbsp;
+    Edge-AI | Radar-Vision Fusion | Physical Containment | Resilient Mesh SOS
+  </p>
+</div>
+
+</body>
+</html>
