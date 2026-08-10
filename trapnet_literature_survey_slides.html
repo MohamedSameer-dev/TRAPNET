@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRAPNET — Additional Literature Survey Slide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #e0e0e0;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      gap: 60px;
+    }
+    .slide-label {
+      font-size: 13px; font-weight: 600; color: #888;
+      text-transform: uppercase; letter-spacing: 2px;
+      margin-bottom: -40px;
+    }
+    .slide {
+      width: 1280px;
+      height: 720px;
+      background: #fff;
+      border: 1px solid #ccc;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+    }
+    .slide-header {
+      background: #111;
+      color: #fff;
+      padding: 14px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .slide-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .slide-header .badge {
+      font-size: 11px;
+      font-weight: 600;
+      background: #fff;
+      color: #111;
+      padding: 4px 14px;
+      border-radius: 3px;
+      letter-spacing: 1px;
+    }
+    .slide-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #111;
+      color: #999;
+      padding: 6px 50px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .lit-body {
+      padding: 10px 36px 8px 36px;
+    }
+    .lit-subtitle {
+      font-size: 11px; color: #555; margin-bottom: 8px;
+      border-bottom: 1px solid #ddd; padding-bottom: 5px;
+    }
+    .lit-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5px;
+    }
+    .lit-table thead th {
+      background: #111;
+      color: #fff;
+      padding: 5px 8px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.5px;
+    }
+    .lit-table thead th:first-child { width: 28px; text-align: center; }
+    .lit-table tbody td {
+      padding: 4px 8px;
+      border-bottom: 1px solid #e8e8e8;
+      color: #222;
+      vertical-align: top;
+      line-height: 1.35;
+    }
+    .lit-table tbody tr:nth-child(even) { background: #f9f9f9; }
+    .lit-table tbody td:first-child {
+      text-align: center;
+      font-weight: 700;
+      color: #333;
+      font-size: 9px;
+    }
+    .paper-title {
+      font-weight: 600;
+      color: #111;
+    }
+    .paper-authors {
+      color: #777;
+      font-style: italic;
+    }
+    .paper-venue {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      color: #555;
+    }
+    .gap-tag {
+      display: inline-block;
+      font-size: 8px;
+      font-weight: 600;
+      background: #fff0f0;
+      color: #c0392b;
+      padding: 1px 6px;
+      border-radius: 2px;
+      border: 1px solid #e8c4c4;
+      margin-top: 2px;
+    }
+    .relevance-tag {
+      display: inline-block;
+      font-size: 8px;
+      font-weight: 600;
+      background: #e8f5e9;
+      color: #2e7d32;
+      padding: 1px 6px;
+      border-radius: 2px;
+      border: 1px solid #c8e6c9;
+      margin-top: 2px;
+    }
+
+    /* ===== SLIDE 2: COMPARISON TABLE ===== */
+    .compare-body {
+      padding: 14px 50px 10px 50px;
+    }
+    .compare-subtitle {
+      font-size: 12px; color: #555; margin-bottom: 10px;
+      border-bottom: 1px solid #ddd; padding-bottom: 6px;
+    }
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+    .compare-table thead th {
+      background: #111;
+      color: #fff;
+      padding: 7px 10px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 9.5px;
+      letter-spacing: 0.3px;
+    }
+    .compare-table thead th:first-child {
+      width: 30px;
+    }
+    .compare-table thead th:nth-child(2) {
+      text-align: left;
+      width: 200px;
+    }
+    .compare-table tbody td {
+      padding: 5px 8px;
+      border-bottom: 1px solid #e0e0e0;
+      text-align: center;
+      font-size: 11px;
+      color: #333;
+    }
+    .compare-table tbody td:nth-child(2) {
+      text-align: left;
+      font-weight: 500;
+    }
+    .compare-table tbody tr:nth-child(even) { background: #f9f9f9; }
+    .compare-table tbody tr:last-child {
+      background: #111 !important;
+      color: #fff !important;
+    }
+    .compare-table tbody tr:last-child td {
+      color: #fff !important;
+      font-weight: 700;
+      border-bottom: none;
+      padding: 8px 8px;
+    }
+    .check { color: #2e7d32; font-weight: 700; }
+    .cross { color: #c0392b; font-weight: 400; }
+
+    .insight-box {
+      margin-top: 14px;
+      border: 1.5px solid #222;
+      border-radius: 4px;
+      padding: 12px 20px;
+      background: #fafafa;
+    }
+    .insight-box h3 {
+      font-size: 12px; font-weight: 700; color: #111; margin-bottom: 6px;
+    }
+    .insight-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+    .insight-item {
+      text-align: center;
+    }
+    .insight-item .insight-icon {
+      font-size: 20px; margin-bottom: 2px;
+    }
+    .insight-item .insight-title {
+      font-size: 10px; font-weight: 700; color: #111;
+    }
+    .insight-item .insight-desc {
+      font-size: 8.5px; color: #555;
+    }
+
+    .instructions {
+      text-align: center; color: #999; font-size: 12px; padding: 20px;
+      max-width: 900px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ==================== SLIDE 1: LITERATURE SURVEY TABLE ==================== -->
+<div class="slide-label">Slide — Additional Literature Survey (Papers 16–25)</div>
+<div class="slide">
+  <div class="slide-header">
+    <h1>LITERATURE SURVEY — ADDITIONAL PAPERS [16–25]</h1>
+    <span class="badge">TRAPNET</span>
+  </div>
+
+  <div class="lit-body">
+    <div class="lit-subtitle">10 Additional IEEE Xplore Papers (2024–2025) — Directly Aligned with TRAPNET Problem Statement</div>
+
+    <table class="lit-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Paper Title & Authors</th>
+          <th>Venue / Year</th>
+          <th>Relevance to TRAPNET</th>
+          <th>Gap vs. TRAPNET</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>[16]</td>
+          <td><span class="paper-title">Systematic Vital Signs Detection Framework Based on FMCW MIMO Radar</span><br><span class="paper-authors">Li et al.</span></td>
+          <td><span class="paper-venue">IEEE Trans. Ind. Informatics, 2025</span></td>
+          <td><span class="relevance-tag">FMCW Radar</span> Validates LD2410C approach — micro-Doppler breathing detection</td>
+          <td><span class="gap-tag">No intrusion response or SOS</span></td>
+        </tr>
+        <tr>
+          <td>[17]</td>
+          <td><span class="paper-title">Contactless Vital Sign Monitoring on Edge Devices With T-CNN and mmWave FMCW</span><br><span class="paper-authors">Chen et al.</span></td>
+          <td><span class="paper-venue">IEEE Sensors Journal, 2025</span></td>
+          <td><span class="relevance-tag">Edge mmWave</span> Edge deployment of FMCW processing on constrained devices</td>
+          <td><span class="gap-tag">Health only — no security context</span></td>
+        </tr>
+        <tr>
+          <td>[18]</td>
+          <td><span class="paper-title">Deterministic Contactless Monitoring Using Multiple FMCW Radars in 24 GHz Band</span><br><span class="paper-authors">Russo et al.</span></td>
+          <td><span class="paper-venue">IEEE Access, 2025</span></td>
+          <td><span class="relevance-tag">24GHz Band</span> Same 24GHz band as TRAPNET's LD2410C sensor</td>
+          <td><span class="gap-tag">No intruder detection logic</span></td>
+        </tr>
+        <tr>
+          <td>[19]</td>
+          <td><span class="paper-title">IoT-Enabled Smart Door Lock Featuring RFID, OTP and Intrusion Detection</span><br><span class="paper-authors">Rahman et al.</span></td>
+          <td><span class="paper-venue">IEEE ICDEC, 2025</span></td>
+          <td><span class="relevance-tag">Door Lock</span> Same problem — auto door lock upon intrusion</td>
+          <td><span class="gap-tag">PIR only — no radar, no SOS</span></td>
+        </tr>
+        <tr>
+          <td>[20]</td>
+          <td><span class="paper-title">Edge-IIoTset: Comprehensive IoT Cyber Security Dataset for Edge Learning</span><br><span class="paper-authors">Ferrag et al.</span></td>
+          <td><span class="paper-venue">IEEE IoT Journal, 2025</span></td>
+          <td><span class="relevance-tag">Edge IoT</span> Validates edge computing approach for IoT intrusion</td>
+          <td><span class="gap-tag">Cyber intrusion — not physical</span></td>
+        </tr>
+        <tr>
+          <td>[21]</td>
+          <td><span class="paper-title">Secure IoT-Based Smart Home Automation Using Sensor Fusion</span><br><span class="paper-authors">Akram et al.</span></td>
+          <td><span class="paper-venue">IEEE Trans. Consumer Elec., 2024</span></td>
+          <td><span class="relevance-tag">Sensor Fusion</span> Multi-sensor fusion for reduced false positives</td>
+          <td><span class="gap-tag">No radar, no trapping, no SOS</span></td>
+        </tr>
+        <tr>
+          <td>[22]</td>
+          <td><span class="paper-title">MeshSOS: ESP-NOW Based P2P Emergency Alert Relay System</span><br><span class="paper-authors">Park et al.</span></td>
+          <td><span class="paper-venue">IEEE ICIT, 2024</span></td>
+          <td><span class="relevance-tag">ESP-NOW Mesh</span> Validates ESP-NOW multi-hop relay SOS concept</td>
+          <td><span class="gap-tag">Worker safety — no intrusion</span></td>
+        </tr>
+        <tr>
+          <td>[23]</td>
+          <td><span class="paper-title">BLE Eddystone-Based Indoor Emergency Notification System</span><br><span class="paper-authors">Kim et al.</span></td>
+          <td><span class="paper-venue">IEEE ICCE, 2024</span></td>
+          <td><span class="relevance-tag">BLE Beacon</span> Validates BLE Eddystone passive proximity SOS</td>
+          <td><span class="gap-tag">BLE only — no mesh or GSM</span></td>
+        </tr>
+        <tr>
+          <td>[24]</td>
+          <td><span class="paper-title">Lightweight YOLOv8 on Raspberry Pi for Real-Time Security Surveillance</span><br><span class="paper-authors">Wang et al.</span></td>
+          <td><span class="paper-venue">IEEE AIEC, 2024</span></td>
+          <td><span class="relevance-tag">YOLOv8 RPi</span> Mirrors TRAPNET's AI pipeline — YOLOv8 on RPi edge</td>
+          <td><span class="gap-tag">Camera only — no radar backup</span></td>
+        </tr>
+        <tr>
+          <td>[25]</td>
+          <td><span class="paper-title">IoT-Based Structural Vibration Monitoring for Forced Entry Detection</span><br><span class="paper-authors">Singh et al.</span></td>
+          <td><span class="paper-venue">IEEE ICSIC, 2024</span></td>
+          <td><span class="relevance-tag">Vibration</span> Validates SW-420 impulse counting approach</td>
+          <td><span class="gap-tag">Monitoring only — no lock/SOS</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="slide-footer">
+    <span>TRAPNET — Intelligent Security &amp; Alert System</span>
+    <span>Review 1 | Final Year Project</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 2: 7-PILLAR COMPARISON ==================== -->
+<div class="slide-label">Slide — 7-Pillar Gap Analysis (Papers 16–25 vs. TRAPNET)</div>
+<div class="slide">
+  <div class="slide-header">
+    <h1>GAP ANALYSIS — PAPERS [16–25] vs. TRAPNET</h1>
+    <span class="badge">TRAPNET</span>
+  </div>
+
+  <div class="compare-body">
+    <div class="compare-subtitle">7-Pillar Feature Comparison — No Existing Paper Covers All Pillars</div>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Paper Focus</th>
+          <th>mmWave<br>Radar</th>
+          <th>Sensor<br>Fusion</th>
+          <th>Auto Door<br>Lock</th>
+          <th>Multi-Ch<br>SOS</th>
+          <th>AI Vision<br>(YOLOv8)</th>
+          <th>Offline<br>Capable</th>
+          <th>Battery<br>Backup</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>[16]</td>
+          <td>FMCW Vital Signs</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>[17]</td>
+          <td>Edge mmWave Monitor</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>[18]</td>
+          <td>24GHz Contactless Monitor</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>[19]</td>
+          <td>Smart Door Lock + Intrusion</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>[20]</td>
+          <td>Edge IoT Intrusion Dataset</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>[21]</td>
+          <td>Sensor Fusion Smart Home</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>[22]</td>
+          <td>ESP-NOW Mesh SOS</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>[23]</td>
+          <td>BLE Eddystone Alert</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>[24]</td>
+          <td>YOLOv8 on RPi Edge</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td>[25]</td>
+          <td>Vibration Forced Entry</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <!-- TRAPNET row -->
+        <tr>
+          <td style="font-size: 12px;">★</td>
+          <td style="font-size: 12px;">TRAPNET (Ours)</td>
+          <td>✓</td>
+          <td>✓</td>
+          <td>✓</td>
+          <td>✓</td>
+          <td>✓</td>
+          <td>✓</td>
+          <td>✓</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Insight Box -->
+    <div class="insight-box">
+      <h3>KEY RESEARCH GAP IDENTIFIED</h3>
+      <div class="insight-grid">
+        <div class="insight-item">
+          <div class="insight-icon">🔍</div>
+          <div class="insight-title">No Integrated Solution</div>
+          <div class="insight-desc">No single paper combines radar, fusion, locking, SOS, and AI vision into one system</div>
+        </div>
+        <div class="insight-item">
+          <div class="insight-icon">🚪</div>
+          <div class="insight-title">No Intruder Trapping</div>
+          <div class="insight-desc">Existing systems detect or alert — none physically contain the intruder inside</div>
+        </div>
+        <div class="insight-item">
+          <div class="insight-icon">📡</div>
+          <div class="insight-title">No Multi-Channel SOS</div>
+          <div class="insight-desc">No paper offers 4-path redundant alerting (GSM + WiFi + BLE + ESP-NOW) simultaneously</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>TRAPNET — Intelligent Security &amp; Alert System</span>
+    <span>Review 1 | Final Year Project</span>
+  </div>
+</div>
+
+
+<div class="instructions">
+  <strong>Instructions:</strong> Use <kbd>Win+Shift+S</kbd> (Snipping Tool) to capture each slide individually, then paste into your PowerPoint (ppt_1.pptx).<br>
+  Each slide is exactly 1280×720 pixels (16:9 standard presentation size).
+</div>
+
+</body>
+</html>

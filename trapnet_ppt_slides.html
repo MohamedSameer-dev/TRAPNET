@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRAPNET — Review 1 PPT Slides</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #e0e0e0;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      gap: 60px;
+    }
+    .slide-label {
+      font-size: 13px; font-weight: 600; color: #888;
+      text-transform: uppercase; letter-spacing: 2px;
+      margin-bottom: -40px;
+    }
+
+    /* ===== SLIDE CONTAINER ===== */
+    .slide {
+      width: 1280px;
+      height: 720px;
+      background: #fff;
+      border: 1px solid #ccc;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+    }
+
+    /* ===== SLIDE HEADER BAR ===== */
+    .slide-header {
+      background: #111;
+      color: #fff;
+      padding: 18px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .slide-header h1 {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .slide-header .badge {
+      font-size: 11px;
+      font-weight: 600;
+      background: #fff;
+      color: #111;
+      padding: 4px 14px;
+      border-radius: 3px;
+      letter-spacing: 1px;
+    }
+
+    /* ===== SLIDE FOOTER ===== */
+    .slide-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #111;
+      color: #999;
+      padding: 8px 50px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== METHODOLOGY SLIDE ===== */
+    .method-body {
+      padding: 30px 50px 20px 50px;
+    }
+    .method-subtitle {
+      font-size: 13px; color: #555; margin-bottom: 20px;
+      border-bottom: 1px solid #ddd; padding-bottom: 8px;
+    }
+    .pipeline-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+    .pipeline-step {
+      background: #111;
+      color: #fff;
+      padding: 8px 22px;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 3px;
+      letter-spacing: 0.5px;
+    }
+    .pipeline-arrow {
+      font-size: 20px; color: #333; font-weight: 300;
+    }
+
+    .method-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .method-card {
+      border: 1.5px solid #222;
+      border-radius: 4px;
+      padding: 16px 20px;
+      position: relative;
+    }
+    .method-card .card-num {
+      position: absolute;
+      top: -11px;
+      left: 16px;
+      background: #111;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 2px;
+    }
+    .method-card h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 6px;
+      margin-top: 4px;
+    }
+    .method-card ul {
+      list-style: none;
+      padding: 0;
+    }
+    .method-card ul li {
+      font-size: 11.5px;
+      color: #333;
+      padding: 2px 0;
+      padding-left: 16px;
+      position: relative;
+    }
+    .method-card ul li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: #555;
+      font-size: 12px;
+    }
+    .method-card .tech-tag {
+      display: inline-block;
+      font-size: 9.5px;
+      font-weight: 600;
+      background: #f0f0f0;
+      color: #333;
+      padding: 1px 7px;
+      border-radius: 2px;
+      border: 1px solid #ccc;
+      margin-right: 4px;
+      margin-top: 4px;
+    }
+
+    .method-justification {
+      margin-top: 14px;
+      border: 1.5px solid #222;
+      border-radius: 4px;
+      padding: 12px 20px;
+      background: #fafafa;
+    }
+    .method-justification h3 {
+      font-size: 13px; font-weight: 700; color: #111; margin-bottom: 6px;
+    }
+    .justification-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 10px;
+    }
+    .just-item {
+      text-align: center;
+    }
+    .just-item .just-icon {
+      font-size: 22px; margin-bottom: 2px;
+    }
+    .just-item .just-title {
+      font-size: 10.5px; font-weight: 700; color: #111;
+    }
+    .just-item .just-desc {
+      font-size: 9px; color: #555;
+    }
+
+    /* ===== COMPONENT LIST SLIDE ===== */
+    .comp-body {
+      padding: 18px 40px 10px 40px;
+    }
+    .comp-subtitle {
+      font-size: 12px; color: #555; margin-bottom: 12px;
+      border-bottom: 1px solid #ddd; padding-bottom: 6px;
+    }
+    .comp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+    .comp-table thead th {
+      background: #111;
+      color: #fff;
+      padding: 7px 10px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 10.5px;
+      letter-spacing: 0.5px;
+    }
+    .comp-table thead th:first-child {
+      width: 28px;
+      text-align: center;
+    }
+    .comp-table thead th:nth-child(2) {
+      width: 28px;
+      text-align: center;
+    }
+    .comp-table tbody td {
+      padding: 5px 10px;
+      border-bottom: 1px solid #e0e0e0;
+      color: #222;
+      vertical-align: middle;
+    }
+    .comp-table tbody tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    .comp-table tbody td:first-child {
+      text-align: center;
+      font-weight: 600;
+      color: #555;
+      font-size: 10px;
+    }
+    .comp-table tbody td:nth-child(2) {
+      text-align: center;
+    }
+    .comp-table .layer-row td {
+      background: #111 !important;
+      color: #fff !important;
+      font-weight: 700;
+      font-size: 10.5px;
+      letter-spacing: 1px;
+      padding: 5px 10px;
+    }
+
+    /* Checkbox styling */
+    .chk {
+      width: 14px;
+      height: 14px;
+      border: 1.8px solid #222;
+      border-radius: 2px;
+      display: inline-block;
+      vertical-align: middle;
+      cursor: pointer;
+      position: relative;
+      background: #fff;
+    }
+    .chk.checked {
+      background: #111;
+    }
+    .chk.checked::after {
+      content: '✓';
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      position: absolute;
+      top: -2px;
+      left: 1.5px;
+    }
+    .comp-model {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 500;
+    }
+    .comp-note {
+      font-size: 9px;
+      color: #777;
+      font-style: italic;
+    }
+    .comp-footer-note {
+      margin-top: 8px;
+      font-size: 10px;
+      color: #555;
+      border-top: 1px solid #ddd;
+      padding-top: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ==================== SLIDE 1: METHODOLOGY ==================== -->
+<div class="slide-label">Slide 1 — Methodology</div>
+<div class="slide">
+  <div class="slide-header">
+    <h1>METHODOLOGY</h1>
+    <span class="badge">TRAPNET</span>
+  </div>
+
+  <div class="method-body">
+    <div class="method-subtitle">System Design Approach — Four-Layer Pipeline Architecture</div>
+
+    <!-- Pipeline Flow -->
+    <div class="pipeline-flow">
+      <div class="pipeline-step">① DETECT</div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">② PROCESS</div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">③ RESPOND</div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">④ ALERT</div>
+    </div>
+
+    <!-- 4 Cards -->
+    <div class="method-grid">
+      <!-- Card 1: Detect -->
+      <div class="method-card">
+        <span class="card-num">LAYER 1 — DETECT</span>
+        <h3>Sensor Layer</h3>
+        <ul>
+          <li>LD2410C 24GHz mmWave radar for human presence detection</li>
+          <li>IR sensors (×2) on door &amp; window for entry breach detection</li>
+          <li>SW-420 vibration sensors (×2) for forced-entry vibration</li>
+          <li>NEO-6M GPS module for location tracking of trapped victim</li>
+          <li>CCTV Camera (RPi CSI) for visual confirmation via AI</li>
+        </ul>
+        <div>
+          <span class="tech-tag">UART</span>
+          <span class="tech-tag">Digital GPIO</span>
+          <span class="tech-tag">SoftSerial</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Process -->
+      <div class="method-card">
+        <span class="card-num">LAYER 2 — PROCESS</span>
+        <h3>Processing Layer</h3>
+        <ul>
+          <li>ESP32-S3 DevKit as central coordinator — sensor fusion + SOS</li>
+          <li>Raspberry Pi Zero 2W runs OpenCV + YOLOv8 for object detection</li>
+          <li>Multi-sensor data fusion to reduce false alarms</li>
+          <li>Dual buck converters (5V + 4V) for stable multi-rail power</li>
+          <li>18650 Li-Ion battery backup (4–6 hours via TP4056)</li>
+        </ul>
+        <div>
+          <span class="tech-tag">UART ×3</span>
+          <span class="tech-tag">I2C</span>
+          <span class="tech-tag">SPI</span>
+          <span class="tech-tag">WiFi</span>
+          <span class="tech-tag">BLE</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Respond -->
+      <div class="method-card">
+        <span class="card-num">LAYER 3 — RESPOND</span>
+        <h3>Response Layer</h3>
+        <ul>
+          <li>12V electromagnetic solenoid lock for automatic door locking</li>
+          <li>2-channel relay module (opto-isolated) for safe high-voltage switching</li>
+          <li>MicroSD card module (16GB) for local evidence logging</li>
+          <li>0.96" OLED display (SSD1306) for real-time system status</li>
+          <li>All responses trigger within &lt;500ms of confirmed intrusion</li>
+        </ul>
+        <div>
+          <span class="tech-tag">Relay Control</span>
+          <span class="tech-tag">VSPI</span>
+          <span class="tech-tag">I2C</span>
+        </div>
+      </div>
+
+      <!-- Card 4: Alert -->
+      <div class="method-card">
+        <span class="card-num">LAYER 4 — ALERT (SOS)</span>
+        <h3>SOS Alert Layer</h3>
+        <ul>
+          <li>WiFi Beacon SSID broadcast (15–30m radius) — no app needed</li>
+          <li>BLE Eddystone beacon (10–15m radius) — passive detection</li>
+          <li>GSM SMS via SIM800L — sends alert to predefined contacts</li>
+          <li>ESP-NOW mesh relay (200m+) — device-to-device, no router</li>
+          <li>Multi-channel redundancy ensures alert even if one path fails</li>
+        </ul>
+        <div>
+          <span class="tech-tag">WiFi</span>
+          <span class="tech-tag">BLE</span>
+          <span class="tech-tag">GSM</span>
+          <span class="tech-tag">ESP-NOW</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Justification Bar -->
+    <div class="method-justification">
+      <h3>WHY THIS METHODOLOGY?</h3>
+      <div class="justification-grid">
+        <div class="just-item">
+          <div class="just-icon">🔁</div>
+          <div class="just-title">Layered Separation</div>
+          <div class="just-desc">Each layer is independent — can be tested, debugged, and upgraded individually</div>
+        </div>
+        <div class="just-item">
+          <div class="just-icon">📡</div>
+          <div class="just-title">Multi-Channel SOS</div>
+          <div class="just-desc">4 alert paths (WiFi, BLE, GSM, ESP-NOW) ensure message gets through</div>
+        </div>
+        <div class="just-item">
+          <div class="just-icon">🔋</div>
+          <div class="just-title">Power Resilience</div>
+          <div class="just-desc">Dual-rail power + battery backup = works during power outages</div>
+        </div>
+        <div class="just-item">
+          <div class="just-icon">🧠</div>
+          <div class="just-title">AI + Sensor Fusion</div>
+          <div class="just-desc">YOLOv8 + multi-sensor fusion reduces false positives to near zero</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>TRAPNET — Intelligent Security &amp; Alert System</span>
+    <span>Review 1 | Final Year Project</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 2: COMPONENT LIST ==================== -->
+<div class="slide-label">Slide 2 — Component List</div>
+<div class="slide">
+  <div class="slide-header">
+    <h1>COMPONENT LIST</h1>
+    <span class="badge">TRAPNET</span>
+  </div>
+
+  <div class="comp-body">
+    <div class="comp-subtitle">Hardware Bill of Materials — Check (☑) each component as acquired</div>
+
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>☑</th>
+          <th>Component</th>
+          <th>Model / Specification</th>
+          <th>Qty</th>
+          <th>Interface</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- SENSOR LAYER -->
+        <tr class="layer-row"><td colspan="7">▸ SENSOR LAYER</td></tr>
+        <tr>
+          <td>1</td>
+          <td><span class="chk" onclick="this.classList.toggle('checked')"></span></td>
+          <td><b>Human Presence Sensor</b></td>
+          <td class="comp-model">LD2410C (24GHz mmWave)</td>
+          <td>1</td>
+          <td>UART2 (256000 baud)</td>
+          <td>Detect human presence through walls</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><span class="chk" onclick="this.classList.toggle('checked')"></span></td>
+          <td><b>IR Obstacle Sensor</b></td>
+          <td class="comp-model">FC-51 / HW-201</td>
+          <td>2</td>
+          <td>Digital GPIO</td>
+          <td>Door &amp; window breach detection</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><span class="chk" onclick="this.classList.toggle('checked')"></span></td>
+          <td><b>Vibration Sensor</b></td>
+          <td class="comp-model">SW-420 (adj. sensitivity)</td>
+          <td>2</td>
+          <td>Digital GPIO</td>
+          <td>Forced-entry vibration detection</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><span class="chk" onclick="this.classList.toggle('checked')"></span></td>
+          <td><b>GPS Module</b></td>
+          <td class="comp-model">NEO-6M (GY-GPS6MV2)</td>
+          <td>1</td>
+          <td>SoftSerial (9600 baud)</td>
+          <td>Location tracking for SOS</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><span class="chk" onclick="this.classList.toggle('checked')"></span></td>
+          <td><b>CCTV Camera</b></td>
+          <td class="comp-model">RPi Camera V2 / USB Cam</td>
+          <td>1</td>
+          <td>CSI / USB (to RPi)</td>
+          <td>Visual AI-based detection</td>
+        </tr>
+
+        <!-- PROCESSING LAYER -->
+        <tr class="layer-row"><td colspan="7">▸ PROCESSING LAYER</td></tr>
+        <tr>
+          <td>6</td>
+          <td><span class="chk" onclick="this.classList.toggle('checked')"></span></td>
+          <td><b>Microcontroller</b></td>
+          <td class="comp-model">ESP32-S3 DevKit (WROOM)</td>
+          <td>1</td>
+          <td>Central Controller</td>
+          <td>Sensor fusion, SOS coordinator, WiFi+BLE</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td><span class="chk" onclick="this.classList.toggle('checked')"></span></td>
+          <td><b>AI Processor</b></td>
+          <td class="comp-model">Raspberry Pi Zero 2W</td>
+          <td>1</td>
+          <td>UART to ESP32</td>
+          <td>OpenCV + YOLOv8 object detection</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td><span class="chk" onclick="this.classList.toggle('checked')"></span></td>
+          <td><b>Buck Converter (5V)</b></td>
+          <td class="comp-model">LM2596 DC-DC Step-Down</td>
+          <td>1</td>
+          <td>Power rail</td>
+          <td>12V → 5V for ESP32, LD2410, Relay, RPi</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td><span class="chk" onclick="this.classList.toggle('checked')"></span></td>
+          <td><b>Buck Converter (4V)</b></td>
+          <td class="comp-model">LM2596 DC-DC Step-Down</td>
+          <td>1</td>
+          <td>Power rail</td>
+          <td>12V → 4V dedicated for SIM800L</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td><span class="chk" onclick="this.classList.toggle('checked')"></span></td>
+          <td><b>Battery + Charger</b></td>
+          <td class="comp-model">18650 × 2 + TP4056</td>
+          <td>1 set</td>
+          <td>Backup power</td>
+          <td>4–6hr battery backup during outage</td>
+        </tr>
+
+        <!-- RESPONSE LAYER -->
+        <tr class="layer-row"><td colspan="7">▸ RESPONSE LAYER</td></tr>
+        <tr>
+          <td>11</td>
+          <td><span class="chk" onclick="this.classList.toggle('checked')"></span></td>
+          <td><b>Relay Module</b></td>
+          <td class="comp-model">2-Ch 5V Opto-Isolated</td>
+          <td>1</td>
+          <td>GPIO OUT (Active LOW)</td>
+          <td>Switch 12V solenoid lock safely</td>
+        </tr>
+        <tr>
+          <td>12</td>
+          <td><span class="chk" onclick="this.classList.toggle('checked')"></span></td>
+          <td><b>Solenoid Door Lock</b></td>
+          <td class="comp-model">12V Electromagnetic Lock</td>
+          <td>1</td>
+          <td>Via Relay (12V direct)</td>
+          <td>Automatic door locking on intrusion</td>
+        </tr>
+        <tr>
+          <td>13</td>
+          <td><span class="chk" onclick="this.classList.toggle('checked')"></span></td>
+          <td><b>MicroSD Module</b></td>
+          <td class="comp-model">SPI Breakout + 16GB Card</td>
+          <td>1</td>
+          <td>VSPI Bus</td>
+          <td>Local evidence logging (FAT32)</td>
+        </tr>
+        <tr>
+          <td>14</td>
+          <td><span class="chk" onclick="this.classList.toggle('checked')"></span></td>
+          <td><b>OLED Display</b></td>
+          <td class="comp-model">0.96" SSD1306 128×64</td>
+          <td>1</td>
+          <td>I2C (Addr: 0x3C)</td>
+          <td>Real-time system status display</td>
+        </tr>
+
+        <!-- SOS ALERT LAYER -->
+        <tr class="layer-row"><td colspan="7">▸ SOS ALERT LAYER</td></tr>
+        <tr>
+          <td>15</td>
+          <td><span class="chk" onclick="this.classList.toggle('checked')"></span></td>
+          <td><b>GSM Module</b></td>
+          <td class="comp-model">SIM800L V2.0 + SIM Card</td>
+          <td>1</td>
+          <td>UART1 (remapped)</td>
+          <td>SMS alerts to emergency contacts</td>
+        </tr>
+        <tr>
+          <td>16</td>
+          <td><span class="chk" onclick="this.classList.toggle('checked')"></span></td>
+          <td><b>GSM Antenna</b></td>
+          <td class="comp-model">SMA Spring Antenna</td>
+          <td>1</td>
+          <td>SMA connector</td>
+          <td>900/1800MHz signal reception</td>
+        </tr>
+
+        <!-- PASSIVE & SUPPORT -->
+        <tr class="layer-row"><td colspan="7">▸ PASSIVE &amp; SUPPORT COMPONENTS</td></tr>
+        <tr>
+          <td>17</td>
+          <td><span class="chk" onclick="this.classList.toggle('checked')"></span></td>
+          <td><b>Pull-Down Resistors</b></td>
+          <td class="comp-model">10kΩ 1/4W</td>
+          <td>2</td>
+          <td>GPIO34, GPIO39</td>
+          <td>Required for input-only pins</td>
+        </tr>
+        <tr>
+          <td>18</td>
+          <td><span class="chk" onclick="this.classList.toggle('checked')"></span></td>
+          <td><b>Decoupling Capacitor</b></td>
+          <td class="comp-model">1000µF 16V Electrolytic</td>
+          <td>1</td>
+          <td>SIM800L VCC/GND</td>
+          <td>Absorb 2A GSM transmit spikes</td>
+        </tr>
+        <tr>
+          <td>19</td>
+          <td><span class="chk" onclick="this.classList.toggle('checked')"></span></td>
+          <td><b>12V Power Adapter</b></td>
+          <td class="comp-model">12V 2A DC Barrel Jack</td>
+          <td>1</td>
+          <td>Main power input</td>
+          <td>Primary wall power supply</td>
+        </tr>
+        <tr>
+          <td>20</td>
+          <td><span class="chk" onclick="this.classList.toggle('checked')"></span></td>
+          <td><b>Jumper Wires + Breadboard</b></td>
+          <td class="comp-model">M-M, M-F Assorted + PCB</td>
+          <td>1 set</td>
+          <td>—</td>
+          <td>Prototyping &amp; final assembly</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="comp-footer-note">
+      <b>Total: 20 line items</b> &nbsp;|&nbsp; WiFi Beacon, BLE Eddystone, ESP-NOW Mesh = built-in ESP32-S3 (no extra hardware) &nbsp;|&nbsp;
+      <b>Estimated Cost: ₹5,300 – ₹7,500</b>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>TRAPNET — Intelligent Security &amp; Alert System</span>
+    <span>Review 1 | Final Year Project</span>
+  </div>
+</div>
+
+
+<!-- ==================== SLIDE 3: METHODOLOGY JUSTIFICATION ==================== -->
+<div class="slide-label">Slide 3 — Justification of Methodology</div>
+<div class="slide">
+  <div class="slide-header">
+    <h1>JUSTIFICATION OF METHODOLOGY</h1>
+    <span class="badge">TRAPNET</span>
+  </div>
+
+  <div style="padding: 28px 50px 20px 50px;">
+    <div class="method-subtitle">Why the Four-Layer Pipeline Architecture is the Optimal Approach</div>
+
+    <!-- Justification Points -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px;">
+
+      <!-- Point 1 -->
+      <div style="border: 1.5px solid #222; border-radius: 4px; padding: 18px 22px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <div style="background: #111; color: #fff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">1</div>
+          <h3 style="font-size: 15px; font-weight: 700; color: #111;">Modular & Testable Design</h3>
+        </div>
+        <ul style="list-style: none; padding: 0; font-size: 11.5px; color: #333;">
+          <li style="padding: 2px 0; padding-left: 14px; position: relative;"><span style="position:absolute;left:0;">▸</span>Each layer operates independently — a sensor failure doesn't crash the alert system</li>
+          <li style="padding: 2px 0; padding-left: 14px; position: relative;"><span style="position:absolute;left:0;">▸</span>Individual layers can be unit-tested before system integration</li>
+          <li style="padding: 2px 0; padding-left: 14px; position: relative;"><span style="position:absolute;left:0;">▸</span>New sensors or alert channels can be added without redesigning the whole system</li>
+        </ul>
+      </div>
+
+      <!-- Point 2 -->
+      <div style="border: 1.5px solid #222; border-radius: 4px; padding: 18px 22px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <div style="background: #111; color: #fff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">2</div>
+          <h3 style="font-size: 15px; font-weight: 700; color: #111;">Multi-Sensor Fusion Accuracy</h3>
+        </div>
+        <ul style="list-style: none; padding: 0; font-size: 11.5px; color: #333;">
+          <li style="padding: 2px 0; padding-left: 14px; position: relative;"><span style="position:absolute;left:0;">▸</span>Single-sensor systems have high false-positive rates (wind, pets, shadows)</li>
+          <li style="padding: 2px 0; padding-left: 14px; position: relative;"><span style="position:absolute;left:0;">▸</span>Fusing radar + IR + vibration + camera reduces false alarms to near-zero</li>
+          <li style="padding: 2px 0; padding-left: 14px; position: relative;"><span style="position:absolute;left:0;">▸</span>YOLOv8 on RPi provides AI-level visual confirmation before triggering response</li>
+        </ul>
+      </div>
+
+      <!-- Point 3 -->
+      <div style="border: 1.5px solid #222; border-radius: 4px; padding: 18px 22px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <div style="background: #111; color: #fff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">3</div>
+          <h3 style="font-size: 15px; font-weight: 700; color: #111;">Redundant Alert Channels</h3>
+        </div>
+        <ul style="list-style: none; padding: 0; font-size: 11.5px; color: #333;">
+          <li style="padding: 2px 0; padding-left: 14px; position: relative;"><span style="position:absolute;left:0;">▸</span>GSM SMS works even without internet — guaranteed message delivery</li>
+          <li style="padding: 2px 0; padding-left: 14px; position: relative;"><span style="position:absolute;left:0;">▸</span>WiFi + BLE beacons alert nearby devices passively — no app install needed</li>
+          <li style="padding: 2px 0; padding-left: 14px; position: relative;"><span style="position:absolute;left:0;">▸</span>ESP-NOW mesh provides device-to-device relay over 200m without WiFi router</li>
+        </ul>
+      </div>
+
+      <!-- Point 4 -->
+      <div style="border: 1.5px solid #222; border-radius: 4px; padding: 18px 22px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <div style="background: #111; color: #fff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">4</div>
+          <h3 style="font-size: 15px; font-weight: 700; color: #111;">Real-World Resilience</h3>
+        </div>
+        <ul style="list-style: none; padding: 0; font-size: 11.5px; color: #333;">
+          <li style="padding: 2px 0; padding-left: 14px; position: relative;"><span style="position:absolute;left:0;">▸</span>Dual-rail power (5V + 4V) prevents SIM800L 2A spikes from browning out ESP32</li>
+          <li style="padding: 2px 0; padding-left: 14px; position: relative;"><span style="position:absolute;left:0;">▸</span>18650 battery backup ensures 4–6 hours of operation during power failure</li>
+          <li style="padding: 2px 0; padding-left: 14px; position: relative;"><span style="position:absolute;left:0;">▸</span>MicroSD evidence logging works offline — no cloud dependency</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Comparison Table -->
+    <div style="border: 1.5px solid #222; border-radius: 4px; padding: 14px 20px; background: #fafafa;">
+      <h3 style="font-size: 13px; font-weight: 700; color: #111; margin-bottom: 8px;">COMPARISON: TRAPNET vs. Conventional Security Systems</h3>
+      <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+        <thead>
+          <tr style="background: #222; color: #fff;">
+            <th style="padding: 6px 12px; text-align: left; font-weight: 600;">Feature</th>
+            <th style="padding: 6px 12px; text-align: center; font-weight: 600;">Conventional CCTV</th>
+            <th style="padding: 6px 12px; text-align: center; font-weight: 600;">Basic Alarm</th>
+            <th style="padding: 6px 12px; text-align: center; font-weight: 600; border: 2px solid #fff;">TRAPNET (Ours)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding:5px 12px; border-bottom:1px solid #ddd; font-weight: 600;">AI Detection</td><td style="text-align:center; border-bottom:1px solid #ddd;">✗</td><td style="text-align:center; border-bottom:1px solid #ddd;">✗</td><td style="text-align:center; border-bottom:1px solid #ddd; font-weight:700;">✓ YOLOv8</td></tr>
+          <tr style="background:#f5f5f5;"><td style="padding:5px 12px; border-bottom:1px solid #ddd; font-weight: 600;">Multi-Sensor Fusion</td><td style="text-align:center; border-bottom:1px solid #ddd;">✗</td><td style="text-align:center; border-bottom:1px solid #ddd;">✗</td><td style="text-align:center; border-bottom:1px solid #ddd; font-weight:700;">✓ 6 Sensors</td></tr>
+          <tr><td style="padding:5px 12px; border-bottom:1px solid #ddd; font-weight: 600;">Works Without Internet</td><td style="text-align:center; border-bottom:1px solid #ddd;">✗</td><td style="text-align:center; border-bottom:1px solid #ddd;">✓</td><td style="text-align:center; border-bottom:1px solid #ddd; font-weight:700;">✓ GSM + BLE + ESP-NOW</td></tr>
+          <tr style="background:#f5f5f5;"><td style="padding:5px 12px; border-bottom:1px solid #ddd; font-weight: 600;">Battery Backup</td><td style="text-align:center; border-bottom:1px solid #ddd;">✗</td><td style="text-align:center; border-bottom:1px solid #ddd;">✓ (limited)</td><td style="text-align:center; border-bottom:1px solid #ddd; font-weight:700;">✓ 4–6 hours</td></tr>
+          <tr><td style="padding:5px 12px; border-bottom:1px solid #ddd; font-weight: 600;">Automatic Door Lock</td><td style="text-align:center; border-bottom:1px solid #ddd;">✗</td><td style="text-align:center; border-bottom:1px solid #ddd;">✗</td><td style="text-align:center; border-bottom:1px solid #ddd; font-weight:700;">✓ Solenoid</td></tr>
+          <tr style="background:#f5f5f5;"><td style="padding:5px 12px; font-weight: 600;">Cost</td><td style="text-align:center;">₹15,000+</td><td style="text-align:center;">₹3,000+</td><td style="text-align:center; font-weight:700;">₹5,300 – ₹7,500</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span>TRAPNET — Intelligent Security &amp; Alert System</span>
+    <span>Review 1 | Final Year Project</span>
+  </div>
+</div>
+
+<div style="text-align: center; color: #999; font-size: 12px; padding: 20px;">
+  Right-click each slide → "Save image as" or use Snipping Tool (Win+Shift+S) to capture individual slides for your PPT
+</div>
+
+</body>
+</html>

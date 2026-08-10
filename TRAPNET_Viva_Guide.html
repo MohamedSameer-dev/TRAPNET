@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRAPNET — Viva & Technical Comprehensive Study Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f8f9fa;
+      color: #1a1a1a;
+      font-family: 'Inter', -apple-system, sans-serif;
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+      padding: 50px;
+    }
+    header {
+      border-bottom: 3px solid #8b0000;
+      padding-bottom: 25px;
+      margin-bottom: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    header h1 {
+      font-size: 32px;
+      font-weight: 800;
+      color: #8b0000;
+      letter-spacing: 1px;
+    }
+    header p {
+      font-size: 14px;
+      color: #666;
+      margin-top: 4px;
+    }
+    .badge {
+      background: #8b0000;
+      color: #ffffff;
+      padding: 6px 16px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    
+    h2 {
+      font-size: 22px;
+      color: #111;
+      border-left: 4px solid #8b0000;
+      padding-left: 14px;
+      margin: 35px 0 18px 0;
+    }
+    h3 {
+      font-size: 16px;
+      color: #222;
+      margin: 18px 0 10px 0;
+      font-weight: 700;
+    }
+    p, li {
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    ul, ol {
+      padding-left: 22px;
+      margin-bottom: 15px;
+    }
+    li {
+      margin-bottom: 6px;
+    }
+    
+    /* Vocabulary Highlights */
+    .vocab-box {
+      background: #fff8f8;
+      border: 1.5px solid #ffcdd2;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 15px 0 25px 0;
+    }
+    .vocab-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #b71c1c;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .vocab-item {
+      display: inline-block;
+      background: #ffffff;
+      border: 1px solid #ef9a9a;
+      border-radius: 4px;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #b71c1c;
+      margin: 3px 4px 3px 0;
+    }
+
+    /* Diagram / Schematic Boxes */
+    .schematic-card {
+      background: #1e1e1e;
+      color: #00ff66;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 12px;
+      line-height: 1.4;
+      margin: 20px 0;
+    }
+
+    /* Q&A Cards */
+    .qa-card {
+      border: 1.5px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 22px;
+      margin-bottom: 20px;
+      background: #ffffff;
+      transition: all 0.2s ease;
+    }
+    .qa-card:hover {
+      border-color: #8b0000;
+      box-shadow: 0 4px 15px rgba(139,0,0,0.08);
+    }
+    .qa-number {
+      font-size: 12px;
+      font-weight: 800;
+      color: #8b0000;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    .qa-question {
+      font-size: 16px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 12px;
+    }
+    .qa-answer {
+      font-size: 14px;
+      color: #333;
+    }
+
+    .key-point {
+      background: #eef7ee;
+      border-left: 3px solid #2e7d32;
+      padding: 10px 14px;
+      margin: 10px 0;
+      font-size: 13px;
+      color: #1b5e20;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 13px;
+    }
+    table th {
+      background: #8b0000;
+      color: #ffffff;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+    }
+    table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    table tr:nth-child(even) {
+      background: #fcfcfc;
+    }
+
+    footer {
+      margin-top: 50px;
+      border-top: 1px solid #e0e0e0;
+      padding-top: 20px;
+      text-anchor: center;
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div>
+      <h1>TRAPNET — VIVA & EXAMINER STUDY GUIDE</h1>
+      <p>Technical Explanations, Sensor Mechanics, Circuit Connections, and External Q&A</p>
+    </div>
+    <span class="badge">REVIEW 1 &amp; FINAL VIVA</span>
+  </header>
+
+  <!-- ==================== SECTION 1 ==================== -->
+  <h2>1. mmWave Radar (LD2410C 24GHz) — Detection & Wall Penetration</h2>
+
+  <div class="vocab-box">
+    <div class="vocab-title">📚 Key Academic Vocabulary to Use</div>
+    <span class="vocab-item">FMCW Modulation</span>
+    <span class="vocab-item">Micro-Doppler Signature</span>
+    <span class="vocab-item">Electromagnetic Attenuation</span>
+    <span class="vocab-item">Dielectric Permittivity</span>
+    <span class="vocab-item">Sub-millimeter Displacement</span>
+    <span class="vocab-item">Fresnel Zone Reflection</span>
+  </div>
+
+  <h3>Q: How does mmWave radar detect objects and human presence?</h3>
+  <p>The <b>LD2410C</b> operates on <b>24GHz Frequency Modulated Continuous Wave (FMCW)</b> radar technology. Unlike traditional PIR motion sensors that rely solely on thermal movement across infrared beams, mmWave radar transmits high-frequency electromagnetic radio waves and analyzes the reflected signals from objects.</p>
+  <ul>
+    <li><b>Chest Breathing Micro-Doppler Sensing:</b> When a human stands or sits completely still (hidden or frozen), their chest displacement (3mm to 5mm during respiration) causes tiny frequency shifts in the reflected radar wave known as <b>Micro-Doppler Signatures</b>.</li>
+    <li><b>Energy Threshold Evaluation:</b> The radar digitizes signal energy across motion gates (0.75m to 6m) and static gates. If static energy exceeds <b>Gate Energy > 40</b>, human presence is confirmed.</li>
+  </ul>
+
+  <h3>Q: How does the radar wave travel through walls and obstacles?</h3>
+  <p>Radio frequency waves at 24GHz exhibit high penetration capability through non-conductive, low-density materials such as drywall, wood, plywood, glass, plastic, and thin brick partitions.</p>
+  <ul>
+    <li><b>Dielectric Permittivity:</b> Non-metallic barrier materials allow electromagnetic waves to pass through with minor amplitude decay (attenuation).</li>
+    <li><b>Reflective Boundaries:</b> Dense metallic surfaces (iron, steel, reinforced concrete, foil) reflect 100% of the wave, acting as a shield.</li>
+  </ul>
+
+  <div class="schematic-card">
++-----------------------------------------------------------------------------------+
+|                           LD2410C MMWAVE RADAR WIRING                             |
++-----------------------------------------------------------------------------------+
+|  [LD2410C Pin]                                                [ESP32-S3 GPIO]    |
+|   VCC  (5V DC)  ===========================================>  VIN / 5V Rail     |
+|   GND  (Ground) ===========================================>  GND                |
+|   TXD  (Serial) ===========================================>  GPIO16 (RX2)       |
+|   RXD  (Serial) <===========================================  GPIO17 (TX2)       |
++-----------------------------------------------------------------------------------+
+|  Baud Rate: 256000 bps | Logic Level: 3.3V | Range: 0.75m to 6.0m                |
++-----------------------------------------------------------------------------------+
+  </div>
+
+
+  <!-- ==================== SECTION 2 ==================== -->
+  <h2>2. Vibration Sensor (SW-420) — Intracavity vs. Extracavity Detection</h2>
+
+  <div class="vocab-box">
+    <div class="vocab-title">📚 Key Academic Vocabulary to Use</div>
+    <span class="vocab-item">Piezo-Mechanical Resonance</span>
+    <span class="vocab-item">Transient Mechanical Shock</span>
+    <span class="vocab-item">Microsecond Debouncing</span>
+    <span class="vocab-item">Spurious Noise Rejection</span>
+    <span class="vocab-item">Potentiometric Calibration</span>
+  </div>
+
+  <h3>Q: How does the SW-420 vibration sensor detect and react to vibration?</h3>
+  <p>The <b>SW-420</b> contains a tiny metallic spring suspended inside a conductive metal cylinder. In a quiescent state, the spring doesn't contact the casing (circuit open = HIGH). When structural shock occurs, mechanical momentum forces the spring to vibrate against the inner wall, making rapid contact (circuit closed = LOW pulse stream).</p>
+
+  <h3>Q: How do we distinguish between indoor/outdoor vibrations and prevent false alarms?</h3>
+  <ul>
+    <li><b>Indoor vs Outdoor Disturbance:</b> Outdoor environmental vibration (passing heavy vehicles, strong wind, thunder) produces low-frequency, single-pulse transients. Forced entry (door battering, drilling, window smashing) produces continuous high-density impulse spikes.</li>
+    <li><b>Software Impulse Pulse-Counting:</b> The ESP32-S3 software counts the number of low pulses within a <b>500ms sliding window</b>. If pulse count > 15 within 500ms, it is classified as a genuine breach attempt; single isolated spikes are discarded.</li>
+    <li><b>Hardware Potentiometric Calibration:</b> The onboard LM393 comparator potentiometer adjusts the sensitivity threshold to ignore ambient room noise.</li>
+  </ul>
+
+  <div class="schematic-card">
++-----------------------------------------------------------------------------------+
+|                        SW-420 VIBRATION SENSOR WIRING                             |
++-----------------------------------------------------------------------------------+
+|  [SW-420 Pin]                                                 [ESP32-S3 GPIO]    |
+|   VCC  (3.3V)   ===========================================>  3.3V Rail          |
+|   GND  (Ground) ===========================================>  GND                |
+|   OUT  (Digital)===========================================>  GPIO34 / GPIO39    |
+|                                                                    |              |
+|                                                               [10kΩ Pull-Down]   |
+|                                                                    |              |
+|                                                                   GND             |
++-----------------------------------------------------------------------------------+
+|  Note: GPIO34 & GPIO39 are Input-Only (GPI). 10kΩ external pull-down MANDATORY!  |
++-----------------------------------------------------------------------------------+
+  </div>
+
+
+  <!-- ==================== SECTION 3 ==================== -->
+  <h2>3. IR Sensors & 2-Channel Relay Module — Purpose & Operation</h2>
+
+  <div class="vocab-box">
+    <div class="vocab-title">📚 Key Academic Vocabulary to Use</div>
+    <span class="vocab-item">Galvanic Isolation</span>
+    <span class="vocab-item">Inductive Kickback Suppression</span>
+    <span class="vocab-item">Optoelectronic Interruption</span>
+    <span class="vocab-item">Active-LOW Actuation</span>
+    <span class="vocab-item">Fail-Secure Electromechanics</span>
+  </div>
+
+  <h3>Q: Why and how are IR sensors used in TRAPNET?</h3>
+  <p><b>Why:</b> To provide instantaneous, zero-latency physical boundary protection at entry points (doors and windows).</p>
+  <p><b>How:</b> Transmits 940nm infrared light from an LED. When a door or window is forced open, the light path is broken or reflected back to the photodiode, driving the output pin LOW in < 1ms to initiate immediate security evaluation.</p>
+
+  <h3>Q: Why and how is a 2-Channel Relay Module used?</h3>
+  <p><b>Why (Safety & Isolation):</b> Microcontrollers operate at 3.3V/5V DC and low current (mA). The solenoid door lock requires 12V DC and ~500mA. The relay provides <b>Galvanic Isolation</b> via an onboard optocoupler, preventing 12V voltage surges or <b>Inductive Kickback</b> from destroying the ESP32-S3.</p>
+  <p><b>How:</b> ESP32-S3 pulls GPIO32 LOW (Active-LOW trigger). The relay optocoupler turns ON, energizing the 5V relay coil. The mechanical switch contacts change from Normally Open (NO) to Common (COM), routing 12V power to lock the solenoid door within 3 seconds.</p>
+
+  <div class="schematic-card">
++-----------------------------------------------------------------------------------+
+|                      2-CHANNEL RELAY & SOLENOID LOCK WIRING                       |
++-----------------------------------------------------------------------------------+
+|  [ESP32-S3]              [RELAY MODULE]                   [12V POWER SUPPLY]     |
+|   GPIO32 (IN1) --------> IN1 (Channel 1)                      (+) 12V DC Positive |
+|   GPIO33 (IN2) --------> IN2 (Channel 2)                               |          |
+|   5V (VIN Rail)-------> VCC (Relay Power)                              |          |
+|   GND -----------------> GND                                           |          |
+|                                                                        v          |
+|                          Relay CH1 COM <-------------------------------+          |
+|                          Relay CH1 NO  ----------------> Solenoid Wire (+)        |
+|                                                          Solenoid Wire (-) ------>|
+|                                                                          GND      |
++-----------------------------------------------------------------------------------+
+  </div>
+
+
+  <!-- ==================== SECTION 4 ==================== -->
+  <h2>4. SIM800L GSM Communication & Multi-Layer SOS Alerts</h2>
+
+  <div class="vocab-box">
+    <div class="vocab-title">📚 Key Academic Vocabulary to Use</div>
+    <span class="vocab-item">Base Transceiver Station (BTS)</span>
+    <span class="vocab-item">Quad-Band Cellular Modem</span>
+    <span class="vocab-item">Asynchronous AT Command Protocol</span>
+    <span class="vocab-item">Autonomous Beacon SSID</span>
+    <span class="vocab-item">Decoupled Mesh Relay</span>
+  </div>
+
+  <h3>Q: How does the SIM800L communicate during SOS alerts?</h3>
+  <p>The <b>SIM800L</b> is a quad-band 2G GSM cellular modem that communicates directly with nearby cellular cell towers (Base Transceiver Stations) using AT commands via UART serial at 9600 baud.</p>
+  <ul>
+    <li><b>SMS Alert Dispatch:</b> Upon intrusion, ESP32-S3 issues <code>AT+CMGS="+91xxxxxx"</code> to dispatch an SMS containing breach timestamp, sensor state, and GPS coordinates directly to registered mobile devices.</li>
+    <li><b>Proximity SOS Broadcasts (No Internet / No SIM Needed):</b>
+      <ul>
+        <li><b>WiFi Beacon SSID:</b> ESP32-S3 broadcasts a raw AP SSID string like <code>"SOS_TRAPPED_VICTIM_LOC_LAT12.9_LON80.1"</code> readable by any nearby smartphone within 30m without password/pairing.</li>
+        <li><b>BLE Eddystone:</b> Transmits BLE Eddystone telemetry packets (10–15m radius) for passive reception by nearby BLE devices.</li>
+        <li><b>ESP-NOW Mesh Relay:</b> Multi-hop 2.4GHz peer-to-peer RF relay reaching up to 200m+ to neighbor nodes without a router.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="schematic-card">
++-----------------------------------------------------------------------------------+
+|                        SIM800L GSM MODULE POWER & WIRING                          |
++-----------------------------------------------------------------------------------+
+|  [LM2596 BUCK #2]        [1000µF CAPACITOR]               [SIM800L MODULE]        |
+|   4.0V OUT  ===========> (+) Positive Lead ============> VCC (3.4V - 4.4V)     |
+|   GND OUT   ===========> (-) Negative Lead ============> GND                      |
+|                                                                                   |
+|  [ESP32-S3 GPIO]                                          [SIM800L SERIAL]        |
+|   GPIO26 (RX) <========================================= TXD                      |
+|   GPIO27 (TX) =========================================> RXD                      |
++-----------------------------------------------------------------------------------+
+|  CRITICAL: 1000µF capacitor absorbs 2A peak current bursts during GSM transmit!  |
++-----------------------------------------------------------------------------------+
+  </div>
+
+
+  <!-- ==================== SECTION 5 ==================== -->
+  <h2>5. Real-World Execution Architecture & Response Pipeline</h2>
+
+  <div class="schematic-card">
++-----------------------------------------------------------------------------------+
+|                         FOUR-LAYER PIPELINE ARCHITECTURE                          |
++-----------------------------------------------------------------------------------+
+|  ① DETECT LAYER    : LD2410C Radar + IR x2 + SW-420 x2 + GPS + CCTV Camera         |
+|         |                                                                         |
+|         v (Signals sent to Coordinator)                                           |
+|  ② PROCESS LAYER   : ESP32-S3 (Fusion Logic) <==MQTT Serial==> RPi Zero 2W (YOLOv8) |
+|         |                                                                         |
+|         v (Threat Confirmed <500ms)                                               |
+|  ③ RESPOND LAYER   : 2-Ch Relay --> 12V Solenoid Door Locked (<3s) + MicroSD Log    |
+|         |                                                                         |
+|         v (Simultaneous Dispatch)                                                 |
+|  ④ SOS ALERT LAYER : SIM800L GSM SMS + WiFi Beacon + BLE Eddystone + ESP-NOW Mesh |
++-----------------------------------------------------------------------------------+
+  </div>
+
+
+  <!-- ==================== SECTION 6 ==================== -->
+  <h2>6. External Examiner (Viva) Brainstorming Questions & Answers</h2>
+
+  <div class="qa-card">
+    <div class="qa-number">Question 1</div>
+    <div class="qa-question">Why did you use mmWave radar instead of PIR motion sensors?</div>
+    <div class="qa-answer">
+      <b>Answer:</b> PIR (Passive Infrared) sensors only detect ambient infrared changes caused by a <i>moving</i> body. If an intruder stands still, freezes, or hides behind furniture, PIR fails completely. mmWave radar (LD2410C) uses 24GHz FMCW radio waves to detect micro-Doppler chest movements (3–5mm) caused by human breathing, allowing us to detect stationary intruders through light obstacles.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-number">Question 2</div>
+    <div class="qa-question">How does your system handle power failure or intentional wire cutting by an intruder?</div>
+    <div class="qa-answer">
+      <b>Answer:</b> TRAPNET incorporates a dual-rail power resilience architecture. Main power is supplied via a 12V 2A DC adapter. If the main wire is cut, a dual 18650 Li-Ion battery pack (7.4V) with a TP4056 protection module automatically maintains system power for 4 to 6 hours. Furthermore, cellular GSM, local MicroSD logging, and local WiFi/BLE/ESP-NOW alerts operate 100% offline without requiring internet infrastructure.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-number">Question 3</div>
+    <div class="qa-question">How do you prevent false positives (e.g. pets, passing trucks) from accidentally locking the door?</div>
+    <div class="qa-answer">
+      <b>Answer:</b> We implement <b>Multi-Sensor Data Fusion</b> across 3 criteria:
+      <ol>
+        <li><b>Radar Energy Gate:</b> mmWave static energy must exceed Gate Energy > 40.</li>
+        <li><b>Vibration Pulse Counting:</b> SW-420 vibration sensor must register >15 impulses within a 500ms sliding window (ignoring single isolated truck shocks).</li>
+        <li><b>Vision AI Secondary Confirmation:</b> On Version 2, Raspberry Pi Zero 2W runs YOLOv8 person detection over camera frames. The door lock actuates only when both radar and vision AI confirm human presence.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-number">Question 4</div>
+    <div class="qa-question">Why do you need both an ESP32-S3 and a Raspberry Pi Zero 2W?</div>
+    <div class="qa-answer">
+      <b>Answer:</b> This is an edge-distributed architecture. The <b>ESP32-S3</b> is a hard real-time microcontroller responsible for low-latency sensor readings, relay switching (<3s), and multi-protocol radio alerts (WiFi/BLE/ESP-NOW). The <b>Raspberry Pi Zero 2W</b> is an application processor dedicated to computer vision tasks (OpenCV + YOLOv8 inference). Decoupling these ensures that computer vision processing delays never freeze the critical safety and lock actuation pipeline.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-number">Question 5</div>
+    <div class="qa-question">Why did you use a separate LM2596 buck converter for the SIM800L GSM module?</div>
+    <div class="qa-answer">
+      <b>Answer:</b> The SIM800L module operates strictly between 3.4V and 4.4V (4.0V optimal) and draws short peak current spikes up to <b>2 Amperes</b> during GSM network transmission bursts. Powering SIM800L from the ESP32's 3.3V or 5V line would cause severe voltage sags, causing the ESP32 to brownout and reset. A dedicated LM2596 buck converter set to 4.0V with a 1000µF electrolytic capacitor guarantees supply stability.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-number">Question 6</div>
+    <div class="qa-question">What is the safety mechanism in case an authorized person is accidentally trapped inside?</div>
+    <div class="qa-answer">
+      <b>Answer:</b> The solenoid door lock is fail-secure via a 2-channel relay. An authorized user can disarm the system using a disarm passcode sent via SMS to the SIM800L module, or through an emergency physical mechanical override key on the inside of the door lock.
+    </div>
+  </div>
+
+  <footer>
+    TRAPNET — Intelligent Security &amp; Alert System | Final Year Project Viva Guide
+  </footer>
+</div>
+
+</body>
+</html>

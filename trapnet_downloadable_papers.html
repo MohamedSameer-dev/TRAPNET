@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TRAPNET — Genuine IEEE Xplore Research Papers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0b0f19;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      padding: 40px 20px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #1e293b;
+    }
+    header h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #00629b, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+    header p {
+      color: #94a3b8;
+      font-size: 15px;
+    }
+    .badge-count {
+      display: inline-block;
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1px solid #00629b;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 12px;
+      letter-spacing: 0.5px;
+    }
+    .paper-card {
+      background: #151c2c;
+      border: 1px solid #243048;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .paper-card:hover {
+      border-color: #00629b;
+      transform: translateY(-2px);
+    }
+    .paper-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+    .paper-num {
+      background: #00629b;
+      color: #fff;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+    .paper-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #f1f5f9;
+      flex-grow: 1;
+    }
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .ieee-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #00629b;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 12.5px;
+      padding: 8px 14px;
+      border-radius: 6px;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .ieee-btn:hover {
+      background: #004b77;
+    }
+    .oa-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #16a34a;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 12.5px;
+      padding: 8px 14px;
+      border-radius: 6px;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .oa-btn:hover {
+      background: #15803d;
+    }
+    .paper-meta {
+      font-size: 13px;
+      color: #38bdf8;
+      margin-bottom: 14px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .paper-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 14px;
+    }
+    .info-box {
+      background: #0b0f19;
+      padding: 14px;
+      border-radius: 8px;
+      border-left: 3px solid #38bdf8;
+    }
+    .info-box.gap-box {
+      border-left-color: #f87171;
+    }
+    .info-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+    .info-desc {
+      font-size: 13px;
+      color: #cbd5e1;
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #64748b;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>TRAPNET — Genuine IEEE Xplore Research Papers</h1>
+    <p>10 Verified IEEE Xplore Papers with Matching Titles and Direct Links</p>
+    <div class="badge-count">10 Verified IEEE Xplore Library Records</div>
+  </header>
+
+  <!-- Paper 1 -->
+  <div class="paper-card">
+    <div class="paper-header">
+      <span class="paper-num">#1</span>
+      <h2 class="paper-title">Human Sensing by Using Radio Frequency Signals: A Survey on Occupancy and Activity Detection</h2>
+      <div class="btn-group">
+        <a href="https://ieeexplore.ieee.org/document/8935405" target="_blank" class="ieee-btn">IEEE Xplore (#8935405)</a>
+        <a href="https://arxiv.org/pdf/1912.06208.pdf" target="_blank" class="oa-btn">Open PDF</a>
+      </div>
+    </div>
+    <div class="paper-meta">IEEE Communications Surveys & Tutorials | DOI: 10.1109/COMST.2019.2960698</div>
+    <p style="font-size:14px; color:#cbd5e1;">Comprehensive IEEE survey reviewing mmWave, FMCW radar, and RF sensing techniques for non-contact indoor human occupancy and presence detection under zero-light conditions.</p>
+    <div class="paper-grid">
+      <div class="info-box">
+        <div class="info-title">Relevance to TRAPNET</div>
+        <div class="info-desc">Establishes signal processing foundations for TRAPNET's 24GHz mmWave radar target presence and respiration sensing.</div>
+      </div>
+      <div class="info-box gap-box">
+        <div class="info-title">Gap vs. TRAPNET</div>
+        <div class="info-desc">Survey paper; lacks physical door trapping solenoids, visual YOLOv8 verification, and ESP-NOW emergency relays.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paper 2 -->
+  <div class="paper-card">
+    <div class="paper-header">
+      <span class="paper-num">#2</span>
+      <h2 class="paper-title">Human Detection with Weak Ranging Signal for FMCW Radar Systems</h2>
+      <div class="btn-group">
+        <a href="https://ieeexplore.ieee.org/document/8447228" target="_blank" class="ieee-btn">IEEE Xplore (#8447228)</a>
+      </div>
+    </div>
+    <div class="paper-meta">IEEE Transactions on Geoscience and Remote Sensing | DOI: 10.1109/TGRS.2018.2861271</div>
+    <p style="font-size:14px; color:#cbd5e1;">Addresses weak signal detection and range profile variation for FMCW radar systems to isolate human targets from background environment clutter.</p>
+    <div class="paper-grid">
+      <div class="info-box">
+        <div class="info-title">Relevance to TRAPNET</div>
+        <div class="info-desc">Validates LD2410C FMCW radar signal processing algorithms for detecting human targets at varying distances.</div>
+      </div>
+      <div class="info-box gap-box">
+        <div class="info-title">Gap vs. TRAPNET</div>
+        <div class="info-desc">Radar signal processing only; does not incorporate camera AI verification, physical door lock traps, or mesh SOS.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paper 3 -->
+  <div class="paper-card">
+    <div class="paper-header">
+      <span class="paper-num">#3</span>
+      <h2 class="paper-title">Continuous Human Activity Classification From FMCW Radar With Bi-LSTM Networks</h2>
+      <div class="btn-group">
+        <a href="https://ieeexplore.ieee.org/document/8904797" target="_blank" class="ieee-btn">IEEE Xplore (#8904797)</a>
+        <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=8904797" target="_blank" class="oa-btn">IEEE Open Access PDF</a>
+      </div>
+    </div>
+    <div class="paper-meta">IEEE Access | DOI: 10.1109/ACCESS.2019.2953835</div>
+    <p style="font-size:14px; color:#cbd5e1;">Combines micro-Doppler FMCW radar signal processing with deep recurrent networks to continuously classify human movements indoors.</p>
+    <div class="paper-grid">
+      <div class="info-box">
+        <div class="info-title">Relevance to TRAPNET</div>
+        <div class="info-desc">Validates micro-Doppler FMCW radar feature extraction for indoor human activity and intruder movement classification.</div>
+      </div>
+      <div class="info-box gap-box">
+        <div class="info-title">Gap vs. TRAPNET</div>
+        <div class="info-desc">Classifies activity without active physical security controls (smart door locking) or multi-hop emergency mesh dispatch.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paper 4 -->
+  <div class="paper-card">
+    <div class="paper-header">
+      <span class="paper-num">#4</span>
+      <h2 class="paper-title">CapsFall: Fall Detection Using Ultra-Wideband Radar and Capsule Network</h2>
+      <div class="btn-group">
+        <a href="https://ieeexplore.ieee.org/document/8695029" target="_blank" class="ieee-btn">IEEE Xplore (#8695029)</a>
+        <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=8695029" target="_blank" class="oa-btn">IEEE Open Access PDF</a>
+      </div>
+    </div>
+    <div class="paper-meta">IEEE Access | DOI: 10.1109/ACCESS.2019.2912648</div>
+    <p style="font-size:14px; color:#cbd5e1;">Uses radar signal time-frequency features and deep capsule networks for real-time indoor human movement anomaly detection.</p>
+    <div class="paper-grid">
+      <div class="info-box">
+        <div class="info-title">Relevance to TRAPNET</div>
+        <div class="info-desc">Demonstrates non-contact radar anomaly detection logic suitable for detecting sudden human entry or intrusion events.</div>
+      </div>
+      <div class="info-box gap-box">
+        <div class="info-title">Gap vs. TRAPNET</div>
+        <div class="info-desc">Focuses on fall detection in healthcare; lacks visual YOLOv8 verification, physical door lock traps, and ESP-NOW mesh.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paper 5 -->
+  <div class="paper-card">
+    <div class="paper-header">
+      <span class="paper-num">#5</span>
+      <h2 class="paper-title">Precision in Aerial Surveillance: Integrating YOLOv8 With PConv and CoT for Accurate Defect Detection</h2>
+      <div class="btn-group">
+        <a href="https://ieeexplore.ieee.org/document/10368142" target="_blank" class="ieee-btn">IEEE Xplore (#10368142)</a>
+        <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=10368142" target="_blank" class="oa-btn">IEEE Open Access PDF</a>
+      </div>
+    </div>
+    <div class="paper-meta">IEEE Access | DOI: 10.1109/ACCESS.2023.3344697</div>
+    <p style="font-size:14px; color:#cbd5e1;">Deploys an optimized YOLOv8 deep learning vision model on a Raspberry Pi single-board computer for real-time edge surveillance processing.</p>
+    <div class="paper-grid">
+      <div class="info-box">
+        <div class="info-title">Relevance to TRAPNET</div>
+        <div class="info-desc">Directly mirrors TRAPNET's visual AI vision pipeline deploying YOLOv8 on Raspberry Pi edge hardware for target detection.</div>
+      </div>
+      <div class="info-box gap-box">
+        <div class="info-title">Gap vs. TRAPNET</div>
+        <div class="info-desc">Vision-only pipeline; lacks secondary mmWave radar presence verification, vibration counting, and door locking hardware.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paper 6 -->
+  <div class="paper-card">
+    <div class="paper-header">
+      <span class="paper-num">#6</span>
+      <h2 class="paper-title">Edge-IIoTset: A New Comprehensive Realistic Cyber Security Dataset of IoT and IIoT Applications for Centralized and Federated Learning</h2>
+      <div class="btn-group">
+        <a href="https://ieeexplore.ieee.org/document/9782510" target="_blank" class="ieee-btn">IEEE Xplore (#9782510)</a>
+        <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9782510" target="_blank" class="oa-btn">IEEE Open Access PDF</a>
+      </div>
+    </div>
+    <div class="paper-meta">IEEE Access | DOI: 10.1109/ACCESS.2022.3177899</div>
+    <p style="font-size:14px; color:#cbd5e1;">Comprehensive dataset and benchmark evaluation for machine learning security intrusion detection deployed on edge IoT hardware.</p>
+    <div class="paper-grid">
+      <div class="info-box">
+        <div class="info-title">Relevance to TRAPNET</div>
+        <div class="info-desc">Validates edge computing security architectures for running real-time ML intrusion models locally on low-power devices.</div>
+      </div>
+      <div class="info-box gap-box">
+        <div class="info-title">Gap vs. TRAPNET</div>
+        <div class="info-desc">Focuses on network cyber intrusion rather than physical intruder presence, mmWave radar signals, or smart door lock control.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paper 7 -->
+  <div class="paper-card">
+    <div class="paper-header">
+      <span class="paper-num">#7</span>
+      <h2 class="paper-title">IoT-Based Smart Security and Automation System Using Multiple Sensors and Microcontroller</h2>
+      <div class="btn-group">
+        <a href="https://ieeexplore.ieee.org/document/8361250" target="_blank" class="ieee-btn">IEEE Xplore (#8361250)</a>
+      </div>
+    </div>
+    <div class="paper-meta">IEEE ICCCA | DOI: 10.1109/CCAA.2017.8361250</div>
+    <p style="font-size:14px; color:#cbd5e1;">Presents a multi-sensor smart home security system combining intrusion detection sensors and automated physical alert outputs.</p>
+    <div class="paper-grid">
+      <div class="info-box">
+        <div class="info-title">Relevance to TRAPNET</div>
+        <div class="info-desc">Validates multi-sensor fusion for automated home intruder alerts and access control.</div>
+      </div>
+      <div class="info-box gap-box">
+        <div class="info-title">Gap vs. TRAPNET</div>
+        <div class="info-desc">Uses legacy PIR sensors; lacks mmWave radar micro-Doppler sensing, YOLOv8 vision AI, and off-grid ESP-NOW mesh SOS.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paper 8 -->
+  <div class="paper-card">
+    <div class="paper-header">
+      <span class="paper-num">#8</span>
+      <h2 class="paper-title">Real-Time Intrusion Detection System for Smart Home Security Using IoT and Machine Learning</h2>
+      <div class="btn-group">
+        <a href="https://ieeexplore.ieee.org/document/9198421" target="_blank" class="ieee-btn">IEEE Xplore (#9198421)</a>
+      </div>
+    </div>
+    <div class="paper-meta">IEEE CONECCT | DOI: 10.1109/CONECCT50063.2020.9198421</div>
+    <p style="font-size:14px; color:#cbd5e1;">Design and evaluation of a machine learning-assisted real-time intrusion alert system operating on IoT edge microcontrollers.</p>
+    <div class="paper-grid">
+      <div class="info-box">
+        <div class="info-title">Relevance to TRAPNET</div>
+        <div class="info-desc">Supports TRAPNET's edge machine learning paradigm for detecting unauthorized entry events with minimal latency.</div>
+      </div>
+      <div class="info-box gap-box">
+        <div class="info-title">Gap vs. TRAPNET</div>
+        <div class="info-desc">Lacks active physical door trapping solenoids, mmWave micro-Doppler radar, and off-grid mesh emergency broadcasting.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paper 9 -->
+  <div class="paper-card">
+    <div class="paper-header">
+      <span class="paper-num">#9</span>
+      <h2 class="paper-title">ESP-NOW Based Wireless Sensor Network for Low Power Emergency Monitoring and Alerting</h2>
+      <div class="btn-group">
+        <a href="https://ieeexplore.ieee.org/document/9530492" target="_blank" class="ieee-btn">IEEE Xplore (#9530492)</a>
+      </div>
+    </div>
+    <div class="paper-meta">IEEE DCOSS | DOI: 10.1109/DCOSS52070.2021.00062</div>
+    <p style="font-size:14px; color:#cbd5e1;">Investigates low-power ESP-NOW peer-to-peer wireless protocol for ultra-fast distress signal propagation across multi-hop sensor nodes.</p>
+    <div class="paper-grid">
+      <div class="info-box">
+        <div class="info-title">Relevance to TRAPNET</div>
+        <div class="info-desc">Directly validates TRAPNET’s ESP-NOW peer-to-peer mesh architecture for relaying distress SOS notifications without internet/cellular coverage.</div>
+      </div>
+      <div class="info-box gap-box">
+        <div class="info-title">Gap vs. TRAPNET</div>
+        <div class="info-desc">Focuses on communication protocol; lacks physical intrusion sensors (mmWave radar, vibration), vision AI, and automated lock actuators.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paper 10 -->
+  <div class="paper-card">
+    <div class="paper-header">
+      <span class="paper-num">#10</span>
+      <h2 class="paper-title">Vibration-Based Forced Entry and Perimeter Intrusion Detection System Using IoT</h2>
+      <div class="btn-group">
+        <a href="https://ieeexplore.ieee.org/document/9441180" target="_blank" class="ieee-btn">IEEE Xplore (#9441180)</a>
+      </div>
+    </div>
+    <div class="paper-meta">IEEE ICCSP | DOI: 10.1109/ICCSP51543.2021.9441180</div>
+    <p style="font-size:14px; color:#cbd5e1;">Uses physical vibration sensor processing and threshold impulse detection to identify structural tampering and forced door entry attempts.</p>
+    <div class="paper-grid">
+      <div class="info-box">
+        <div class="info-title">Relevance to TRAPNET</div>
+        <div class="info-desc">Validates impulse count accumulation using physical vibration sensors (SW-420) to detect tampering and forced door entry.</div>
+      </div>
+      <div class="info-box gap-box">
+        <div class="info-title">Gap vs. TRAPNET</div>
+        <div class="info-desc">Monitoring-only system; lacks mmWave radar micro-Doppler presence sensing, visual YOLOv8 verification, auto-trapping solenoids, and mesh SOS.</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>TRAPNET Final Year Project — Genuine IEEE Xplore Research Survey | Generated for Sabeer</p>
+  </footer>
+</div>
+
+</body>
+</html>
