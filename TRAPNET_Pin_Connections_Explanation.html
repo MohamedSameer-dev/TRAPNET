@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRAPNET — Hardware Pin Connections & Wiring Specification Guide</title>
+<style>
+  :root {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-card: #182234;
+    --accent-red: #ef4444;
+    --accent-blue: #3b82f6;
+    --accent-green: #10b981;
+    --accent-amber: #f59e0b;
+    --accent-purple: #8b5cf6;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-color: #334155;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-main);
+    line-height: 1.6;
+    padding-bottom: 60px;
+  }
+
+  /* Header Section */
+  .header {
+    background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+    border-bottom: 2px solid var(--accent-red);
+    padding: 40px 5%;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  .header h1 {
+    font-size: 2.2rem;
+    color: #ffffff;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .header p {
+    font-size: 1rem;
+    color: var(--text-muted);
+    max-width: 800px;
+    margin: 0 auto 15px auto;
+  }
+  .header .badge-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--border-color);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    color: #cbd5e1;
+    font-weight: 600;
+  }
+  .badge-red { border-color: var(--accent-red); color: #fca5a5; }
+  .badge-blue { border-color: var(--accent-blue); color: #93c5fd; }
+  .badge-green { border-color: var(--accent-green); color: #6ee7b7; }
+
+  /* Main Container */
+  .container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+  }
+
+  /* Filter Bar */
+  .search-box {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    padding: 14px 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+  .search-box input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 1rem;
+    width: 100%;
+  }
+  .search-box label {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  /* Section Styling */
+  .section-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 30px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+  }
+  .section-card h2 {
+    font-size: 1.4rem;
+    color: #fff;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-card h3 {
+    font-size: 1.15rem;
+    color: var(--accent-blue);
+    margin: 22px 0 12px 0;
+  }
+
+  /* Tables */
+  table.pin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    font-size: 0.9rem;
+  }
+  table.pin-table th {
+    background: #1e293b;
+    color: #f1f5f9;
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 2px solid var(--border-color);
+    font-weight: 600;
+  }
+  table.pin-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #273549;
+    color: #cbd5e1;
+  }
+  table.pin-table tr:hover td {
+    background: rgba(59, 130, 246, 0.08);
+  }
+  .pin-name {
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
+    font-weight: bold;
+    color: #38bdf8;
+  }
+  .wire-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .wire-red { background: #7f1d1d; color: #fca5a5; border: 1px solid #ef4444; }
+  .wire-black { background: #1e293b; color: #cbd5e1; border: 1px solid #475569; }
+  .wire-green { background: #064e3b; color: #6ee7b7; border: 1px solid #10b981; }
+  .wire-yellow { background: #78350f; color: #fde047; border: 1px solid #eab308; }
+  .wire-blue { background: #1e3a8a; color: #93c5fd; border: 1px solid #3b82f6; }
+  .wire-orange { background: #7c2d12; color: #fdba74; border: 1px solid #f97316; }
+  .wire-white { background: #334155; color: #f8fafc; border: 1px solid #94a3b8; }
+
+  /* Schematics & Code Boxes */
+  .schematic-box {
+    background: #090d16;
+    border: 1px solid #1e293b;
+    border-left: 4px solid var(--accent-blue);
+    padding: 16px 20px;
+    border-radius: 8px;
+    font-family: 'Cascadia Code', 'Fira Code', 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: #38bdf8;
+    white-space: pre;
+    overflow-x: auto;
+    margin: 15px 0;
+    line-height: 1.4;
+  }
+
+  /* Callout Alerts */
+  .callout {
+    padding: 14px 18px;
+    border-radius: 8px;
+    margin: 16px 0;
+    font-size: 0.9rem;
+  }
+  .callout-warning {
+    background: rgba(245, 158, 11, 0.1);
+    border-left: 4px solid var(--accent-amber);
+    color: #fef08a;
+  }
+  .callout-danger {
+    background: rgba(239, 68, 68, 0.1);
+    border-left: 4px solid var(--accent-red);
+    color: #fca5a5;
+  }
+  .callout-info {
+    background: rgba(59, 130, 246, 0.1);
+    border-left: 4px solid var(--accent-blue);
+    color: #bfdbfe;
+  }
+
+  /* ESP32 Pinout Graphic Diagram */
+  .esp32-diagram {
+    display: grid;
+    grid-template-columns: 1fr 180px 1fr;
+    gap: 15px;
+    align-items: center;
+    background: #090d16;
+    border: 1px solid var(--border-color);
+    padding: 25px;
+    border-radius: 12px;
+    margin: 20px 0;
+  }
+  .esp32-chip {
+    background: #1e293b;
+    border: 2px solid #475569;
+    border-radius: 8px;
+    padding: 20px 10px;
+    text-align: center;
+    font-weight: bold;
+    color: #f8fafc;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+  }
+  .pin-list { list-style: none; }
+  .pin-list li {
+    font-size: 0.78rem;
+    font-family: monospace;
+    padding: 3px 6px;
+    margin: 3px 0;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .pin-left li { background: rgba(59, 130, 246, 0.12); color: #93c5fd; }
+  .pin-right li { background: rgba(16, 185, 129, 0.12); color: #6ee7b7; text-align: right; }
+
+  /* Print Styles */
+  @media print {
+    body { background: #fff; color: #000; }
+    .section-card { background: #fff; border: 1px solid #ccc; color: #000; box-shadow: none; }
+    .schematic-box { background: #f8f9fa; color: #000; border: 1px solid #ccc; }
+    .search-box { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⚡ TRAPNET Hardware Pin Connection &amp; Wiring Specifications</h1>
+  <p>Comprehensive Single Source of Truth for ESP32 DevKit V1, Raspberry Pi Zero 2W, Sensors, Actuators, and Power Rails</p>
+  <div class="badge-container">
+    <span class="badge badge-red">ESP32 DevKit V1 (30-Pin)</span>
+    <span class="badge badge-blue">Raspberry Pi Zero 2W</span>
+    <span class="badge badge-green">HLK-LD2410C 24GHz mmWave</span>
+    <span class="badge">SIM800L GSM</span>
+    <span class="badge">Dual Buck PSU (5V / 4.1V)</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Search Filter Bar -->
+  <div class="search-box">
+    <label for="pinSearch">🔍 Filter Pin Connections:</label>
+    <input type="text" id="pinSearch" placeholder="Type pin name (e.g. GPIO34, GPIO16, SIM800L, Radar, Solenoid)..." onkeyup="filterPins()">
+  </div>
+
+  <!-- SECTION 1: MASTER GPIO MAP TABLE -->
+  <div class="section-card">
+    <h2>📌 1. Master GPIO Pin Allocation Map (ESP32 DevKit V1)</h2>
+    <p>This table defines the authoritative hardware assignments for the 30-pin ESP32 WROOM-32 development board. Every sensor, relay, communication module, and power rail is mapped below.</p>
+
+    <table class="pin-table" id="masterPinTable">
+      <thead>
+        <tr>
+          <th>GPIO Pin</th>
+          <th>Direction</th>
+          <th>Connected Module &amp; Pin</th>
+          <th>Protocol / Signal</th>
+          <th>Wire Color</th>
+          <th>Electrical Specs &amp; Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="pin-name">GPIO16 (RX2)</span></td>
+          <td>INPUT</td>
+          <td>HLK-LD2410C Radar → <strong>TX</strong></td>
+          <td>UART2 RX</td>
+          <td><span class="wire-badge wire-green">Green</span></td>
+          <td>Receives 24GHz target energy &amp; breathing data @ 256,000 baud.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO17 (TX2)</span></td>
+          <td>OUTPUT</td>
+          <td>HLK-LD2410C Radar → <strong>RX</strong></td>
+          <td>UART2 TX</td>
+          <td><span class="wire-badge wire-yellow">Yellow</span></td>
+          <td>Transmits radar sensitivity &amp; gate configuration commands.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO26</span></td>
+          <td>INPUT</td>
+          <td>SIM800L GSM Module → <strong>TX</strong></td>
+          <td>UART1 SoftSerial RX</td>
+          <td><span class="wire-badge wire-blue">Blue</span></td>
+          <td>Incoming GSM network responses &amp; SMS status @ 9,600 baud.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO27</span></td>
+          <td>OUTPUT</td>
+          <td>SIM800L GSM Module → <strong>RX</strong></td>
+          <td>UART1 SoftSerial TX</td>
+          <td><span class="wire-badge wire-orange">Orange</span></td>
+          <td>Outgoing AT commands for SMS alert dispatch &amp; telemetry.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO32</span></td>
+          <td>OUTPUT</td>
+          <td>2-Channel Relay → <strong>IN1</strong></td>
+          <td>Active-LOW Digital</td>
+          <td><span class="wire-badge wire-yellow">Yellow</span></td>
+          <td>Drives 12V Solenoid Lock relay channel. LOW = LOCK DEADBOLT.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO33</span></td>
+          <td>OUTPUT</td>
+          <td>2-Channel Relay → <strong>IN2</strong></td>
+          <td>Active-LOW Digital</td>
+          <td><span class="wire-badge wire-orange">Orange</span></td>
+          <td>Drives 12V Aerosol Fog Machine relay channel. LOW = FIRE FOG.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO4</span></td>
+          <td>INPUT</td>
+          <td>IR Sensor #1 (Door) → <strong>OUT</strong></td>
+          <td>Digital Interrupt</td>
+          <td><span class="wire-badge wire-white">White</span></td>
+          <td>Perimeter door contact beam. LOW = Beam Broken (Door Open).</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO13</span></td>
+          <td>INPUT</td>
+          <td>IR Sensor #2 (Window) → <strong>OUT</strong></td>
+          <td>Digital Interrupt</td>
+          <td><span class="wire-badge wire-white">White</span></td>
+          <td>Perimeter window tripwire beam. LOW = Beam Broken.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO34</span></td>
+          <td>INPUT ONLY</td>
+          <td>SW-420 #1 Vibration → <strong>OUT</strong></td>
+          <td>Digital IN</td>
+          <td><span class="wire-badge wire-green">Green</span></td>
+          <td>Safe/Locker vibration sensor. ⚠️ Requires external 10kΩ pull-down to GND.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO39 (SVN)</span></td>
+          <td>INPUT ONLY</td>
+          <td>SW-420 #2 Vibration → <strong>OUT</strong></td>
+          <td>Digital IN</td>
+          <td><span class="wire-badge wire-green">Green</span></td>
+          <td>Wall drilling vibration sensor. ⚠️ Requires external 10kΩ pull-down to GND.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO35</span></td>
+          <td>INPUT ONLY</td>
+          <td>NEO-6M GPS Module → <strong>TX</strong></td>
+          <td>SoftSerial RX</td>
+          <td><span class="wire-badge wire-blue">Blue</span></td>
+          <td>Incoming GPS NMEA location sentence stream @ 9,600 baud.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO25</span></td>
+          <td>OUTPUT</td>
+          <td>NEO-6M GPS Module → <strong>RX</strong></td>
+          <td>SoftSerial TX</td>
+          <td><span class="wire-badge wire-yellow">Yellow</span></td>
+          <td>GPS module configuration commands.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO21 (SDA)</span></td>
+          <td>I/O BIDIR</td>
+          <td>0.96" OLED Display → <strong>SDA</strong></td>
+          <td>I2C Data</td>
+          <td><span class="wire-badge wire-blue">Blue</span></td>
+          <td>I2C Data line (shared with optional MLX90640 Thermal sensor @ 400kHz).</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO22 (SCL)</span></td>
+          <td>OUTPUT</td>
+          <td>0.96" OLED Display → <strong>SCL</strong></td>
+          <td>I2C Clock</td>
+          <td><span class="wire-badge wire-green">Green</span></td>
+          <td>I2C Clock line. Pull-up resistors integrated on display board.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO23 (MOSI)</span></td>
+          <td>OUTPUT</td>
+          <td>MicroSD Card Module → <strong>MOSI</strong></td>
+          <td>VSPI Master Out</td>
+          <td><span class="wire-badge wire-yellow">Yellow</span></td>
+          <td>SPI Data Out to SD Card logging memory.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO19 (MISO)</span></td>
+          <td>INPUT</td>
+          <td>MicroSD Card Module → <strong>MISO</strong></td>
+          <td>VSPI Master In</td>
+          <td><span class="wire-badge wire-green">Green</span></td>
+          <td>SPI Data In from SD Card.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO18 (CLK)</span></td>
+          <td>OUTPUT</td>
+          <td>MicroSD Card Module → <strong>SCK</strong></td>
+          <td>VSPI Clock</td>
+          <td><span class="wire-badge wire-orange">Orange</span></td>
+          <td>SPI Serial Clock signal line.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO5 (CS)</span></td>
+          <td>OUTPUT</td>
+          <td>MicroSD Card Module → <strong>CS</strong></td>
+          <td>VSPI Chip Select</td>
+          <td><span class="wire-badge wire-white">White</span></td>
+          <td>Chip Select pin for MicroSD card module (Active-LOW).</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO14</span></td>
+          <td>OUTPUT</td>
+          <td>Raspberry Pi Zero 2W → <strong>GPIO15 (RX)</strong></td>
+          <td>Hardware Serial TX</td>
+          <td><span class="wire-badge wire-yellow">Yellow</span></td>
+          <td>Sends sensor fusion status and heartbeat ping to Raspberry Pi.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO36 (SVP)</span></td>
+          <td>INPUT ONLY</td>
+          <td>Raspberry Pi Zero 2W → <strong>GPIO14 (TX)</strong></td>
+          <td>Hardware Serial RX</td>
+          <td><span class="wire-badge wire-green">Green</span></td>
+          <td>Receives YOLOv8 object detection score and SSIM tamper flag.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO15</span></td>
+          <td>INPUT</td>
+          <td>Manual Panic SOS Button</td>
+          <td>Digital Interrupt</td>
+          <td><span class="wire-badge wire-red">Red</span></td>
+          <td>Internal pull-up enabled. Pressing button connects GPIO15 to GND.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">VIN (5V)</span></td>
+          <td>POWER IN</td>
+          <td>LM2596 Buck #1 → <strong>5.0V OUT</strong></td>
+          <td>5V DC Main Rail</td>
+          <td><span class="wire-badge wire-red">Red</span></td>
+          <td>Powers ESP32 internal 3.3V LDO regulator. Supplying 5.0V DC.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GND</span></td>
+          <td>GROUND</td>
+          <td>Common Ground Bus Rail</td>
+          <td>System GND</td>
+          <td><span class="wire-badge wire-black">Black</span></td>
+          <td>Common reference ground connecting ALL module grounds together.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">3.3V</span></td>
+          <td>POWER OUT</td>
+          <td>Sensors (LD2410, IR, SW-420, OLED)</td>
+          <td>3.3V Regulated</td>
+          <td><span class="wire-badge wire-red">Red</span></td>
+          <td>Clean 3.3V supply from ESP32 onboard LDO for low-power sensors.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 2: HARDWARE MODULE WIRING SCHEMATICS -->
+  <div class="section-card">
+    <h2>🛠️ 2. Detailed Wire-by-Wire Connection Schematics</h2>
+
+    <h3>A. HLK-LD2410C 24GHz mmWave Radar → ESP32</h3>
+    <div class="schematic-box">
+HLK-LD2410C Radar Module                                 ESP32 DevKit V1 (WROOM-32)
+┌─────────────────────────┐                             ┌─────────────────────────┐
+│                         │                             │                         │
+│  VCC (5V)         ●─────┼────── [RED Wire] ───────────┼────── VIN (5.0V Rail)   │
+│  GND              ●─────┼────── [BLACK Wire] ─────────┼────── GND (Common Rail) │
+│  TX               ●─────┼────── [GREEN Wire] ─────────┼────── GPIO16 (RX2)      │
+│  RX               ●─────┼────── [YELLOW Wire] ────────┼────── GPIO17 (TX2)      │
+│  OUT (Digital)    ●     │   (Not connected — UART)    │                         │
+└─────────────────────────┘                             └─────────────────────────┘
+Baud Rate: 256,000 bps | Logic Level: 3.3V | Operating Distance: 0.75m to 6.0m
+    </div>
+
+    <h3>B. SIM800L GSM Emergency Module → ESP32 &amp; Power Buck Converter</h3>
+    <div class="schematic-box">
+LM2596 Buck #2 (4.0V Rail)        SIM800L GSM Module                  ESP32 DevKit V1
+┌─────────────────────────┐       ┌───────────────────┐               ┌─────────────────┐
+│ OUT+ (4.0V DC)    ●─────┼─[RED]─┼─ VCC              │               │                 │
+│ OUT- (GND)        ●─────┼─[BLK]─┼─ GND              │               │                 │
+└─────────────────────────┘       │                   │               │                 │
+                      │           │  TX  ●───[BLUE]───┼───────────────┼── GPIO26 (RX)   │
+           ┌──────┐   │           │  RX  ●───[ORG]────┼───────────────┼── GPIO27 (TX)   │
+ 1000µF    │ CAP  ├───┤           │                   │               │                 │
+ Decouple  │ 16V  ├───┘           │  RST ● (Unused)   │               │                 │
+           └──────┘               └───────────────────┘               └─────────────────┘
+⚠️ CRITICAL: 1000µF capacitor MUST be soldered across SIM800L VCC and GND to handle 2.0A peak bursts!
+⚠️ CRITICAL: Tune LM2596 #2 potentiometer to EXACTLY 4.0V DC before connecting SIM800L!
+    </div>
+
+    <h3>C. 2-Channel Relay Module → 12V Solenoid Lock &amp; Mini Fog Generator</h3>
+    <div class="schematic-box">
+ESP32 DevKit V1                 2-Ch Optocoupled Relay           12V PSU &amp; Actuators
+┌─────────────────┐             ┌────────────────────┐          ┌───────────────────────┐
+│ GPIO32 (Lock) ●─┼── [YELLOW] ─┼── IN1              │          │ +12V DC Supply Rail   │
+│ GPIO33 (Fog)  ●─┼── [ORANGE] ─┼── IN2              │          │                       │
+│ VIN (5V Power)●─┼── [RED] ────┼── VCC              │   ┌──────┼─ COM1 (Channel 1)     │
+│ GND (Ground)  ●─┼── [BLACK] ──┼── GND              │   │      │                       │
+└─────────────────┘             │                    │   │  ┌───┼─ NO1 ──► Solenoid (+) │
+                                │  COM2 ─────────────┼───┼──┘   │                       │
+                                │  NO2  ─────────────┼───┼──────┼──► Fog Machine (+)   │
+                                └────────────────────┘   │      └───────────────────────┘
+                                                         │        ┌───────────────┐
+                                                         └────────┤ 1N4007 Diode  ├─┐
+                                                                  └───────────────┘ │
+                                                                  (Across Solenoid) ┘
+⚠️ 1N4007 Flyback Diode: Cathode (silver stripe) to +12V, Anode to Solenoid Ground. Prevents 50V inductive kickback.
+    </div>
+
+    <h3>D. SW-420 Vibration Sensors &amp; IR Tripwires → ESP32</h3>
+    <div class="schematic-box">
+SW-420 Sensor #1 (Safe)                                 ESP32 DevKit V1
+┌─────────────────────────┐                             ┌─────────────────────────┐
+│ VCC (3.3V)        ●─────┼────── [RED Wire] ───────────┼────── 3.3V Rail         │
+│ GND               ●─────┼────── [BLACK Wire] ─────────┼────── GND Rail          │
+│ OUT               ●─────┼────── [GREEN Wire] ─────────┼──┬─── GPIO34 (Input-Only)│
+└─────────────────────────┘                             │  │                      │
+                                                        │  └─[10kΩ Resistor]─┐    │
+SW-420 Sensor #2 (Wall)                                 │                    │    │
+┌─────────────────────────┐                             │                    v    │
+│ OUT               ●─────┼────── [GREEN Wire] ─────────┼──┬─── GPIO39 (Input-Only)│
+└─────────────────────────┘                             │  │                      │
+                                                        │  └─[10kΩ Resistor]──GND │
+IR Sensor #1 (Door Contact)                             │                         │
+┌─────────────────────────┐                             │                         │
+│ OUT               ●─────┼────── [WHITE Wire] ─────────┼────── GPIO4             │
+└─────────────────────────┘                             └─────────────────────────┘
+    </div>
+
+    <h3>E. Raspberry Pi Zero 2W Edge-AI Interconnection</h3>
+    <div class="schematic-box">
+Raspberry Pi Zero 2W (YOLOv8)                           ESP32 DevKit V1 (Master)
+┌─────────────────────────┐                             ┌─────────────────────────┐
+│                         │                             │                         │
+│  GPIO14 (UART TX) ●─────┼────── [GREEN Wire] ─────────┼────── GPIO36 (RX)       │
+│  GPIO15 (UART RX) ●─────┼────── [YELLOW Wire] ────────┼────── GPIO14 (TX)       │
+│  GND              ●─────┼────── [BLACK Wire] ─────────┼────── GND (Common GND)  │
+│  5V Power Pin     ●─────┼────── [RED Wire] ───────────┼────── LM2596 #1 5.0V    │
+│                         │                             │                         │
+└─────────────────────────┘                             └─────────────────────────┘
+Baud Rate: 115,200 bps | Data Flow: RPi sends bounding box confidence &amp; SSIM camera tamper score.
+    </div>
+  </div>
+
+  <!-- SECTION 3: POWER DISTRIBUTION ARCHITECTURE -->
+  <div class="section-card">
+    <h2>🔋 3. Power Distribution &amp; Regulation Architecture</h2>
+    <p>TRAPNET incorporates a dual-rail power supply architecture featuring active mains regulation and an uninterrupted battery backup bank to guarantee 100% operational survival during grid power cuts or perpetrator wire-snipping attacks.</p>
+
+    <table class="pin-table">
+      <thead>
+        <tr>
+          <th>Power Rail / Module</th>
+          <th>Input Voltage</th>
+          <th>Output Voltage</th>
+          <th>Target Load / Devices Powered</th>
+          <th>Max Current Capacity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>12V DC Primary Adapter</strong></td>
+          <td>230V AC Mains</td>
+          <td>12.0V DC</td>
+          <td>Solenoid Lock, Fog Machine Relay, Buck Converters</td>
+          <td>5.0 Amperes (60 Watts)</td>
+        </tr>
+        <tr>
+          <td><strong>LM2596 Buck Converter #1</strong></td>
+          <td>12.0V DC Rail</td>
+          <td>5.0V DC (Adjusted)</td>
+          <td>ESP32 VIN, Raspberry Pi Zero 2W, MicroSD Card</td>
+          <td>3.0 Amperes Continuous</td>
+        </tr>
+        <tr>
+          <td><strong>LM2596 Buck Converter #2</strong></td>
+          <td>12.0V DC Rail</td>
+          <td>4.0V DC (Adjusted)</td>
+          <td>SIM800L GSM Module (Dedicated Rail)</td>
+          <td>3.0A (Handles 2.0A GSM Bursts)</td>
+        </tr>
+        <tr>
+          <td><strong>Dual 18650 Li-ion Bank</strong></td>
+          <td>3.7V Nominal / Cell</td>
+          <td>7.4V Series / Step</td>
+          <td>TP4056 Automatic UPS Failover Backup (4–6 Hours)</td>
+          <td>5200 mAh Total Capacity</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-warning">
+      <strong>⚠️ Power Tuning Protocol:</strong> Always disconnect load devices and measure output voltage with a digital multimeter while adjusting the LM2596 brass potentiometer screw before plugging in sensitive components. ESP32 VIN accepts up to 5.2V max; SIM800L VCC MUST be set between 3.8V and 4.2V (4.0V optimal).
+    </div>
+  </div>
+
+  <!-- SECTION 4: PIN SAFETY & BOOT STRAPPING WARNINGS -->
+  <div class="section-card">
+    <h2>⚠️ 4. ESP32 Pin Safety &amp; Boot Strapping Restrictions</h2>
+    <p>When designing and assembling ESP32 circuits, specific GPIO pins exhibit hardware restrictions during the power-on boot sequence. Misconfiguring these pins can prevent the microcontroller from booting.</p>
+
+    <table class="pin-table">
+      <thead>
+        <tr>
+          <th>GPIO Pin</th>
+          <th>Boot Strapping Behavior</th>
+          <th>Hardware Restriction / Configuration Rule</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="pin-name">GPIO0</span></td>
+          <td>Boot Mode Select</td>
+          <td>Must be HIGH during power-up for normal execution. Driven LOW for flashing mode.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO2</span></td>
+          <td>Onboard LED / Boot State</td>
+          <td>Must be left floating or pulled LOW during boot. Connected to blue onboard LED.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO12 (MTDI)</span></td>
+          <td>Flash Voltage Select</td>
+          <td>Must be LOW at boot. Pulling HIGH sets internal flash voltage to 1.8V instead of 3.3V, causing boot crash.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO15 (MTDO)</span></td>
+          <td>SDIO Slave Select</td>
+          <td>Must be HIGH at boot. Used for Panic Button with internal pull-up enabled.</td>
+        </tr>
+        <tr>
+          <td><span class="pin-name">GPIO34, 35, 36, 39</span></td>
+          <td>Input Only Pins</td>
+          <td>Cannot be used as outputs! Have no internal pull-up/pull-down resistors. Require external 10kΩ pull-down for vibration sensing.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+  function filterPins() {
+    let input = document.getElementById("pinSearch").value.toUpperCase();
+    let table = document.getElementById("masterPinTable");
+    let tr = table.getElementsByTagName("tr");
+
+    for (let i = 1; i < tr.length; i++) {
+      let textContent = tr[i].textContent || tr[i].innerText;
+      if (textContent.toUpperCase().indexOf(input) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+</script>
+
+</body>
+</html>

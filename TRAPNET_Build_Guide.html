@@ -1,0 +1,2756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRAPNET — Complete Real-World Build & Implementation Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ═══════════════════ RESET & BASE ═══════════════════ */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ═══════════════════ STICKY HEADER ═══════════════════ */
+  .top-bar {
+    position: sticky; top: 0; z-index: 100;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    padding: 14px 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    border-bottom: 3px solid #e94560;
+  }
+  .top-bar h1 {
+    font-size: 22px; font-weight: 900; color: #ffffff;
+    letter-spacing: 2px;
+  }
+  .top-bar h1 span { color: #e94560; }
+  .top-bar .subtitle {
+    font-size: 12px; color: #a0aec0; font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  .top-bar .badge-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .top-badge {
+    display: inline-block; padding: 3px 10px; border-radius: 4px;
+    font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .tb-red { background: rgba(233,69,96,0.2); color: #e94560; border: 1px solid #e94560; }
+  .tb-blue { background: rgba(15,52,96,0.4); color: #60a5fa; border: 1px solid #3b82f6; }
+  .tb-green { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid #10b981; }
+
+  /* ═══════════════════ HERO BANNER ═══════════════════ */
+  .hero {
+    background: linear-gradient(135deg, #1a1a2e, #16213e 60%, #0f3460);
+    color: #ffffff;
+    padding: 60px 40px 50px;
+    text-align: center;
+  }
+  .hero h2 {
+    font-size: 36px; font-weight: 900; letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .hero h2 span { color: #e94560; }
+  .hero p {
+    font-size: 16px; color: #cbd5e1; max-width: 800px;
+    margin: 0 auto 20px;
+  }
+  .hero .meta-line {
+    font-size: 13px; color: #64748b;
+  }
+
+  /* ═══════════════════ LAYOUT ═══════════════════ */
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 30px; }
+
+  /* ═══════════════════ TABLE OF CONTENTS ═══════════════════ */
+  .toc-wrapper {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    margin: 30px auto;
+    max-width: 1000px;
+    padding: 30px 40px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  }
+  .toc-wrapper h3 {
+    font-size: 18px; font-weight: 800; color: #1a1a2e;
+    border-bottom: 3px solid #e94560;
+    padding-bottom: 10px; margin-bottom: 18px;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 40px;
+  }
+  .toc-item {
+    display: flex; align-items: baseline; gap: 10px;
+    padding: 6px 0;
+  }
+  .toc-num {
+    background: #1a1a2e; color: #ffffff;
+    min-width: 28px; height: 28px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 6px; font-size: 12px; font-weight: 800;
+  }
+  .toc-item a {
+    color: #1a1a2e; text-decoration: none;
+    font-size: 14px; font-weight: 600;
+    transition: color 0.2s;
+  }
+  .toc-item a:hover { color: #e94560; }
+
+  /* ═══════════════════ SECTIONS ═══════════════════ */
+  .section {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    margin: 24px 0;
+    padding: 36px 40px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  }
+  .section-dark {
+    background: #1a1a2e; color: #e2e8f0;
+    border-color: #334155;
+  }
+  .section-dark h2, .section-dark h3, .section-dark h4 { color: #ffffff; }
+  .section-dark p, .section-dark li { color: #cbd5e1; }
+  .section-dark td { color: #cbd5e1; border-color: #334155; }
+  .section-dark tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+
+  .section h2 {
+    font-size: 24px; font-weight: 900; color: #1a1a2e;
+    border-left: 5px solid #e94560;
+    padding-left: 16px; margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section h2 .sec-num {
+    background: #e94560; color: #fff;
+    width: 36px; height: 36px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 8px; font-size: 16px; font-weight: 900;
+  }
+  .section h3 {
+    font-size: 17px; font-weight: 700; color: #16213e;
+    margin: 28px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #f1f5f9;
+  }
+  .section h4 {
+    font-size: 15px; font-weight: 700; color: #334155;
+    margin: 18px 0 8px;
+  }
+  .section p { margin-bottom: 12px; color: #334155; }
+  .section ul, .section ol { padding-left: 24px; margin-bottom: 14px; }
+  .section li { margin-bottom: 6px; color: #334155; }
+
+  /* ═══════════════════ CODE BLOCKS ═══════════════════ */
+  pre {
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 20px 24px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 14px 0;
+    border: 1px solid #1e293b;
+    position: relative;
+  }
+  pre .lang-tag {
+    position: absolute; top: 8px; right: 12px;
+    background: #e94560; color: #fff;
+    padding: 2px 10px; border-radius: 4px;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 1px;
+  }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    background: #f1f5f9; padding: 1px 6px; border-radius: 4px;
+    font-size: 0.88em; color: #e94560;
+  }
+  .section-dark code { background: #334155; color: #f472b6; }
+
+  /* ═══════════════════ WIRING TABLES ═══════════════════ */
+  table {
+    width: 100%; border-collapse: collapse;
+    margin: 16px 0; font-size: 13.5px;
+  }
+  th {
+    background: #1a1a2e; color: #ffffff;
+    padding: 11px 14px; text-align: left;
+    font-weight: 700; font-size: 12.5px;
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  td {
+    padding: 10px 14px; border-bottom: 1px solid #e2e8f0;
+    color: #334155;
+  }
+  tr:nth-child(even) td { background: #f8fafc; }
+  tr:hover td { background: #eff6ff; }
+
+  /* ═══════════════════ CALLOUT BOXES ═══════════════════ */
+  .callout {
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .callout-danger {
+    background: #fef2f2; border: 1.5px solid #fca5a5;
+    color: #991b1b;
+    border-left: 5px solid #ef4444;
+  }
+  .callout-danger::before { content: "⚠️ DANGER: "; font-weight: 800; }
+  .callout-warning {
+    background: #fffbeb; border: 1.5px solid #fcd34d;
+    color: #92400e;
+    border-left: 5px solid #f59e0b;
+  }
+  .callout-warning::before { content: "⚡ WARNING: "; font-weight: 800; }
+  .callout-tip {
+    background: #f0fdf4; border: 1.5px solid #86efac;
+    color: #166534;
+    border-left: 5px solid #22c55e;
+  }
+  .callout-tip::before { content: "💡 TIP: "; font-weight: 800; }
+  .callout-info {
+    background: #eff6ff; border: 1.5px solid #93c5fd;
+    color: #1e40af;
+    border-left: 5px solid #3b82f6;
+  }
+  .callout-info::before { content: "ℹ️ NOTE: "; font-weight: 800; }
+  .callout-check {
+    background: #ecfdf5; border: 1.5px solid #6ee7b7;
+    color: #065f46;
+    border-left: 5px solid #10b981;
+  }
+  .callout-check::before { content: "✅ VERIFIED: "; font-weight: 800; }
+
+  /* ═══════════════════ SCHEMATIC CARD ═══════════════════ */
+  .schematic {
+    background: #0f172a; color: #4ade80;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 20px 24px; border-radius: 8px;
+    font-size: 12.5px; line-height: 1.35;
+    overflow-x: auto; margin: 16px 0;
+    border: 2px solid #1e293b;
+    white-space: pre;
+  }
+  .schematic .label {
+    color: #60a5fa; font-weight: 700;
+  }
+
+  /* ═══════════════════ STEP BLOCKS ═══════════════════ */
+  .step {
+    display: flex; gap: 16px;
+    margin: 18px 0; padding: 16px 20px;
+    background: #f8fafc; border-radius: 8px;
+    border: 1px solid #e2e8f0;
+  }
+  .step-num {
+    background: #e94560; color: #fff;
+    min-width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; font-weight: 800; font-size: 14px;
+    flex-shrink: 0;
+  }
+  .step-content { flex: 1; }
+  .step-content strong { color: #1a1a2e; }
+
+  /* ═══════════════════ CHECKLIST ═══════════════════ */
+  .checklist { list-style: none; padding: 0; }
+  .checklist li {
+    padding: 8px 0 8px 32px;
+    position: relative;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .checklist li::before {
+    content: "☐";
+    position: absolute; left: 4px;
+    font-size: 16px; color: #94a3b8;
+  }
+
+  /* ═══════════════════ WIRE COLOR BADGES ═══════════════════ */
+  .wire {
+    display: inline-block; padding: 1px 8px;
+    border-radius: 4px; font-size: 11px;
+    font-weight: 700; letter-spacing: 0.5px;
+  }
+  .wire-red { background: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; }
+  .wire-black { background: #f1f5f9; color: #1e293b; border: 1px solid #94a3b8; }
+  .wire-yellow { background: #fefce8; color: #a16207; border: 1px solid #fde047; }
+  .wire-green { background: #f0fdf4; color: #16a34a; border: 1px solid #86efac; }
+  .wire-blue { background: #eff6ff; color: #2563eb; border: 1px solid #93c5fd; }
+  .wire-orange { background: #fff7ed; color: #ea580c; border: 1px solid #fdba74; }
+  .wire-white { background: #ffffff; color: #475569; border: 1px solid #cbd5e1; }
+
+  /* ═══════════════════ GPIO PIN MAP ═══════════════════ */
+  .pin-map {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 2px; margin: 16px 0;
+    background: #1e293b; border-radius: 10px;
+    padding: 16px; max-width: 700px;
+  }
+  .pin-left, .pin-right {
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .pin-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 4px 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: #e2e8f0;
+  }
+  .pin-row .pin-name { font-weight: 700; min-width: 120px; }
+  .pin-row .pin-use { color: #94a3b8; font-weight: 500; }
+  .pin-assigned { color: #4ade80 !important; }
+  .pin-power { color: #f59e0b !important; }
+  .pin-free { color: #64748b !important; }
+
+  /* ═══════════════════ COMPARISON GRID ═══════════════════ */
+  .compare-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px; margin: 16px 0;
+  }
+  .compare-card {
+    background: #f8fafc; border: 1px solid #e2e8f0;
+    border-radius: 8px; padding: 20px;
+  }
+  .compare-card h4 {
+    color: #e94560; margin-bottom: 8px;
+    font-size: 14px;
+  }
+
+  /* ═══════════════════ FOOTER ═══════════════════ */
+  .footer {
+    background: #1a1a2e; color: #64748b;
+    padding: 30px 40px; text-align: center;
+    margin-top: 40px; font-size: 13px;
+  }
+  .footer strong { color: #e94560; }
+
+  /* ═══════════════════ RESPONSIVE ═══════════════════ */
+  @media (max-width: 768px) {
+    .toc-grid { grid-template-columns: 1fr; }
+    .hero h2 { font-size: 24px; }
+    .section { padding: 24px 20px; }
+    .top-bar { padding: 10px 16px; flex-direction: column; gap: 8px; }
+    .pin-map { grid-template-columns: 1fr; }
+  }
+
+  /* ═══════════════════ PRINT ═══════════════════ */
+  @media print {
+    .top-bar { position: static; }
+    .section { break-inside: avoid; }
+    pre { white-space: pre-wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ TOP BAR ═══════════════════════════════════════════ -->
+<div class="top-bar">
+  <div>
+    <h1>🔐 <span>TRAP</span>NET</h1>
+    <div class="subtitle">Complete Real-World Build & Implementation Guide</div>
+  </div>
+  <div class="badge-row">
+    <span class="top-badge tb-red">HARDWARE</span>
+    <span class="top-badge tb-blue">FIRMWARE</span>
+    <span class="top-badge tb-green">DEPLOY</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ HERO ═══════════════════════════════════════════ -->
+<div class="hero">
+  <h2>From <span>Theory</span> to <span>Reality</span></h2>
+  <p>Every wire. Every GPIO pin. Every line of code. Every configuration step. The complete hands-on guide to build, program, test, and deploy TRAPNET in the real world.</p>
+  <div class="meta-line">
+    Sathyabama Institute of Science and Technology &nbsp;|&nbsp; Final Year Project 2025–2026 &nbsp;|&nbsp;
+    Department of ECE &nbsp;|&nbsp; Build Guide v1.0
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ TOC ═══════════════════════════════════════════ -->
+<div class="container">
+<div class="toc-wrapper">
+  <h3>📋 Complete Build Guide — Table of Contents</h3>
+  <div class="toc-grid">
+    <div class="toc-item"><span class="toc-num">1</span><a href="#s1">Hardware Assembly — Physical Wiring & Connections</a></div>
+    <div class="toc-item"><span class="toc-num">2</span><a href="#s2">Power System Design & Battery Backup</a></div>
+    <div class="toc-item"><span class="toc-num">3</span><a href="#s3">ESP32 Firmware — Complete Arduino Code</a></div>
+    <div class="toc-item"><span class="toc-num">4</span><a href="#s4">Raspberry Pi Setup — OpenCV + YOLOv8</a></div>
+    <div class="toc-item"><span class="toc-num">5</span><a href="#s5">SOS Alert System — Multi-Layer Implementation</a></div>
+    <div class="toc-item"><span class="toc-num">6</span><a href="#s6">Physical Response Mechanisms</a></div>
+    <div class="toc-item"><span class="toc-num">7</span><a href="#s7">Enclosure & Physical Installation</a></div>
+    <div class="toc-item"><span class="toc-num">8</span><a href="#s8">Testing & Calibration Protocol</a></div>
+    <div class="toc-item"><span class="toc-num">9</span><a href="#s9">Real-World Deployment Scenarios</a></div>
+    <div class="toc-item"><span class="toc-num">10</span><a href="#s10">Troubleshooting & Known Issues</a></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════ SECTION 1: HARDWARE ASSEMBLY ═══════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="s1">
+  <h2><span class="sec-num">1</span> Hardware Assembly — Physical Wiring & Connections</h2>
+
+  <h3>1.1 Components Checklist (Before You Start)</h3>
+  <p>Lay out every component on your workbench and verify each one before wiring:</p>
+  <ul class="checklist">
+    <li><strong>ESP32 DevKit V1 (WROOM-32)</strong> — 30-pin or 38-pin board with USB-Micro</li>
+    <li><strong>HLK-LD2410C mmWave Radar</strong> — 24GHz, 5-pin header (VCC, GND, TX, RX, OUT)</li>
+    <li><strong>SIM800L GSM Module</strong> — Red PCB with helical antenna, micro-SIM slot</li>
+    <li><strong>12V Solenoid Door Lock</strong> — Electromagnetic lock, 2 wires (red+/black-)</li>
+    <li><strong>2-Channel Relay Module</strong> — 5V optocoupler-isolated, Active-LOW trigger</li>
+    <li><strong>IR Sensor Module × 2</strong> — 3-pin (VCC, GND, OUT), adjustable sensitivity</li>
+    <li><strong>SW-420 Vibration Sensor × 2</strong> — 3-pin with LM393 comparator onboard</li>
+    <li><strong>NEO-6M GPS Module</strong> — with ceramic patch antenna, 4-pin (VCC, GND, TX, RX)</li>
+    <li><strong>SSD1306 OLED Display 0.96"</strong> — I2C, 4-pin (VCC, GND, SDA, SCL)</li>
+    <li><strong>MicroSD Card Module</strong> — SPI interface, 6-pin</li>
+    <li><strong>LM2596 Buck Converter × 2</strong> — Adjustable output, 3A max</li>
+    <li><strong>18650 Li-Ion Battery × 2</strong> — 3.7V 2600mAh each</li>
+    <li><strong>TP4056 Charging Module</strong> — with DW01A protection IC</li>
+    <li><strong>1000µF 16V Electrolytic Capacitor</strong> — for SIM800L power stabilization</li>
+    <li><strong>10kΩ Resistor × 2</strong> — Pull-down for SW-420 vibration sensors</li>
+    <li><strong>1N4007 Flyback Diode</strong> — Across solenoid lock terminals</li>
+    <li><strong>830-Point Breadboard</strong> — Full-size, for prototyping</li>
+    <li><strong>Jumper Wires</strong> — Male-Male, Male-Female, Female-Female (40 each)</li>
+    <li><strong>12V 2A DC Adapter</strong> — Barrel jack, center-positive</li>
+    <li><strong>Momentary Push Button</strong> — Panic button, normally-open</li>
+    <li><strong>Raspberry Pi Zero 2W</strong> — With GPIO header soldered</li>
+    <li><strong>16GB MicroSD Card (Class 10)</strong> — For Raspberry Pi OS</li>
+    <li><strong>CCTV Camera</strong> — WiFi IP camera with battery + SD card (existing)</li>
+  </ul>
+
+  <h3>1.2 Master GPIO Pin Allocation Map — ESP32 DevKit V1</h3>
+  <p>This is the <strong>single source of truth</strong> for all GPIO assignments. Every wire in this project follows this map:</p>
+
+  <table>
+    <tr>
+      <th>GPIO Pin</th>
+      <th>Direction</th>
+      <th>Connected To</th>
+      <th>Protocol</th>
+      <th>Wire Color</th>
+      <th>Notes</th>
+    </tr>
+    <tr>
+      <td><strong>GPIO16 (RX2)</strong></td>
+      <td>INPUT</td>
+      <td>LD2410C → TX</td>
+      <td>UART2 RX</td>
+      <td><span class="wire wire-green">GREEN</span></td>
+      <td>Radar data incoming at 256000 baud</td>
+    </tr>
+    <tr>
+      <td><strong>GPIO17 (TX2)</strong></td>
+      <td>OUTPUT</td>
+      <td>LD2410C → RX</td>
+      <td>UART2 TX</td>
+      <td><span class="wire wire-yellow">YELLOW</span></td>
+      <td>Configuration commands to radar</td>
+    </tr>
+    <tr>
+      <td><strong>GPIO26</strong></td>
+      <td>INPUT</td>
+      <td>SIM800L → TX</td>
+      <td>SoftSerial RX</td>
+      <td><span class="wire wire-blue">BLUE</span></td>
+      <td>GSM responses incoming at 9600 baud</td>
+    </tr>
+    <tr>
+      <td><strong>GPIO27</strong></td>
+      <td>OUTPUT</td>
+      <td>SIM800L → RX</td>
+      <td>SoftSerial TX</td>
+      <td><span class="wire wire-orange">ORANGE</span></td>
+      <td>AT commands to GSM module</td>
+    </tr>
+    <tr>
+      <td><strong>GPIO32</strong></td>
+      <td>OUTPUT</td>
+      <td>Relay CH1 → IN1</td>
+      <td>Digital LOW</td>
+      <td><span class="wire wire-yellow">YELLOW</span></td>
+      <td>Active-LOW: LOW = solenoid LOCKS</td>
+    </tr>
+    <tr>
+      <td><strong>GPIO33</strong></td>
+      <td>OUTPUT</td>
+      <td>Relay CH2 → IN2</td>
+      <td>Digital LOW</td>
+      <td><span class="wire wire-orange">ORANGE</span></td>
+      <td>Active-LOW: LOW = fog machine ON</td>
+    </tr>
+    <tr>
+      <td><strong>GPIO4</strong></td>
+      <td>INPUT</td>
+      <td>IR Sensor 1 → OUT</td>
+      <td>Digital IN</td>
+      <td><span class="wire wire-white">WHITE</span></td>
+      <td>Door contact — LOW = broken beam</td>
+    </tr>
+    <tr>
+      <td><strong>GPIO13</strong></td>
+      <td>INPUT</td>
+      <td>IR Sensor 2 → OUT</td>
+      <td>Digital IN</td>
+      <td><span class="wire wire-white">WHITE</span></td>
+      <td>Window contact — LOW = broken beam</td>
+    </tr>
+    <tr>
+      <td><strong>GPIO34</strong></td>
+      <td>INPUT ONLY</td>
+      <td>SW-420 #1 → OUT</td>
+      <td>Digital IN</td>
+      <td><span class="wire wire-green">GREEN</span></td>
+      <td>⚠️ Needs external 10kΩ pull-down to GND</td>
+    </tr>
+    <tr>
+      <td><strong>GPIO39 (SVN)</strong></td>
+      <td>INPUT ONLY</td>
+      <td>SW-420 #2 → OUT</td>
+      <td>Digital IN</td>
+      <td><span class="wire wire-green">GREEN</span></td>
+      <td>⚠️ Needs external 10kΩ pull-down to GND</td>
+    </tr>
+    <tr>
+      <td><strong>GPIO35</strong></td>
+      <td>INPUT ONLY</td>
+      <td>NEO-6M GPS → TX</td>
+      <td>SoftSerial RX</td>
+      <td><span class="wire wire-blue">BLUE</span></td>
+      <td>GPS NMEA data incoming at 9600 baud</td>
+    </tr>
+    <tr>
+      <td><strong>GPIO25</strong></td>
+      <td>OUTPUT</td>
+      <td>NEO-6M GPS → RX</td>
+      <td>SoftSerial TX</td>
+      <td><span class="wire wire-yellow">YELLOW</span></td>
+      <td>GPS configuration commands</td>
+    </tr>
+    <tr>
+      <td><strong>GPIO21 (SDA)</strong></td>
+      <td>I/O</td>
+      <td>OLED Display → SDA</td>
+      <td>I2C Data</td>
+      <td><span class="wire wire-blue">BLUE</span></td>
+      <td>Also for MLX90640 thermal (shared I2C bus)</td>
+    </tr>
+    <tr>
+      <td><strong>GPIO22 (SCL)</strong></td>
+      <td>OUTPUT</td>
+      <td>OLED Display → SCL</td>
+      <td>I2C Clock</td>
+      <td><span class="wire wire-green">GREEN</span></td>
+      <td>Also for MLX90640 thermal (shared I2C bus)</td>
+    </tr>
+    <tr>
+      <td><strong>GPIO23 (MOSI)</strong></td>
+      <td>OUTPUT</td>
+      <td>SD Card Module → MOSI</td>
+      <td>VSPI</td>
+      <td><span class="wire wire-yellow">YELLOW</span></td>
+      <td>Data to SD card</td>
+    </tr>
+    <tr>
+      <td><strong>GPIO19 (MISO)</strong></td>
+      <td>INPUT</td>
+      <td>SD Card Module → MISO</td>
+      <td>VSPI</td>
+      <td><span class="wire wire-green">GREEN</span></td>
+      <td>Data from SD card</td>
+    </tr>
+    <tr>
+      <td><strong>GPIO18 (CLK)</strong></td>
+      <td>OUTPUT</td>
+      <td>SD Card Module → CLK</td>
+      <td>VSPI</td>
+      <td><span class="wire wire-orange">ORANGE</span></td>
+      <td>SPI clock signal</td>
+    </tr>
+    <tr>
+      <td><strong>GPIO5 (CS)</strong></td>
+      <td>OUTPUT</td>
+      <td>SD Card Module → CS</td>
+      <td>VSPI</td>
+      <td><span class="wire wire-white">WHITE</span></td>
+      <td>Chip select — LOW = SD active</td>
+    </tr>
+    <tr>
+      <td><strong>GPIO14</strong></td>
+      <td>OUTPUT</td>
+      <td>Raspberry Pi → GPIO15 (RX)</td>
+      <td>Serial TX</td>
+      <td><span class="wire wire-yellow">YELLOW</span></td>
+      <td>ESP32 sends sensor data to RPi</td>
+    </tr>
+    <tr>
+      <td><strong>GPIO36 (SVP)</strong></td>
+      <td>INPUT ONLY</td>
+      <td>Raspberry Pi → GPIO14 (TX)</td>
+      <td>Serial RX</td>
+      <td><span class="wire wire-green">GREEN</span></td>
+      <td>RPi sends YOLO detection results back</td>
+    </tr>
+    <tr>
+      <td><strong>GPIO15</strong></td>
+      <td>INPUT</td>
+      <td>Panic Button (one leg)</td>
+      <td>Digital IN</td>
+      <td><span class="wire wire-red">RED</span></td>
+      <td>Internal pull-up enabled; button connects to GND</td>
+    </tr>
+    <tr>
+      <td><strong>VIN</strong></td>
+      <td>POWER IN</td>
+      <td>LM2596 #1 → 5V OUT</td>
+      <td>Power</td>
+      <td><span class="wire wire-red">RED</span></td>
+      <td>Main power input to ESP32</td>
+    </tr>
+    <tr>
+      <td><strong>GND</strong></td>
+      <td>GROUND</td>
+      <td>Common ground bus</td>
+      <td>Power</td>
+      <td><span class="wire wire-black">BLACK</span></td>
+      <td>ALL GNDs must connect to this common rail</td>
+    </tr>
+    <tr>
+      <td><strong>3.3V</strong></td>
+      <td>POWER OUT</td>
+      <td>Sensors (IR, SW-420, LD2410)</td>
+      <td>Power</td>
+      <td><span class="wire wire-red">RED</span></td>
+      <td>Regulated output from ESP32's onboard LDO</td>
+    </tr>
+  </table>
+
+  <div class="callout callout-danger">
+    GPIO34, GPIO35, GPIO36, GPIO39 are <strong>INPUT-ONLY</strong> pins on ESP32 WROOM-32. They have no internal pull-up/pull-down resistors. You MUST use external pull-down resistors (10kΩ to GND) for SW-420 vibration sensors connected to GPIO34 and GPIO39.
+  </div>
+
+  <h3>1.3 Wire-by-Wire Connection Guide</h3>
+  <p>Follow these connections in order. Complete one module at a time. <strong>Power OFF the ESP32 while wiring.</strong></p>
+
+  <h4>Connection A: LD2410C mmWave Radar → ESP32</h4>
+  <div class="schematic">
+    LD2410C Radar Module                                ESP32 DevKit V1
+    ┌──────────────────┐                                ┌──────────────────┐
+    │                  │                                │                  │
+    │  VCC (5V)  ●─────┼──── <span class="label">RED wire</span> ──────────────────┼──── VIN (5V)      │
+    │  GND       ●─────┼──── <span class="label">BLACK wire</span> ─────────────────┼──── GND           │
+    │  TX        ●─────┼──── <span class="label">GREEN wire</span> ─────────────────┼──── GPIO16 (RX2)  │
+    │  RX        ●─────┼──── <span class="label">YELLOW wire</span> ────────────────┼──── GPIO17 (TX2)  │
+    │  OUT       ●     │  (not used — we read UART)    │                  │
+    │                  │                                │                  │
+    └──────────────────┘                                └──────────────────┘
+    Baud Rate: 256000 bps  |  Logic Level: 3.3V  |  Range: 0.75m – 6.0m
+  </div>
+  <div class="callout callout-info">
+    The LD2410C TX (transmit) goes to ESP32 RX2 (receive), and vice versa. This is a <strong>crossover connection</strong> — TX always connects to RX on the other side.
+  </div>
+
+  <h4>Connection B: SIM800L GSM Module → ESP32</h4>
+  <div class="schematic">
+    LM2596 Buck #2                  SIM800L GSM Module                ESP32 DevKit V1
+    ┌─────────────┐                 ┌──────────────────┐              ┌──────────────────┐
+    │ OUT+ (4.0V) ●──── <span class="label">RED</span> ──┬─────┼── VCC              │              │                  │
+    │ OUT- (GND)  ●──── <span class="label">BLK</span> ──┼─────┼── GND              │              │                  │
+    └─────────────┘        │     │                  │              │                  │
+                           │     │  TX  ●───────────┼── <span class="label">BLUE</span> ──────┼── GPIO26 (RX)    │
+               ┌───┐       │     │  RX  ●───────────┼── <span class="label">ORANGE</span> ────┼── GPIO27 (TX)    │
+               │ C │ 1000µF│     │                  │              │                  │
+               │ A │───────┤     │  RST ●  (N/C)    │              │                  │
+               │ P │───────┘     │                  │              │                  │
+               └───┘             └──────────────────┘              └──────────────────┘
+
+    ⚠️  CRITICAL: 1000µF electrolytic capacitor across VCC and GND of SIM800L
+    ⚠️  CRITICAL: Set LM2596 #2 potentiometer to exactly 4.0V using multimeter BEFORE connecting
+    ⚠️  SIM800L operating range: 3.4V – 4.4V (optimal: 4.0V)
+  </div>
+  <div class="callout callout-danger">
+    <strong>NEVER</strong> power SIM800L from ESP32's 3.3V or 5V pin. It draws 2A peak current bursts during GSM transmission, which will brown out and reset the ESP32. Always use a separate LM2596 buck converter with a 1000µF decoupling capacitor.
+  </div>
+
+  <h4>Connection C: 2-Channel Relay → Solenoid Lock & Fog Machine</h4>
+  <div class="schematic">
+    ESP32                Relay Module                12V Power        Solenoid Lock
+    ┌──────────┐         ┌───────────────────┐       ┌─────┐         ┌──────────────┐
+    │ GPIO32 ●─┼── <span class="label">YEL</span> ──┼── IN1              │       │ +12V│──── <span class="label">RED</span> ─┼── COM (CH1)   │
+    │ GPIO33 ●─┼── <span class="label">ORG</span> ──┼── IN2              │       │     │         │              │
+    │ VIN(5V)●─┼── <span class="label">RED</span> ──┼── VCC              │       │     │         │  NO (CH1) ●──┼──── Solenoid (+)
+    │ GND    ●─┼── <span class="label">BLK</span> ──┼── GND              │       │ GND │──────────┼──────────────┼──── Solenoid (-)
+    └──────────┘         │                   │       └─────┘         │              │
+                         │  COM (CH2) ●──────┼── 12V+               │  ┌──────┐    │
+                         │  NO  (CH2) ●──────┼── Fog Machine (+)    │  │ 1N4007│   │
+                         │                   │   Fog Machine (-) ───┼──│ Diode │   │
+                         └───────────────────┘   ──── to 12V GND    │  └──────┘    │
+                                                                    └──────────────┘
+    Relay is ACTIVE-LOW: pulling GPIO32 LOW = relay CH1 energizes = solenoid LOCKS
+    1N4007 diode: Cathode (stripe) toward +12V, Anode toward Solenoid (-)
+    This suppresses inductive kickback voltage spike when solenoid de-energizes
+  </div>
+  <div class="callout callout-warning">
+    The 1N4007 flyback diode across the solenoid is <strong>mandatory</strong>. Without it, the voltage spike when the solenoid turns off can reach 50V+ and destroy the relay or ESP32. Place it <strong>reverse-biased</strong>: cathode (silver stripe) to positive terminal, anode to negative terminal.
+  </div>
+
+  <h4>Connection D: IR Sensors → ESP32</h4>
+  <div class="schematic">
+    IR Sensor #1 (Door)                    ESP32 DevKit V1
+    ┌──────────────────┐                   ┌──────────────────┐
+    │ VCC  ●───────────┼──── <span class="label">RED</span> ──────────┼── 3.3V             │
+    │ GND  ●───────────┼──── <span class="label">BLACK</span> ────────┼── GND              │
+    │ OUT  ●───────────┼──── <span class="label">WHITE</span> ────────┼── GPIO4             │
+    └──────────────────┘                   │                  │
+                                           │                  │
+    IR Sensor #2 (Window)                  │                  │
+    ┌──────────────────┐                   │                  │
+    │ VCC  ●───────────┼──── <span class="label">RED</span> ──────────┼── 3.3V             │
+    │ GND  ●───────────┼──── <span class="label">BLACK</span> ────────┼── GND              │
+    │ OUT  ●───────────┼──── <span class="label">WHITE</span> ────────┼── GPIO13            │
+    └──────────────────┘                   └──────────────────┘
+
+    Output: HIGH = no obstacle (beam unbroken), LOW = obstacle detected (beam broken)
+  </div>
+
+  <h4>Connection E: SW-420 Vibration Sensors → ESP32</h4>
+  <div class="schematic">
+    SW-420 #1                              ESP32 DevKit V1
+    ┌──────────────────┐                   ┌──────────────────┐
+    │ VCC  ●───────────┼──── <span class="label">RED</span> ──────────┼── 3.3V             │
+    │ GND  ●───────────┼──── <span class="label">BLACK</span> ────────┼── GND              │
+    │ OUT  ●───────────┼──── <span class="label">GREEN</span> ────────┼── GPIO34            │
+    └──────────────────┘                   │       │          │
+                                           │     ┌─┴──┐       │
+    SW-420 #2                              │     │10kΩ│       │
+    ┌──────────────────┐                   │     └─┬──┘       │
+    │ VCC  ●───────────┼──── <span class="label">RED</span> ──────────┼── 3.3V │          │
+    │ GND  ●───────────┼──── <span class="label">BLACK</span> ────────┼── GND──┘          │
+    │ OUT  ●───────────┼──── <span class="label">GREEN</span> ────────┼── GPIO39            │
+    └──────────────────┘                   │       │          │
+                                           │     ┌─┴──┐       │
+                                           │     │10kΩ│       │
+                                           │     └─┬──┘       │
+                                           │    GND─┘         │
+                                           └──────────────────┘
+
+    ⚠️ GPIO34 and GPIO39 are INPUT-ONLY with NO internal pull-up/down
+    ⚠️ External 10kΩ pull-down resistor to GND is MANDATORY on each
+  </div>
+
+  <h4>Connection F: NEO-6M GPS → ESP32</h4>
+  <div class="schematic">
+    NEO-6M GPS Module                      ESP32 DevKit V1
+    ┌──────────────────┐                   ┌──────────────────┐
+    │ VCC  ●───────────┼──── <span class="label">RED</span> ──────────┼── 3.3V             │
+    │ GND  ●───────────┼──── <span class="label">BLACK</span> ────────┼── GND              │
+    │ TX   ●───────────┼──── <span class="label">BLUE</span> ─────────┼── GPIO35 (RX)      │
+    │ RX   ●───────────┼──── <span class="label">YELLOW</span> ───────┼── GPIO25 (TX)      │
+    └──────────────────┘                   └──────────────────┘
+
+    Baud: 9600  |  Protocol: NMEA 0183  |  Cold start: ~30sec outdoors
+    ⚠️ GPIO35 is INPUT-ONLY — perfect for receiving GPS data
+  </div>
+
+  <h4>Connection G: OLED Display (I2C) → ESP32</h4>
+  <div class="schematic">
+    SSD1306 OLED 0.96"                     ESP32 DevKit V1
+    ┌──────────────────┐                   ┌──────────────────┐
+    │ VCC  ●───────────┼──── <span class="label">RED</span> ──────────┼── 3.3V             │
+    │ GND  ●───────────┼──── <span class="label">BLACK</span> ────────┼── GND              │
+    │ SDA  ●───────────┼──── <span class="label">BLUE</span> ─────────┼── GPIO21 (SDA)     │
+    │ SCL  ●───────────┼──── <span class="label">GREEN</span> ────────┼── GPIO22 (SCL)     │
+    └──────────────────┘                   └──────────────────┘
+
+    I2C Address: 0x3C  |  Resolution: 128×64  |  Shared bus with MLX90640
+  </div>
+
+  <h4>Connection H: MicroSD Card Module (SPI) → ESP32</h4>
+  <div class="schematic">
+    MicroSD Card Module                    ESP32 DevKit V1
+    ┌──────────────────┐                   ┌──────────────────┐
+    │ VCC  ●───────────┼──── <span class="label">RED</span> ──────────┼── 3.3V             │
+    │ GND  ●───────────┼──── <span class="label">BLACK</span> ────────┼── GND              │
+    │ MOSI ●───────────┼──── <span class="label">YELLOW</span> ───────┼── GPIO23 (MOSI)    │
+    │ MISO ●───────────┼──── <span class="label">GREEN</span> ────────┼── GPIO19 (MISO)    │
+    │ CLK  ●───────────┼──── <span class="label">ORANGE</span> ───────┼── GPIO18 (CLK)     │
+    │ CS   ●───────────┼──── <span class="label">WHITE</span> ────────┼── GPIO5  (CS)      │
+    └──────────────────┘                   └──────────────────┘
+
+    SD Card: FAT32 formatted, Class 10, 16GB  |  SPI Mode 0
+  </div>
+
+  <h4>Connection I: ESP32 ↔ Raspberry Pi Zero 2W (Serial)</h4>
+  <div class="schematic">
+    ESP32 DevKit V1                        Raspberry Pi Zero 2W
+    ┌──────────────────┐                   ┌──────────────────┐
+    │ GPIO14 (TX) ●────┼──── <span class="label">YELLOW</span> ───────┼── GPIO15 (RXD)     │
+    │ GPIO36 (RX) ●────┼──── <span class="label">GREEN</span> ────────┼── GPIO14 (TXD)     │
+    │ GND         ●────┼──── <span class="label">BLACK</span> ────────┼── GND (Pin 6)      │
+    └──────────────────┘                   └──────────────────┘
+
+    Baud: 115200  |  Protocol: Custom JSON messages
+    ⚠️ ESP32 is 3.3V logic, RPi is 3.3V logic — DIRECT connection OK (no level shifter)
+    ⚠️ DO NOT connect 5V between them — RPi GPIO is NOT 5V tolerant
+  </div>
+
+  <h4>Connection J: Panic Button → ESP32</h4>
+  <div class="schematic">
+    Panic Button                           ESP32 DevKit V1
+    ┌──────────────┐                       ┌──────────────────┐
+    │  ●───────────┼──── <span class="label">RED wire</span> ─────────┼── GPIO15            │
+    │  ●───────────┼──── <span class="label">BLACK wire</span> ────────┼── GND               │
+    └──────────────┘                       └──────────────────┘
+
+    Using ESP32 internal pull-up (INPUT_PULLUP)
+    Normal state: GPIO15 = HIGH (button open)
+    Pressed:      GPIO15 = LOW  (button closes to GND)
+    Software debounce: 50ms minimum
+  </div>
+
+  <h3>1.4 Common Ground Rule</h3>
+  <div class="callout callout-danger">
+    <strong>ALL GND pins from ALL modules MUST connect to the same GND bus.</strong> This includes: ESP32 GND, all sensors, relay module, SIM800L, GPS, OLED, SD card, Raspberry Pi, 12V adapter, LM2596 converters, and battery pack. A single disconnected ground will cause random resets, communication failures, and erratic behavior.
+  </div>
+
+  <h3>1.5 Breadboard Layout Strategy</h3>
+  <p>Organize your 830-point breadboard into logical zones:</p>
+  <div class="schematic">
+    ┌─────────────────────────────────────────────────────────────────────────────────┐
+    │  +5V POWER RAIL ══════════════════════════════════════════════════════════════  │
+    │  GND RAIL ════════════════════════════════════════════════════════════════════  │
+    ├─────────────────────────────────────────────────────────────────────────────────┤
+    │                                                                                 │
+    │  ┌─────────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────┐  │
+    │  │ ESP32 DevKit │  │ LD2410C  │  │ SIM800L  │  │ GPS      │  │ OLED Display │  │
+    │  │ (CENTER)     │  │ Radar    │  │ GSM      │  │ NEO-6M   │  │ 0.96"        │  │
+    │  └─────────────┘  └──────────┘  └──────────┘  └──────────┘  └──────────────┘  │
+    │                                                                                 │
+    │  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────────────────┐  │
+    │  │ Relay Module     │  │ SD Card Module   │  │ Buck Converters #1 & #2     │  │
+    │  │ (NEAR EDGE)      │  │                  │  │ (NEAR POWER INPUT)          │  │
+    │  └──────────────────┘  └──────────────────┘  └──────────────────────────────┘  │
+    │                                                                                 │
+    ├─────────────────────────────────────────────────────────────────────────────────┤
+    │  +3.3V RAIL ═════════════════════════════════════════════════════════════════  │
+    │  GND RAIL (SHARED) ══════════════════════════════════════════════════════════  │
+    └─────────────────────────────────────────────────────────────────────────────────┘
+    OFF-BOARD:  Solenoid Lock (wires to relay)  |  Fog Machine (wires to relay)
+                IR Sensors (wires, mounted at door/window)
+                SW-420 (mounted on safe/wall)  |  Panic Button (accessible)
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════ SECTION 2: POWER SYSTEM ═══════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+<div class="section section-dark" id="s2">
+  <h2><span class="sec-num">2</span> Power System Design & Battery Backup</h2>
+
+  <h3>2.1 Power Architecture Overview</h3>
+  <div class="schematic">
+    ┌─────────────────┐
+    │  220V AC Mains   │
+    │  (Wall Outlet)   │
+    └────────┬─────────┘
+             │
+             ▼
+    ┌─────────────────┐
+    │  12V 2A DC       │
+    │  Adapter         │
+    └────────┬─────────┘
+             │ 12V DC
+             ├───────────────────────────────────────────── 12V to Relay COM (for solenoid + fog)
+             │
+             ├──────────────┐
+             │              │
+             ▼              ▼
+    ┌─────────────┐  ┌─────────────┐
+    │ LM2596 #1   │  │ LM2596 #2   │
+    │ Set: 5.0V   │  │ Set: 4.0V   │
+    └──────┬──────┘  └──────┬──────┘
+           │                │
+           │ 5V             │ 4.0V ──┬── SIM800L VCC
+           │                │        │
+           │                │   ┌────┴────┐
+           ├── ESP32 VIN    │   │ 1000µF  │ Capacitor
+           │                │   │ 16V     │ (absorbs 2A bursts)
+           │                │   └────┬────┘
+           │                │        └── SIM800L GND
+           │
+           │  ESP32 onboard 3.3V LDO regulator
+           │        │
+           │        ├── LD2410C VCC (3.3V or 5V)
+           │        ├── IR Sensors VCC (3.3V)
+           │        ├── SW-420 Sensors VCC (3.3V)
+           │        ├── NEO-6M GPS VCC (3.3V)
+           │        ├── OLED Display VCC (3.3V)
+           │        └── SD Card Module VCC (3.3V)
+           │
+    ┌──────┴─────────────────────────┐
+    │  18650 Battery Backup System   │
+    │                                │
+    │  2× 18650 (7.4V series)       │
+    │       │                        │
+    │       ▼                        │
+    │  TP4056 + DW01A Protection     │
+    │       │                        │
+    │       ▼                        │
+    │  Feeds into LM2596 #1 input   │
+    │  (auto-switchover on power cut)│
+    └────────────────────────────────┘
+  </div>
+
+  <h3>2.2 LM2596 Buck Converter Setup</h3>
+  <p>You have TWO LM2596 converters. Each must be individually calibrated with a multimeter BEFORE connecting any module.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <strong>Connect 12V adapter output to LM2596 INPUT terminals (IN+ and IN-).</strong>
+      <p>Don't connect anything to the output yet.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <strong>Plug in the 12V adapter to mains. Measure LM2596 OUTPUT with a multimeter.</strong>
+      <p>Set multimeter to DC voltage, probes on OUT+ and OUT-.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <strong>Turn the potentiometer screw (tiny brass screw on the blue potentiometer) SLOWLY.</strong>
+      <p>Clockwise = lower voltage. Counter-clockwise = higher voltage. Adjust until multimeter reads:</p>
+      <ul>
+        <li><strong>LM2596 #1:</strong> 5.00V (±0.05V) — for ESP32 VIN</li>
+        <li><strong>LM2596 #2:</strong> 4.00V (±0.05V) — for SIM800L</li>
+      </ul>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <strong>Apply a drop of nail polish or hot glue on the potentiometer screw</strong> to prevent accidental rotation from vibration.
+    </div>
+  </div>
+
+  <div class="callout callout-danger">
+    If LM2596 #2 outputs above 4.4V, the SIM800L will be permanently damaged. If below 3.4V, it will fail to register on the cellular network. Always verify with a multimeter first.
+  </div>
+
+  <h3>2.3 Power Consumption Budget</h3>
+  <table>
+    <tr><th>Component</th><th>Voltage</th><th>Current (Typical)</th><th>Current (Peak)</th><th>Notes</th></tr>
+    <tr><td>ESP32 WROOM-32</td><td>5V (VIN)</td><td>80mA</td><td>300mA (WiFi TX)</td><td>WiFi+BLE active</td></tr>
+    <tr><td>LD2410C Radar</td><td>3.3V</td><td>70mA</td><td>100mA</td><td>Continuous FMCW transmission</td></tr>
+    <tr><td>SIM800L GSM</td><td>4.0V</td><td>20mA (idle)</td><td>2000mA (TX burst)</td><td>Separate supply + 1000µF cap</td></tr>
+    <tr><td>IR Sensor × 2</td><td>3.3V</td><td>20mA each</td><td>25mA</td><td>Always-on beam</td></tr>
+    <tr><td>SW-420 × 2</td><td>3.3V</td><td>2mA each</td><td>5mA</td><td>Very low power</td></tr>
+    <tr><td>NEO-6M GPS</td><td>3.3V</td><td>45mA</td><td>67mA</td><td>Continuous tracking mode</td></tr>
+    <tr><td>OLED Display</td><td>3.3V</td><td>20mA</td><td>25mA</td><td>All pixels on = max</td></tr>
+    <tr><td>SD Card Module</td><td>3.3V</td><td>30mA</td><td>100mA (write)</td><td>Burst during logging</td></tr>
+    <tr><td>Relay Module (per ch)</td><td>5V</td><td>70mA</td><td>80mA</td><td>When relay coil energized</td></tr>
+    <tr><td>Solenoid Lock</td><td>12V</td><td>0mA (unlocked)</td><td>500mA (locked)</td><td>Only when relay activates</td></tr>
+    <tr><td>RPi Zero 2W</td><td>5V</td><td>250mA</td><td>500mA</td><td>CPU-intensive YOLO inference</td></tr>
+    <tr style="background:#1a1a2e;"><td style="color:#e94560;"><strong>TOTAL (All Active)</strong></td><td></td><td style="color:#e94560;"><strong>~650mA</strong></td><td style="color:#e94560;"><strong>~3.7A peak</strong></td><td style="color:#cbd5e1;">SIM800L peak is isolated</td></tr>
+  </table>
+
+  <h3>2.4 Battery Backup — 18650 Wiring</h3>
+  <div class="schematic">
+    18650 Cell #1 (3.7V)      18650 Cell #2 (3.7V)
+    ┌──────────┐              ┌──────────┐
+    │  (+) ────┼──── wire ────┼── (-)    │        ← SERIES connection = 7.4V
+    │  (-)     │              │  (+) ────┼──┐
+    └──────┬───┘              └──────────┘  │
+           │                                │
+           ▼                                ▼
+    ┌──────────────────────────────────────────┐
+    │           TP4056 Charging Module          │
+    │                                          │
+    │  B+  ← 7.4V from batteries              │
+    │  B-  ← Battery negative                 │
+    │  OUT+ → To LM2596 #1 IN+ (through       │
+    │         Schottky diode OR relay for       │
+    │         auto-switchover)                  │
+    │  OUT- → To LM2596 #1 IN-                │
+    │                                          │
+    │  USB Micro → Charging input (5V 1A)      │
+    └──────────────────────────────────────────┘
+  </div>
+  <div class="callout callout-warning">
+    The TP4056 is designed for single-cell 3.7V charging. For 2× series cells (7.4V), you need a <strong>2S BMS (Battery Management System)</strong> board instead of TP4056. The TP4056 option works if you use cells in <strong>parallel</strong> (3.7V, double capacity). For simplicity in your prototype, use 2× 18650 in parallel with TP4056 → this gives 3.7V × 5200mAh, then feed into LM2596 #1 which boosts/bucks to 5V.
+  </div>
+
+  <h3>2.5 Battery Life Estimate</h3>
+  <p>With 2× 18650 in parallel (5200mAh at 3.7V) powering only the ESP32 + sensors (without RPi and solenoid):</p>
+  <ul>
+    <li><strong>Standby mode:</strong> ~350mA draw → 5200/350 = <strong>~14.8 hours</strong></li>
+    <li><strong>Active alert mode:</strong> ~650mA draw → 5200/650 = <strong>~8 hours</strong></li>
+    <li><strong>Realistic estimate (mixed):</strong> <strong>4–6 hours</strong> (accounts for WiFi TX bursts and GSM peaks)</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════ SECTION 3: ESP32 FIRMWARE ═══════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="s3">
+  <h2><span class="sec-num">3</span> ESP32 Firmware — Complete Arduino Code</h2>
+
+  <h3>3.1 Arduino IDE Setup</h3>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <strong>Install Arduino IDE 2.x</strong> from <code>https://www.arduino.cc/en/software</code>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <strong>Add ESP32 Board Package:</strong> Go to File → Preferences → Additional Board Manager URLs, add:<br>
+      <code>https://espressif.github.io/arduino-esp32/package_esp32_index.json</code>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <strong>Install Libraries:</strong> Tools → Manage Libraries → Search and install:
+      <ul>
+        <li><code>Adafruit SSD1306</code> — OLED display driver</li>
+        <li><code>Adafruit GFX Library</code> — Graphics primitives for OLED</li>
+        <li><code>TinyGPSPlus</code> — GPS NMEA parsing</li>
+        <li><code>ArduinoJson</code> — JSON for ESP32↔RPi messages</li>
+        <li><code>SD</code> — (built-in) MicroSD card access</li>
+      </ul>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <strong>Select Board:</strong> Tools → Board → ESP32 Arduino → <strong>"ESP32 Dev Module"</strong><br>
+      <strong>Upload Speed:</strong> 921600 &nbsp;|&nbsp; <strong>Flash Size:</strong> 4MB &nbsp;|&nbsp; <strong>Partition:</strong> Default 4MB with spiffs
+    </div>
+  </div>
+
+  <h3>3.2 Complete Main Firmware — <code>TRAPNET_Main.ino</code></h3>
+  <pre><span class="lang-tag">C++ / Arduino</span>
+/*
+ * ═══════════════════════════════════════════════════════════════
+ *  TRAPNET — Autonomous Intruder Containment System
+ *  Main ESP32 Firmware (ESP32 DevKit V1 / WROOM-32)
+ *  Version: 1.0
+ *  Author: TRAPNET Team — Sathyabama Institute
+ * ═══════════════════════════════════════════════════════════════
+ */
+
+#include &lt;WiFi.h&gt;
+#include &lt;BLEDevice.h&gt;
+#include &lt;BLEUtils.h&gt;
+#include &lt;BLEBeacon.h&gt;
+#include &lt;BLEAdvertising.h&gt;
+#include &lt;esp_wifi.h&gt;
+#include &lt;esp_now.h&gt;
+#include &lt;HardwareSerial.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;SPI.h&gt;
+#include &lt;SD.h&gt;
+#include &lt;Adafruit_GFX.h&gt;
+#include &lt;Adafruit_SSD1306.h&gt;
+#include &lt;TinyGPSPlus.h&gt;
+#include &lt;ArduinoJson.h&gt;
+
+// ═══════════════════ PIN DEFINITIONS ═══════════════════
+// LD2410C Radar (UART2)
+#define RADAR_RX    16    // ESP32 RX2 ← Radar TX
+#define RADAR_TX    17    // ESP32 TX2 → Radar RX
+
+// SIM800L GSM (Software Serial)
+#define GSM_RX      26    // ESP32 ← SIM800L TX
+#define GSM_TX      27    // ESP32 → SIM800L RX
+
+// Relay Module
+#define RELAY_LOCK  32    // Relay CH1 → Solenoid Door Lock
+#define RELAY_FOG   33    // Relay CH2 → Fog Machine
+
+// IR Sensors
+#define IR_DOOR     4     // IR Sensor 1 — Door
+#define IR_WINDOW   13    // IR Sensor 2 — Window
+
+// Vibration Sensors
+#define VIB_1       34    // SW-420 #1 (INPUT ONLY, ext pull-down)
+#define VIB_2       39    // SW-420 #2 (INPUT ONLY, ext pull-down)
+
+// GPS (Software Serial)
+#define GPS_RX      35    // ESP32 ← GPS TX (INPUT ONLY)
+#define GPS_TX      25    // ESP32 → GPS RX
+
+// OLED Display (I2C)
+#define OLED_SDA    21
+#define OLED_SCL    22
+#define OLED_ADDR   0x3C
+#define SCREEN_W    128
+#define SCREEN_H    64
+
+// SD Card (VSPI)
+#define SD_CS       5
+
+// Raspberry Pi Serial
+#define RPI_TX      14    // ESP32 → RPi RX
+#define RPI_RX      36    // ESP32 ← RPi TX (INPUT ONLY)
+
+// Panic Button
+#define PANIC_BTN   15    // Internal pull-up, active LOW
+
+// ═══════════════════ CONFIGURATION ═══════════════════
+#define OWNER_PHONE   "+91XXXXXXXXXX"   // ← CHANGE THIS to your number
+#define POLICE_PHONE  "+91100"          // ← Police number
+#define RADAR_ENERGY_THRESHOLD  40      // Static energy > this = human present
+#define VIB_PULSE_THRESHOLD     15      // Pulses in 500ms window = breach
+#define VIB_WINDOW_MS           500     // Sliding window for vibration counting
+#define DEBOUNCE_MS             50      // Panic button debounce
+#define LOCKDOWN_COOLDOWN_MS    30000   // 30s minimum between lockdowns
+#define GSM_BAUD                9600
+#define RADAR_BAUD              256000
+#define GPS_BAUD                9600
+#define RPI_BAUD                115200
+
+// ═══════════════════ GLOBAL OBJECTS ═══════════════════
+HardwareSerial radarSerial(2);          // UART2 for LD2410C
+HardwareSerial gsmSerial(1);            // UART1 for SIM800L
+HardwareSerial rpiSerial(0);            // We'll use SoftwareSerial approach
+Adafruit_SSD1306 oled(SCREEN_W, SCREEN_H, &amp;Wire, -1);
+TinyGPSPlus gps;
+
+// ═══════════════════ STATE VARIABLES ═══════════════════
+enum SystemState { ARMED, DISARMED, LOCKDOWN, ALERT_ACTIVE };
+volatile SystemState systemState = ARMED;
+
+// Radar data
+bool radarHumanDetected = false;
+bool radarMoving = false;
+bool radarStationary = false;
+int  radarMovEnergy = 0;
+int  radarStatEnergy = 0;
+float radarDistance = 0.0;
+
+// Sensor states
+bool irDoorTriggered = false;
+bool irWindowTriggered = false;
+bool vibrationDetected = false;
+volatile int vibPulseCount1 = 0;
+volatile int vibPulseCount2 = 0;
+unsigned long vibWindowStart = 0;
+
+// GPS data
+double gpsLat = 0.0;
+double gpsLng = 0.0;
+bool   gpsValid = false;
+
+// Timing
+unsigned long lastLockdownTime = 0;
+unsigned long lastOledUpdate = 0;
+unsigned long lastRadarRead = 0;
+unsigned long lastGPSRead = 0;
+volatile unsigned long lastPanicPress = 0;
+volatile bool panicPressed = false;
+
+// RPi confirmation
+bool rpiPersonConfirmed = false;
+unsigned long rpiLastMsg = 0;
+
+// ═══════════════════ INTERRUPT HANDLERS ═══════════════════
+void IRAM_ATTR panicButtonISR() {
+  unsigned long now = millis();
+  if (now - lastPanicPress > DEBOUNCE_MS) {
+    panicPressed = true;
+    lastPanicPress = now;
+  }
+}
+
+void IRAM_ATTR vibISR1() { vibPulseCount1++; }
+void IRAM_ATTR vibISR2() { vibPulseCount2++; }
+
+// ═══════════════════ SETUP ═══════════════════
+void setup() {
+  Serial.begin(115200);
+  Serial.println("\n══════════════════════════════════════");
+  Serial.println("  TRAPNET v1.0 — System Booting...");
+  Serial.println("══════════════════════════════════════\n");
+
+  // --- Pin Modes ---
+  pinMode(RELAY_LOCK, OUTPUT);
+  pinMode(RELAY_FOG,  OUTPUT);
+  digitalWrite(RELAY_LOCK, HIGH);  // HIGH = relay OFF (active-low)
+  digitalWrite(RELAY_FOG,  HIGH);
+
+  pinMode(IR_DOOR,   INPUT);
+  pinMode(IR_WINDOW, INPUT);
+  pinMode(VIB_1,     INPUT);
+  pinMode(VIB_2,     INPUT);
+  pinMode(PANIC_BTN, INPUT_PULLUP);
+
+  // --- Interrupts ---
+  attachInterrupt(digitalPinToInterrupt(PANIC_BTN), panicButtonISR, FALLING);
+  attachInterrupt(digitalPinToInterrupt(VIB_1),     vibISR1,        FALLING);
+  attachInterrupt(digitalPinToInterrupt(VIB_2),     vibISR2,        FALLING);
+
+  // --- UART Init ---
+  radarSerial.begin(RADAR_BAUD, SERIAL_8N1, RADAR_RX, RADAR_TX);
+  gsmSerial.begin(GSM_BAUD, SERIAL_8N1, GSM_RX, GSM_TX);
+
+  // --- I2C + OLED ---
+  Wire.begin(OLED_SDA, OLED_SCL);
+  if (oled.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR)) {
+    oled.clearDisplay();
+    oled.setTextSize(1);
+    oled.setTextColor(SSD1306_WHITE);
+    oled.setCursor(0, 0);
+    oled.println("TRAPNET v1.0");
+    oled.println("Booting...");
+    oled.display();
+    Serial.println("[OLED] Display initialized");
+  } else {
+    Serial.println("[OLED] ERROR: Display not found!");
+  }
+
+  // --- SD Card ---
+  if (SD.begin(SD_CS)) {
+    Serial.println("[SD] Card mounted successfully");
+    logToSD("TRAPNET BOOT", "System startup");
+  } else {
+    Serial.println("[SD] ERROR: Card mount failed!");
+  }
+
+  // --- GPS Software Serial ---
+  // Using Serial2 for radar, Serial1 for GSM
+  // GPS will be read via a separate approach
+  Serial.println("[GPS] Waiting for fix...");
+
+  // --- GSM Init ---
+  delay(3000);  // Wait for SIM800L to register on network
+  initGSM();
+
+  // --- WiFi for Beacon (STA mode initially) ---
+  WiFi.mode(WIFI_AP_STA);
+  Serial.println("[WiFi] AP+STA mode set");
+
+  // --- BLE Init ---
+  BLEDevice::init("TRAPNET");
+  Serial.println("[BLE] Initialized");
+
+  // --- System Ready ---
+  systemState = ARMED;
+  updateOLED("ARMED", "Monitoring...");
+  Serial.println("\n[TRAPNET] System ARMED and monitoring.\n");
+}
+
+// ═══════════════════ MAIN LOOP ═══════════════════
+void loop() {
+  unsigned long now = millis();
+
+  // 1. Read Radar
+  if (now - lastRadarRead > 100) {  // Every 100ms
+    readRadar();
+    lastRadarRead = now;
+  }
+
+  // 2. Read IR Sensors
+  irDoorTriggered   = (digitalRead(IR_DOOR)   == LOW);
+  irWindowTriggered = (digitalRead(IR_WINDOW)  == LOW);
+
+  // 3. Process Vibration (sliding window)
+  if (now - vibWindowStart > VIB_WINDOW_MS) {
+    int totalPulses = vibPulseCount1 + vibPulseCount2;
+    vibrationDetected = (totalPulses > VIB_PULSE_THRESHOLD);
+    vibPulseCount1 = 0;
+    vibPulseCount2 = 0;
+    vibWindowStart = now;
+  }
+
+  // 4. Read GPS (if available)
+  readGPS();
+
+  // 5. Read RPi Serial (YOLO results)
+  readRPiSerial();
+
+  // 6. Check Panic Button
+  if (panicPressed) {
+    panicPressed = false;
+    Serial.println("[PANIC] Button pressed! Triggering full lockdown.");
+    triggerLockdown("PANIC_BUTTON");
+  }
+
+  // 7. === MULTI-SENSOR FUSION LOGIC ===
+  if (systemState == ARMED) {
+    evaluateThreat();
+  }
+
+  // 8. Update OLED every 500ms
+  if (now - lastOledUpdate > 500) {
+    updateStatusOLED();
+    lastOledUpdate = now;
+  }
+
+  delay(10);  // Small yield
+}
+
+// ═══════════════════ SENSOR FUSION ═══════════════════
+void evaluateThreat() {
+  int threatScore = 0;
+  String triggerSource = "";
+
+  // Radar: human detected with sufficient energy
+  if (radarHumanDetected &amp;&amp; radarStatEnergy > RADAR_ENERGY_THRESHOLD) {
+    threatScore += 3;
+    triggerSource += "RADAR ";
+  }
+
+  // IR beam broken (door or window opened)
+  if (irDoorTriggered) {
+    threatScore += 2;
+    triggerSource += "IR_DOOR ";
+  }
+  if (irWindowTriggered) {
+    threatScore += 2;
+    triggerSource += "IR_WINDOW ";
+  }
+
+  // Vibration detected (potential forced entry)
+  if (vibrationDetected) {
+    threatScore += 2;
+    triggerSource += "VIBRATION ";
+  }
+
+  // RPi YOLO person confirmation
+  if (rpiPersonConfirmed) {
+    threatScore += 3;
+    triggerSource += "YOLO_PERSON ";
+  }
+
+  /*
+   * Threat Level Decision Matrix:
+   * Score >= 5: CONFIRMED INTRUSION → Full lockdown
+   * Score >= 3: HIGH ALERT → Pre-alert (log + notify, no lock yet)
+   * Score < 3:  NORMAL → Continue monitoring
+   *
+   * Examples:
+   *   Radar + IR Door = 3+2 = 5 → LOCKDOWN
+   *   Radar + Vibration = 3+2 = 5 → LOCKDOWN
+   *   IR Door alone = 2 → Monitor (could be wind)
+   *   Radar alone = 3 → Pre-alert (could be pet)
+   *   YOLO + Radar = 3+3 = 6 → LOCKDOWN (highest confidence)
+   */
+
+  if (threatScore >= 5) {
+    unsigned long now = millis();
+    if (now - lastLockdownTime > LOCKDOWN_COOLDOWN_MS) {
+      Serial.printf("[FUSION] THREAT CONFIRMED! Score: %d | Sources: %s\n",
+                     threatScore, triggerSource.c_str());
+      triggerLockdown(triggerSource);
+      lastLockdownTime = now;
+    }
+  } else if (threatScore >= 3) {
+    Serial.printf("[FUSION] High alert. Score: %d | Sources: %s\n",
+                   threatScore, triggerSource.c_str());
+    logToSD("HIGH_ALERT", triggerSource);
+  }
+}
+
+// ═══════════════════ LOCKDOWN SEQUENCE ═══════════════════
+void triggerLockdown(String source) {
+  systemState = LOCKDOWN;
+  Serial.println("\n╔══════════════════════════════════════╗");
+  Serial.println("║  🚨 LOCKDOWN ACTIVATED              ║");
+  Serial.println("╚══════════════════════════════════════╝\n");
+
+  // 1. LOCK THE DOOR (relay CH1 active-low)
+  digitalWrite(RELAY_LOCK, LOW);
+  Serial.println("[LOCK] Solenoid door LOCKED");
+
+  // 2. ACTIVATE FOG MACHINE (relay CH2)
+  digitalWrite(RELAY_FOG, LOW);
+  Serial.println("[FOG] Fog machine ACTIVATED");
+  delay(5000);  // Run fog for 5 seconds
+  digitalWrite(RELAY_FOG, HIGH);
+  Serial.println("[FOG] Fog machine DEACTIVATED");
+
+  // 3. SEND GSM SMS
+  String msg = "TRAPNET ALERT!\n";
+  msg += "INTRUSION DETECTED\n";
+  msg += "Source: " + source + "\n";
+  msg += "Radar Energy: " + String(radarStatEnergy) + "\n";
+  if (gpsValid) {
+    msg += "GPS: " + String(gpsLat, 6) + "," + String(gpsLng, 6) + "\n";
+    msg += "Maps: https://maps.google.com/?q=" + String(gpsLat, 6) + "," + String(gpsLng, 6);
+  }
+  msg += "\nTime: " + String(millis() / 1000) + "s uptime";
+
+  sendSMS(OWNER_PHONE, msg);
+  Serial.println("[GSM] SMS sent to owner");
+
+  // 4. BROADCAST WIFI BEACON SOS
+  startSOSBeacon();
+  Serial.println("[WiFi] SOS Beacon broadcasting");
+
+  // 5. BROADCAST BLE EDDYSTONE
+  startBLEBeacon();
+  Serial.println("[BLE] Eddystone beacon broadcasting");
+
+  // 6. LOG TO SD CARD
+  logToSD("LOCKDOWN", source + " | Energy:" + String(radarStatEnergy));
+  Serial.println("[SD] Event logged");
+
+  // 7. SEND TO RPi (for video snapshot)
+  sendToRPi("LOCKDOWN", source);
+
+  // 8. UPDATE OLED
+  updateOLED("!! LOCKDOWN !!", source);
+
+  systemState = ALERT_ACTIVE;
+}
+
+// ═══════════════════ LD2410C RADAR READER ═══════════════════
+void readRadar() {
+  // LD2410C sends frames at ~10Hz on UART2
+  // Frame format: Header(4) + DataType(2) + TargetState(1) + ...
+  // We look for the simple engineering mode data
+
+  static uint8_t buf[64];
+  static int bufIdx = 0;
+
+  while (radarSerial.available()) {
+    uint8_t b = radarSerial.read();
+    buf[bufIdx++] = b;
+
+    // Look for frame header: F4 F3 F2 F1
+    if (bufIdx >= 4 &amp;&amp;
+        buf[bufIdx-4] == 0xF4 &amp;&amp; buf[bufIdx-3] == 0xF3 &amp;&amp;
+        buf[bufIdx-2] == 0xF2 &amp;&amp; buf[bufIdx-1] == 0xF1) {
+      // End of frame detected, parse previous data
+      if (bufIdx > 12) {
+        parseRadarFrame(buf, bufIdx - 4);
+      }
+      bufIdx = 0;
+    }
+
+    if (bufIdx >= 64) bufIdx = 0;  // Buffer overflow protection
+  }
+}
+
+void parseRadarFrame(uint8_t* data, int len) {
+  // Simple target data parsing
+  // Byte 6: Target state (0=none, 1=moving, 2=stationary, 3=both)
+  // Byte 7-8: Moving distance (cm, little-endian)
+  // Byte 9: Moving energy (0-100)
+  // Byte 10-11: Static distance (cm, little-endian)
+  // Byte 12: Static energy (0-100)
+
+  if (len < 13) return;
+
+  // Find data header F4F3F2F1 ... look for target data after AA header
+  for (int i = 0; i < len - 8; i++) {
+    if (data[i] == 0xAA) {  // Target data marker
+      uint8_t state = data[i + 1];
+      int movDist   = data[i + 2] | (data[i + 3] << 8);
+      int movEnergy = data[i + 4];
+      int staDist   = data[i + 5] | (data[i + 6] << 8);
+      int staEnergy = data[i + 7];
+
+      radarMoving     = (state == 1 || state == 3);
+      radarStationary = (state == 2 || state == 3);
+      radarHumanDetected = (state != 0);
+      radarMovEnergy  = movEnergy;
+      radarStatEnergy = staEnergy;
+      radarDistance   = staDist / 100.0;  // Convert cm to meters
+
+      return;
+    }
+  }
+}
+
+// ═══════════════════ GPS READER ═══════════════════
+void readGPS() {
+  // GPS is on a separate software serial or we share UART carefully
+  // For simplicity, we read GPS via bit-banging on GPIO35
+  // In practice, use SoftwareSerial or a timer-based approach
+
+  // Placeholder — in real implementation, feed GPS bytes to TinyGPSPlus
+  if (gps.location.isValid()) {
+    gpsLat = gps.location.lat();
+    gpsLng = gps.location.lng();
+    gpsValid = true;
+  }
+}
+
+// ═══════════════════ GSM / SMS ═══════════════════
+void initGSM() {
+  Serial.println("[GSM] Initializing SIM800L...");
+  sendATCommand("AT", 1000);
+  sendATCommand("AT+CMGF=1", 1000);      // Text mode
+  sendATCommand("AT+CNMI=1,2,0,0,0", 1000);  // SMS notifications
+  sendATCommand("AT+CSQ", 1000);          // Signal quality
+  Serial.println("[GSM] Ready");
+}
+
+void sendSMS(String number, String message) {
+  gsmSerial.println("AT+CMGF=1");
+  delay(300);
+  gsmSerial.println("AT+CMGS=\"" + number + "\"");
+  delay(300);
+  gsmSerial.print(message);
+  delay(100);
+  gsmSerial.write(0x1A);  // Ctrl+Z to send
+  delay(5000);             // Wait for network delivery
+  Serial.println("[GSM] SMS dispatch complete");
+}
+
+String sendATCommand(String cmd, int timeout) {
+  gsmSerial.println(cmd);
+  unsigned long start = millis();
+  String response = "";
+  while (millis() - start < timeout) {
+    while (gsmSerial.available()) {
+      response += (char)gsmSerial.read();
+    }
+  }
+  Serial.println("[AT] " + cmd + " → " + response);
+  return response;
+}
+
+// ═══════════════════ WIFI BEACON SOS ═══════════════════
+void startSOSBeacon() {
+  // Broadcast multiple fake AP SSIDs as SOS alerts
+  // Any phone within 15-30m will see these in WiFi scan list
+
+  const char* ssids[] = {
+    "SOS ROBBERY ALERT CALL 100",
+    "TRAPNET INTRUDER DETECTED",
+    "EMERGENCY CALL POLICE NOW"
+  };
+
+  WiFi.mode(WIFI_AP_STA);
+
+  for (int cycle = 0; cycle &lt; 30; cycle++) {  // Broadcast for ~30 seconds
+    for (int i = 0; i &lt; 3; i++) {
+      // Create beacon frame
+      uint8_t packet[128];
+      int packetLen = buildBeaconFrame(packet, ssids[i], i + 1);
+      esp_wifi_80211_tx(WIFI_IF_AP, packet, packetLen, false);
+      delay(10);
+    }
+    delay(90);
+  }
+}
+
+int buildBeaconFrame(uint8_t* packet, const char* ssid, uint8_t channel) {
+  // 802.11 Beacon Frame structure
+  int ssidLen = strlen(ssid);
+  int idx = 0;
+
+  // Frame Control (Beacon)
+  packet[idx++] = 0x80; packet[idx++] = 0x00;
+  // Duration
+  packet[idx++] = 0x00; packet[idx++] = 0x00;
+  // Destination: broadcast
+  for (int i = 0; i &lt; 6; i++) packet[idx++] = 0xFF;
+  // Source: random MAC
+  packet[idx++] = 0xDE; packet[idx++] = 0xAD;
+  packet[idx++] = 0xBE; packet[idx++] = 0xEF;
+  packet[idx++] = 0x00; packet[idx++] = channel;
+  // BSSID: same as source
+  packet[idx++] = 0xDE; packet[idx++] = 0xAD;
+  packet[idx++] = 0xBE; packet[idx++] = 0xEF;
+  packet[idx++] = 0x00; packet[idx++] = channel;
+  // Sequence
+  packet[idx++] = 0x00; packet[idx++] = 0x00;
+  // Timestamp (8 bytes)
+  for (int i = 0; i &lt; 8; i++) packet[idx++] = 0x00;
+  // Beacon interval
+  packet[idx++] = 0x64; packet[idx++] = 0x00;
+  // Capability info
+  packet[idx++] = 0x31; packet[idx++] = 0x04;
+  // SSID tag
+  packet[idx++] = 0x00;           // Tag: SSID
+  packet[idx++] = (uint8_t)ssidLen; // Length
+  memcpy(&amp;packet[idx], ssid, ssidLen);
+  idx += ssidLen;
+  // Supported rates
+  packet[idx++] = 0x01; packet[idx++] = 0x08;
+  packet[idx++] = 0x82; packet[idx++] = 0x84;
+  packet[idx++] = 0x8B; packet[idx++] = 0x96;
+  packet[idx++] = 0x0C; packet[idx++] = 0x12;
+  packet[idx++] = 0x18; packet[idx++] = 0x24;
+  // Channel
+  packet[idx++] = 0x03; packet[idx++] = 0x01;
+  packet[idx++] = channel;
+
+  return idx;
+}
+
+// ═══════════════════ BLE EDDYSTONE BEACON ═══════════════════
+void startBLEBeacon() {
+  BLEAdvertising* adv = BLEDevice::getAdvertising();
+
+  // Eddystone-URL frame
+  BLEAdvertisementData advData;
+  advData.setFlags(0x06);  // General Discoverable
+
+  // Eddystone-URL service data
+  // URL: "trapnet.alert" (shortened)
+  char beacon_data[20];
+  int idx = 0;
+  beacon_data[idx++] = 0x10;  // Eddystone-URL frame type
+  beacon_data[idx++] = 0xF8;  // TX power (-8 dBm calibrated)
+  beacon_data[idx++] = 0x03;  // URL scheme: "https://"
+  // "trapnet" encoded as plain text
+  const char* urlBody = "trapnet.alert";
+  memcpy(&amp;beacon_data[idx], urlBody, strlen(urlBody));
+  idx += strlen(urlBody);
+
+  // Add Eddystone UUID service data
+  advData.setServiceData(BLEUUID((uint16_t)0xFEAA),
+                          std::string(beacon_data, idx));
+
+  adv->setAdvertisementData(advData);
+  adv->start();
+
+  Serial.println("[BLE] Eddystone-URL beacon active");
+}
+
+// ═══════════════════ ESP-NOW MESH RELAY ═══════════════════
+// Broadcasts alert to nearby TRAPNET nodes
+typedef struct {
+  char type[16];       // "SOS_ALERT"
+  char source[16];     // Node ID
+  float lat;
+  float lng;
+  int radarEnergy;
+  uint8_t hopCount;
+} TrapnetAlert;
+
+void onESPNowRecv(const uint8_t *mac, const uint8_t *data, int len) {
+  if (len == sizeof(TrapnetAlert)) {
+    TrapnetAlert alert;
+    memcpy(&amp;alert, data, sizeof(alert));
+
+    // Relay to next hop if hop count < 3
+    if (alert.hopCount &lt; 3) {
+      alert.hopCount++;
+      esp_now_send(NULL, (uint8_t*)&amp;alert, sizeof(alert));
+      Serial.printf("[ESP-NOW] Relayed alert from %s (hop %d)\n",
+                     alert.source, alert.hopCount);
+    }
+  }
+}
+
+void sendESPNowAlert() {
+  TrapnetAlert alert;
+  strcpy(alert.type, "SOS_ALERT");
+  strcpy(alert.source, "NODE_01");
+  alert.lat = gpsLat;
+  alert.lng = gpsLng;
+  alert.radarEnergy = radarStatEnergy;
+  alert.hopCount = 0;
+
+  // Broadcast to all peers (FF:FF:FF:FF:FF:FF)
+  uint8_t broadcastAddr[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+
+  esp_now_init();
+  esp_now_register_recv_cb(onESPNowRecv);
+
+  esp_now_peer_info_t peer;
+  memset(&amp;peer, 0, sizeof(peer));
+  memcpy(peer.peer_addr, broadcastAddr, 6);
+  peer.channel = 0;
+  peer.encrypt = false;
+  esp_now_add_peer(&amp;peer);
+
+  esp_now_send(broadcastAddr, (uint8_t*)&amp;alert, sizeof(alert));
+  Serial.println("[ESP-NOW] SOS broadcast sent");
+}
+
+// ═══════════════════ SD CARD LOGGING ═══════════════════
+void logToSD(String eventType, String details) {
+  File logFile = SD.open("/trapnet_log.csv", FILE_APPEND);
+  if (logFile) {
+    String entry = String(millis() / 1000) + "," +
+                   eventType + "," +
+                   details + "," +
+                   String(radarStatEnergy) + "," +
+                   String(gpsLat, 6) + "," +
+                   String(gpsLng, 6) + "\n";
+    logFile.print(entry);
+    logFile.close();
+  }
+}
+
+// ═══════════════════ OLED DISPLAY ═══════════════════
+void updateOLED(String line1, String line2) {
+  oled.clearDisplay();
+  oled.setTextSize(1);
+  oled.setCursor(0, 0);
+  oled.println("=== TRAPNET ===");
+  oled.setTextSize(2);
+  oled.setCursor(0, 16);
+  oled.println(line1);
+  oled.setTextSize(1);
+  oled.setCursor(0, 40);
+  oled.println(line2);
+  oled.setCursor(0, 52);
+  oled.print("Radar: ");
+  oled.print(radarStatEnergy);
+  oled.print("  GPS:");
+  oled.print(gpsValid ? "OK" : "NO");
+  oled.display();
+}
+
+void updateStatusOLED() {
+  String state;
+  switch (systemState) {
+    case ARMED:        state = "ARMED"; break;
+    case DISARMED:     state = "DISARMED"; break;
+    case LOCKDOWN:     state = "LOCKDOWN!"; break;
+    case ALERT_ACTIVE: state = "ALERT!"; break;
+  }
+
+  String info = "R:" + String(radarStatEnergy) +
+                " D:" + String(irDoorTriggered ? "!" : "OK") +
+                " W:" + String(irWindowTriggered ? "!" : "OK");
+  updateOLED(state, info);
+}
+
+// ═══════════════════ RPi SERIAL COMM ═══════════════════
+void readRPiSerial() {
+  // Read JSON messages from Raspberry Pi
+  // Format: {"person": true, "confidence": 0.85, "tamper": false}
+  static String rpiBuffer = "";
+
+  while (Serial.available()) {  // Using Serial for debug; use separate pins in prod
+    char c = Serial.read();
+    if (c == '\n') {
+      parseRPiMessage(rpiBuffer);
+      rpiBuffer = "";
+    } else {
+      rpiBuffer += c;
+    }
+  }
+}
+
+void parseRPiMessage(String json) {
+  StaticJsonDocument&lt;256&gt; doc;
+  if (deserializeJson(doc, json) == DeserializationError::Ok) {
+    rpiPersonConfirmed = doc["person"] | false;
+    bool tamperDetected = doc["tamper"] | false;
+    float confidence = doc["confidence"] | 0.0;
+
+    if (tamperDetected) {
+      Serial.println("[RPi] Camera tamper detected! Treating as intrusion.");
+      triggerLockdown("CAMERA_TAMPER");
+    }
+
+    rpiLastMsg = millis();
+    Serial.printf("[RPi] Person: %s (%.0f%%), Tamper: %s\n",
+                   rpiPersonConfirmed ? "YES" : "no",
+                   confidence * 100,
+                   tamperDetected ? "YES" : "no");
+  }
+}
+
+void sendToRPi(String event, String details) {
+  StaticJsonDocument&lt;256&gt; doc;
+  doc["event"] = event;
+  doc["details"] = details;
+  doc["radar_energy"] = radarStatEnergy;
+  doc["lat"] = gpsLat;
+  doc["lng"] = gpsLng;
+
+  String output;
+  serializeJson(doc, output);
+  Serial.println(output);  // Send over serial to RPi
+}
+  </pre>
+
+  <div class="callout callout-tip">
+    Replace <code>+91XXXXXXXXXX</code> in the <code>OWNER_PHONE</code> definition with your actual mobile number. Insert the SIM card into SIM800L before powering on. The system needs ~15 seconds to register on the cellular network after boot.
+  </div>
+
+  <h3>3.3 How the Sensor Fusion Logic Works</h3>
+  <p>The system uses a <strong>weighted scoring system</strong> to prevent false positives while ensuring real threats are caught:</p>
+  <table>
+    <tr><th>Sensor Trigger</th><th>Score</th><th>Alone = Lockdown?</th><th>Rationale</th></tr>
+    <tr><td>Radar (human + energy &gt; 40)</td><td>+3</td><td>No (score=3)</td><td>Could be a pet or AC airflow</td></tr>
+    <tr><td>IR Door beam broken</td><td>+2</td><td>No (score=2)</td><td>Could be wind or normal entry</td></tr>
+    <tr><td>IR Window beam broken</td><td>+2</td><td>No (score=2)</td><td>Could be wind</td></tr>
+    <tr><td>Vibration (15+ pulses/500ms)</td><td>+2</td><td>No (score=2)</td><td>Could be truck passing</td></tr>
+    <tr><td>YOLO person confirmed (RPi)</td><td>+3</td><td>No (score=3)</td><td>High confidence but alone insufficient</td></tr>
+    <tr><td>Panic Button</td><td>∞</td><td><strong>YES (immediate)</strong></td><td>Manual override = always trust</td></tr>
+    <tr><td>Camera Tamper</td><td>∞</td><td><strong>YES (immediate)</strong></td><td>Intentional sabotage = threat</td></tr>
+  </table>
+  <p><strong>Lockdown requires score ≥ 5.</strong> Typical real intrusion scenarios:</p>
+  <ul>
+    <li>Radar + Door IR = 3+2 = <strong>5 → LOCKDOWN ✅</strong></li>
+    <li>Radar + Vibration = 3+2 = <strong>5 → LOCKDOWN ✅</strong></li>
+    <li>YOLO + Door IR = 3+2 = <strong>5 → LOCKDOWN ✅</strong></li>
+    <li>Radar + YOLO = 3+3 = <strong>6 → LOCKDOWN ✅</strong> (highest confidence)</li>
+    <li>Door IR + Window IR = 2+2 = <strong>4 → HIGH ALERT ⚠️</strong> (logged, not locked)</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════ SECTION 4: RASPBERRY PI ═══════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+<div class="section section-dark" id="s4">
+  <h2><span class="sec-num">4</span> Raspberry Pi Setup — OpenCV + YOLOv8</h2>
+
+  <h3>4.1 Raspberry Pi OS Installation</h3>
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <strong>Download Raspberry Pi Imager</strong> from <code>https://www.raspberrypi.com/software/</code>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <strong>Flash "Raspberry Pi OS Lite (64-bit)"</strong> to your 16GB MicroSD card.
+      <p>In Advanced Options (gear icon): Enable SSH, set username: <code>pi</code>, password: <code>trapnet2025</code>, configure WiFi SSID and password.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <strong>Insert MicroSD into RPi Zero 2W</strong>, power it on, and SSH into it:
+      <pre>ssh pi@raspberrypi.local</pre>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <strong>Enable Serial UART on RPi:</strong>
+      <pre>sudo raspi-config
+# Interface Options → Serial Port
+# Login shell over serial: NO
+# Hardware serial port: YES
+# Reboot</pre>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-content">
+      <strong>Install Dependencies:</strong>
+      <pre>sudo apt update &amp;&amp; sudo apt upgrade -y
+sudo apt install -y python3-pip python3-venv libopencv-dev python3-opencv
+python3 -m venv ~/trapnet_env
+source ~/trapnet_env/bin/activate
+pip install ultralytics opencv-python-headless pyserial numpy</pre>
+    </div>
+  </div>
+
+  <h3>4.2 Camera Feed Capture</h3>
+  <p>Depending on your CCTV camera type:</p>
+
+  <div class="compare-grid">
+    <div class="compare-card">
+      <h4>Option A: WiFi IP Camera (RTSP)</h4>
+      <p>Most WiFi cameras with apps expose an RTSP stream. Find the URL in your camera's app settings or manual.</p>
+      <pre>CAMERA_URL = "rtsp://admin:password@192.168.1.64:554/stream1"
+# OR
+CAMERA_URL = "rtsp://192.168.1.64:554/live/ch0"</pre>
+    </div>
+    <div class="compare-card">
+      <h4>Option B: USB Camera / Webcam</h4>
+      <p>Plug directly into RPi Zero 2W via USB OTG adapter.</p>
+      <pre>CAMERA_URL = 0  # First USB camera device</pre>
+    </div>
+    <div class="compare-card">
+      <h4>Option C: RPi Camera Module</h4>
+      <p>CSI ribbon cable to RPi camera port.</p>
+      <pre># Uses picamera2 library instead of OpenCV
+from picamera2 import Picamera2</pre>
+    </div>
+  </div>
+
+  <h3>4.3 Complete RPi Script — <code>trapnet_vision.py</code></h3>
+  <pre><span class="lang-tag">Python</span>
+#!/usr/bin/env python3
+"""
+═══════════════════════════════════════════════════════════
+  TRAPNET — Raspberry Pi Vision & Tamper Detection Module
+  Runs on Raspberry Pi Zero 2W
+  Communicates with ESP32 via UART Serial (/dev/ttyS0)
+═══════════════════════════════════════════════════════════
+"""
+
+import cv2
+import numpy as np
+import serial
+import json
+import time
+import os
+import logging
+from datetime import datetime
+
+# Try importing ultralytics (YOLOv8)
+try:
+    from ultralytics import YOLO
+    YOLO_AVAILABLE = True
+except ImportError:
+    YOLO_AVAILABLE = False
+    logging.warning("ultralytics not installed. Running without YOLO.")
+
+# ═══════════════════ CONFIGURATION ═══════════════════
+CAMERA_URL = "rtsp://192.168.1.64:554/stream1"  # Change to your camera
+# CAMERA_URL = 0  # Uncomment for USB camera
+
+SERIAL_PORT = "/dev/ttyS0"   # RPi hardware UART
+SERIAL_BAUD = 115200
+
+YOLO_MODEL = "yolov8n.pt"    # Nano model — fastest for RPi Zero 2W
+CONFIDENCE_THRESHOLD = 0.45  # Minimum detection confidence
+TAMPER_BRIGHTNESS_THRESHOLD = 15   # Below this = camera blocked
+TAMPER_UNIFORMITY_THRESHOLD = 5    # Std deviation below this = lens covered
+FRAME_SKIP = 3               # Process every Nth frame (save CPU)
+SNAPSHOT_DIR = "/home/pi/trapnet_snapshots"
+
+# ═══════════════════ LOGGING SETUP ═══════════════════
+logging.basicConfig(
+    level=logging.INFO,
+    format='[%(asctime)s] %(levelname)s: %(message)s',
+    datefmt='%H:%M:%S'
+)
+log = logging.getLogger("TRAPNET-Vision")
+
+# ═══════════════════ SERIAL COMMUNICATION ═══════════════════
+class ESP32Link:
+    """Handles bidirectional serial communication with ESP32."""
+
+    def __init__(self, port, baud):
+        try:
+            self.ser = serial.Serial(port, baud, timeout=0.1)
+            log.info(f"Serial connected: {port} @ {baud}")
+        except serial.SerialException as e:
+            log.error(f"Serial connection failed: {e}")
+            self.ser = None
+
+    def send(self, person_detected, confidence, tamper_detected):
+        """Send detection result to ESP32 as JSON."""
+        if self.ser is None:
+            return
+
+        msg = {
+            "person": person_detected,
+            "confidence": round(confidence, 2),
+            "tamper": tamper_detected,
+            "timestamp": int(time.time())
+        }
+        try:
+            line = json.dumps(msg) + "\n"
+            self.ser.write(line.encode())
+            log.debug(f"Sent to ESP32: {msg}")
+        except Exception as e:
+            log.error(f"Serial write error: {e}")
+
+    def read(self):
+        """Read messages from ESP32 (lockdown events, etc.)"""
+        if self.ser is None or not self.ser.in_waiting:
+            return None
+        try:
+            line = self.ser.readline().decode().strip()
+            if line:
+                return json.loads(line)
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            pass
+        return None
+
+
+# ═══════════════════ TAMPER DETECTION ═══════════════════
+class TamperDetector:
+    """Detects camera sabotage: spray paint, cloth cover, physical smash."""
+
+    def __init__(self):
+        self.baseline_brightness = None
+        self.frame_count = 0
+
+    def check(self, frame):
+        """Returns True if camera tampering is detected."""
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        mean_brightness = np.mean(gray)
+        std_brightness = np.std(gray)
+
+        # Establish baseline from first 30 frames
+        if self.frame_count < 30:
+            if self.baseline_brightness is None:
+                self.baseline_brightness = mean_brightness
+            else:
+                self.baseline_brightness = (self.baseline_brightness * 0.9 +
+                                            mean_brightness * 0.1)
+            self.frame_count += 1
+            return False
+
+        # Check 1: Sudden darkness (spray paint, cloth, hand over lens)
+        if mean_brightness < TAMPER_BRIGHTNESS_THRESHOLD:
+            log.warning(f"TAMPER: Darkness detected! Brightness={mean_brightness:.1f}")
+            return True
+
+        # Check 2: Uniform frame (cloth/tape over lens — no texture)
+        if std_brightness < TAMPER_UNIFORMITY_THRESHOLD:
+            log.warning(f"TAMPER: Uniform frame! StdDev={std_brightness:.1f}")
+            return True
+
+        # Check 3: Sudden massive brightness change (>80% drop from baseline)
+        if self.baseline_brightness > 30:
+            drop = (self.baseline_brightness - mean_brightness) / self.baseline_brightness
+            if drop > 0.80:
+                log.warning(f"TAMPER: Brightness drop {drop*100:.0f}%!")
+                return True
+
+        # Update rolling baseline slowly
+        self.baseline_brightness = self.baseline_brightness * 0.99 + mean_brightness * 0.01
+        return False
+
+
+# ═══════════════════ PERSON DETECTOR ═══════════════════
+class PersonDetector:
+    """YOLOv8 nano person detection optimized for RPi Zero 2W."""
+
+    def __init__(self, model_path):
+        if YOLO_AVAILABLE:
+            log.info(f"Loading YOLO model: {model_path}")
+            self.model = YOLO(model_path)
+            # Warm-up inference
+            dummy = np.zeros((320, 320, 3), dtype=np.uint8)
+            self.model.predict(dummy, verbose=False, conf=CONFIDENCE_THRESHOLD)
+            log.info("YOLO model loaded and warmed up")
+        else:
+            self.model = None
+            log.warning("YOLO not available — using fallback motion detection")
+
+    def detect(self, frame):
+        """Returns (person_found: bool, confidence: float, annotated_frame)"""
+        if self.model is None:
+            return False, 0.0, frame
+
+        # Resize for faster inference on RPi Zero 2W
+        small = cv2.resize(frame, (320, 320))
+
+        results = self.model.predict(
+            small,
+            verbose=False,
+            conf=CONFIDENCE_THRESHOLD,
+            classes=[0]  # Class 0 = "person" in COCO dataset
+        )
+
+        person_found = False
+        max_confidence = 0.0
+
+        for r in results:
+            if r.boxes is not None and len(r.boxes) > 0:
+                for box in r.boxes:
+                    conf = float(box.conf[0])
+                    if conf > max_confidence:
+                        max_confidence = conf
+                        person_found = True
+
+                    # Draw bounding box on original frame
+                    x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
+                    # Scale coordinates back to original frame size
+                    h, w = frame.shape[:2]
+                    x1 = int(x1 * w / 320)
+                    y1 = int(y1 * h / 320)
+                    x2 = int(x2 * w / 320)
+                    y2 = int(y2 * h / 320)
+                    cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 2)
+                    cv2.putText(frame, f"Person {conf:.0%}",
+                                (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX,
+                                0.6, (0, 0, 255), 2)
+
+        return person_found, max_confidence, frame
+
+
+# ═══════════════════ SNAPSHOT SAVER ═══════════════════
+def save_snapshot(frame, event_type):
+    """Save timestamped snapshot to SD card."""
+    os.makedirs(SNAPSHOT_DIR, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"{SNAPSHOT_DIR}/{event_type}_{timestamp}.jpg"
+    cv2.imwrite(filename, frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
+    log.info(f"Snapshot saved: {filename}")
+
+
+# ═══════════════════ MAIN LOOP ═══════════════════
+def main():
+    log.info("═══════════════════════════════════════")
+    log.info("  TRAPNET Vision Module — Starting...")
+    log.info("═══════════════════════════════════════")
+
+    # Initialize components
+    esp32 = ESP32Link(SERIAL_PORT, SERIAL_BAUD)
+    tamper = TamperDetector()
+    detector = PersonDetector(YOLO_MODEL)
+
+    # Open camera
+    log.info(f"Connecting to camera: {CAMERA_URL}")
+    cap = cv2.VideoCapture(CAMERA_URL)
+
+    if not cap.isOpened():
+        log.error("Failed to open camera! Check URL or connection.")
+        # Notify ESP32 that camera is down
+        esp32.send(False, 0.0, True)
+        return
+
+    log.info("Camera connected. Starting detection loop...")
+
+    frame_counter = 0
+    last_person_time = 0
+
+    try:
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                log.warning("Frame capture failed. Reconnecting...")
+                cap.release()
+                time.sleep(2)
+                cap = cv2.VideoCapture(CAMERA_URL)
+                continue
+
+            frame_counter += 1
+
+            # Process every Nth frame to save CPU
+            if frame_counter % FRAME_SKIP != 0:
+                continue
+
+            # 1. Check for camera tamper
+            is_tampered = tamper.check(frame)
+            if is_tampered:
+                esp32.send(False, 0.0, True)
+                save_snapshot(frame, "TAMPER")
+                time.sleep(1)
+                continue
+
+            # 2. Run person detection
+            person_found, confidence, annotated = detector.detect(frame)
+
+            if person_found:
+                log.info(f"PERSON DETECTED! Confidence: {confidence:.0%}")
+                save_snapshot(annotated, "PERSON")
+                last_person_time = time.time()
+
+            # 3. Send result to ESP32
+            esp32.send(person_found, confidence, False)
+
+            # 4. Check for messages from ESP32
+            esp32_msg = esp32.read()
+            if esp32_msg:
+                event = esp32_msg.get("event", "")
+                if event == "LOCKDOWN":
+                    log.warning("ESP32 reports LOCKDOWN — saving burst snapshots")
+                    for i in range(5):
+                        ret, burst_frame = cap.read()
+                        if ret:
+                            save_snapshot(burst_frame, f"LOCKDOWN_{i}")
+                        time.sleep(0.5)
+
+            time.sleep(0.1)
+
+    except KeyboardInterrupt:
+        log.info("Shutting down...")
+    finally:
+        cap.release()
+        log.info("Camera released. Goodbye.")
+
+
+if __name__ == "__main__":
+    main()
+  </pre>
+
+  <h3>4.4 Auto-Start on Boot</h3>
+  <p>Create a systemd service so the script starts automatically when RPi boots:</p>
+  <pre><span class="lang-tag">Bash</span>
+# Create service file
+sudo nano /etc/systemd/system/trapnet-vision.service</pre>
+
+  <p>Paste this content:</p>
+  <pre><span class="lang-tag">INI</span>
+[Unit]
+Description=TRAPNET Vision Detection Module
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi
+ExecStart=/home/pi/trapnet_env/bin/python3 /home/pi/trapnet_vision.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target</pre>
+
+  <p>Enable and start the service:</p>
+  <pre><span class="lang-tag">Bash</span>
+sudo systemctl daemon-reload
+sudo systemctl enable trapnet-vision.service
+sudo systemctl start trapnet-vision.service
+
+# Check status
+sudo systemctl status trapnet-vision.service
+
+# View live logs
+journalctl -u trapnet-vision.service -f</pre>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════ SECTION 5: SOS ALERT SYSTEM ═══════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="s5">
+  <h2><span class="sec-num">5</span> SOS Alert System — Multi-Layer Implementation</h2>
+
+  <h3>5.1 What Bystanders Actually See</h3>
+  <p>When TRAPNET triggers an alert, three independent mechanisms fire simultaneously. Here's what a nearby person experiences:</p>
+
+  <div class="compare-grid">
+    <div class="compare-card">
+      <h4>📶 Layer 1: WiFi Beacon SSID</h4>
+      <p><strong>Range:</strong> 15–30 metres</p>
+      <p><strong>Requirement:</strong> WiFi ON on phone (no app)</p>
+      <p><strong>What they see:</strong> Open their WiFi settings and see network names like:</p>
+      <pre style="background:#111; font-size:12px;">
+Available WiFi Networks:
+━━━━━━━━━━━━━━━━━━━━━━━
+🔒 Home_WiFi_5G
+🔒 Neighbor_Airtel
+🚨 SOS ROBBERY ALERT CALL 100
+🚨 TRAPNET INTRUDER DETECTED
+🚨 EMERGENCY CALL POLICE NOW
+🔒 JioFiber_2.4G</pre>
+      <p><strong>How it works:</strong> ESP32 injects raw 802.11 beacon frames using <code>esp_wifi_80211_tx()</code>. These are broadcast frames — no connection needed, no password, no internet. Every phone within WiFi range automatically lists them.</p>
+    </div>
+
+    <div class="compare-card">
+      <h4>📡 Layer 2: BLE Eddystone URL</h4>
+      <p><strong>Range:</strong> 10–15 metres</p>
+      <p><strong>Requirement:</strong> Bluetooth ON (no app)</p>
+      <p><strong>What they see:</strong> On Android phones with Chrome (Physical Web enabled), a notification appears in the notification tray showing the URL.</p>
+      <p><strong>Limitation:</strong> Google deprecated Physical Web notifications in Chrome 70+. However, apps like "Nearby Notifications" and "Beacon Scanner" still pick these up. Best used as a supplementary layer.</p>
+    </div>
+
+    <div class="compare-card">
+      <h4>📱 Layer 3: GSM SMS</h4>
+      <p><strong>Range:</strong> Unlimited (cellular network)</p>
+      <p><strong>Requirement:</strong> Active SIM in SIM800L</p>
+      <p><strong>What owner receives:</strong></p>
+      <pre style="background:#111; font-size:12px;">
+From: +91-TRAPNET-SIM
+━━━━━━━━━━━━━━━━━━━━━
+TRAPNET ALERT!
+INTRUSION DETECTED
+Source: RADAR IR_DOOR
+Radar Energy: 72
+GPS: 12.843791,80.153826
+Maps: https://maps.google.com
+      /?q=12.843791,80.153826
+Time: 3847s uptime</pre>
+      <p><strong>How it works:</strong> ESP32 sends AT commands to SIM800L over UART. The GSM module transmits via nearest cell tower. Works even if WiFi is jammed, internet is down, or power grid is cut (battery backup).</p>
+    </div>
+  </div>
+
+  <h3>5.2 ESP-NOW Mesh — Multi-Node Coverage</h3>
+  <p>For buildings with multiple rooms, deploy ESP32 nodes at each entry point. ESP-NOW creates a peer-to-peer mesh without any router:</p>
+  <div class="schematic">
+    ROOM A                    CORRIDOR                   ROOM B
+    ┌───────────┐             ┌──────────┐               ┌───────────┐
+    │ ESP32     │ ──ESP-NOW──▶│ ESP32    │──ESP-NOW──▶   │ ESP32     │
+    │ Node #1   │  (2.4GHz)   │ Relay #2 │  (2.4GHz)    │ Node #3   │
+    │ + Radar   │             │ (relay   │               │ + Radar   │
+    │ + IR      │ ◀──────────│  only)   │◀──────────    │ + IR      │
+    └───────────┘             └──────────┘               └───────────┘
+         │                         │                          │
+    Detects intrusion         Relays alert              Receives alert
+    Sends SOS to mesh         to all nodes              Activates own
+    Locks own door            Max 3 hops                siren/beacon
+  </div>
+  <p><strong>Protocol:</strong> Each alert message carries a <code>hopCount</code>. When a node receives an alert, it increments the hop count and re-broadcasts — but stops at hop 3 to prevent infinite loops. Range per hop: ~100m line-of-sight, ~30m through walls.</p>
+
+  <h3>5.3 SIM800L — Detailed AT Command Flow</h3>
+  <pre><span class="lang-tag">AT Commands</span>
+Step 1: Check module is alive
+  ESP32 → AT
+  SIM800L → OK
+
+Step 2: Set SMS to text mode
+  ESP32 → AT+CMGF=1
+  SIM800L → OK
+
+Step 3: Check signal quality
+  ESP32 → AT+CSQ
+  SIM800L → +CSQ: 18,0    ← Signal: 18/31 (good = >10)
+  SIM800L → OK
+
+Step 4: Check network registration
+  ESP32 → AT+CREG?
+  SIM800L → +CREG: 0,1    ← 1 = registered on home network ✅
+  SIM800L → OK
+
+Step 5: Send SMS
+  ESP32 → AT+CMGS="+919876543210"
+  SIM800L → >              ← Ready for message text
+  ESP32 → TRAPNET ALERT! INTRUSION DETECTED...
+  ESP32 → [Ctrl+Z]        ← 0x1A byte = send command
+  SIM800L → +CMGS: 42     ← Message reference number
+  SIM800L → OK             ← Delivery confirmed by network
+  </pre>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════ SECTION 6: PHYSICAL RESPONSE ═══════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+<div class="section section-dark" id="s6">
+  <h2><span class="sec-num">6</span> Physical Response Mechanisms</h2>
+
+  <h3>6.1 Solenoid Door Lock — Fail-Secure Design</h3>
+  <table>
+    <tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Operating Voltage</td><td>12V DC</td></tr>
+    <tr><td>Current Draw</td><td>350–500mA when energized</td></tr>
+    <tr><td>Hold Force</td><td>60kg (sufficient for standard doors)</td></tr>
+    <tr><td>Lock Mode</td><td><strong>Fail-Secure</strong> — Power ON = LOCKED, Power OFF = UNLOCKED</td></tr>
+    <tr><td>Activation Time</td><td>&lt; 100ms (near-instant)</td></tr>
+  </table>
+  <div class="callout callout-info">
+    <strong>Fail-Secure</strong> means the door automatically unlocks if power is lost (battery dies). This is a safety feature — in case of fire or emergency, the occupant can always escape. The solenoid lock is <em>additionally</em> secured by the system keeping the relay energized via battery backup.
+  </div>
+
+  <h3>6.2 Relay Switching — Active-LOW Logic</h3>
+  <p>The 2-channel relay module uses <strong>optocoupler isolation</strong> and <strong>active-LOW triggering</strong>:</p>
+  <ul>
+    <li><code>GPIO32 = HIGH</code> → Relay OFF → Solenoid de-energized → Door <strong>UNLOCKED</strong></li>
+    <li><code>GPIO32 = LOW</code> → Relay ON → Solenoid energized → Door <strong>LOCKED</strong></li>
+  </ul>
+  <p>This is why in the firmware, we initialize <code>digitalWrite(RELAY_LOCK, HIGH)</code> — to start in the unlocked (disarmed) state.</p>
+
+  <h3>6.3 1N4007 Flyback Diode — Why It's Critical</h3>
+  <p>The solenoid lock contains a wire coil (inductor). When current through an inductor is suddenly switched OFF, the collapsing magnetic field generates a reverse voltage spike that can reach <strong>50–200V</strong>. This spike travels backward through the relay contacts and can destroy the relay, the ESP32, or other components.</p>
+  <p>The 1N4007 diode is placed <strong>across the solenoid terminals in reverse bias</strong>:</p>
+  <div class="schematic">
+    Normal operation (relay ON):
+    12V+ ──→ Solenoid Coil ──→ GND    Current flows normally. Diode is reverse-biased (blocks).
+
+    Relay turns OFF (spike):
+    Solenoid generates -50V spike ──→ Diode becomes forward-biased ──→ Absorbs spike as heat
+    ↓
+    Spike safely dissipated. ESP32 and relay survive.
+  </div>
+
+  <h3>6.4 Fog Machine Integration</h3>
+  <ul>
+    <li><strong>What:</strong> Mini 12V fog/smoke machine connected to Relay Channel 2</li>
+    <li><strong>How:</strong> <code>GPIO33 = LOW</code> energizes relay CH2 → powers fog machine for 5 seconds</li>
+    <li><strong>Effect:</strong> Room fills with dense, non-toxic glycol-based fog in &lt;10 seconds, reducing visibility to &lt;1 metre</li>
+    <li><strong>Purpose:</strong> Disorientation — intruder cannot see to steal or find exit, buying time for police arrival</li>
+    <li><strong>Safety:</strong> Fog is non-toxic (same as stage/party fog). Dissipates naturally in 15–30 minutes</li>
+  </ul>
+
+  <h3>6.5 Safety Override Mechanisms</h3>
+  <p>An authorized person accidentally trapped inside can escape via:</p>
+  <ol>
+    <li><strong>SMS Disarm:</strong> Send a pre-configured passcode via SMS to the SIM800L number → ESP32 reads it → disarms system and unlocks door</li>
+    <li><strong>Physical Key:</strong> Mechanical override lock on the inside of the door (separate from solenoid)</li>
+    <li><strong>Power Disconnect:</strong> In worst case, disconnecting the battery pack de-energizes the solenoid → door unlocks (fail-secure design)</li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════ SECTION 7: ENCLOSURE ═══════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="s7">
+  <h2><span class="sec-num">7</span> Enclosure & Physical Installation</h2>
+
+  <h3>7.1 ABS Enclosure Layout</h3>
+  <p>Use a standard ABS plastic project box (200mm × 150mm × 70mm). Drill holes for:</p>
+  <ul>
+    <li><strong>Top face:</strong> Slot for OLED display window (26mm × 14mm cutout)</li>
+    <li><strong>Front face:</strong> Small opening for LD2410C radar antenna (radar waves pass through thin ABS plastic, but direct exposure is better)</li>
+    <li><strong>Side (left):</strong> USB Micro port hole for ESP32 programming</li>
+    <li><strong>Side (right):</strong> DC barrel jack hole for 12V power input</li>
+    <li><strong>Bottom:</strong> Cable glands for wires to solenoid, fog machine, IR sensors, panic button</li>
+    <li><strong>Back:</strong> Two screw holes for wall mounting bracket</li>
+  </ul>
+
+  <h3>7.2 Component Placement Inside Enclosure</h3>
+  <div class="schematic">
+    ┌────────────────────────────────────────────────────────┐
+    │  ENCLOSURE TOP VIEW (lid removed)                      │
+    │                                                        │
+    │  ┌─────────────┐   ┌──────────────┐   ┌────────────┐ │
+    │  │ LM2596 #1   │   │ ESP32 DevKit │   │ LM2596 #2  │ │
+    │  │ (5V)        │   │ (CENTER)     │   │ (4.0V)     │ │
+    │  └─────────────┘   └──────────────┘   └────────────┘ │
+    │                                                        │
+    │  ┌──────────┐  ┌──────────┐  ┌─────────────────────┐ │
+    │  │ LD2410C  │  │ SIM800L  │  │ SD Card Module     │  │
+    │  │ Radar    │  │ GSM      │  │                     │  │
+    │  └──────────┘  └──────────┘  └─────────────────────┘ │
+    │                                                        │
+    │  ┌───────────────────────────┐  ┌───────────────────┐ │
+    │  │ 18650 Battery Holder     │  │ Relay Module       │ │
+    │  │ + TP4056 Board           │  │ (near edge for     │ │
+    │  │ (insulated from other    │  │  easy wire access) │ │
+    │  │  components!)            │  │                    │ │
+    │  └───────────────────────────┘  └───────────────────┘ │
+    │                                                        │
+    │  ═══════ Cable glands for external wires ══════════   │
+    └────────────────────────────────────────────────────────┘
+  </div>
+
+  <h3>7.3 Antenna Placement Tips</h3>
+  <table>
+    <tr><th>Antenna</th><th>Placement</th><th>Why</th></tr>
+    <tr><td>LD2410C Radar</td><td>Face toward monitored area, no metal in front</td><td>24GHz reflects off metal — place behind ABS plastic</td></tr>
+    <tr><td>SIM800L Helical</td><td>Extend outside enclosure or near top</td><td>GSM signal attenuates through enclosed metal/thick plastic</td></tr>
+    <tr><td>NEO-6M GPS Patch</td><td>Top of enclosure, ceramic side UP, facing sky</td><td>GPS satellites are overhead — needs clear sky view</td></tr>
+    <tr><td>ESP32 PCB Antenna</td><td>Away from battery and metal parts</td><td>WiFi/BLE 2.4GHz antenna is printed on ESP32 PCB edge</td></tr>
+  </table>
+
+  <h3>7.4 Wall Mounting Guide</h3>
+  <ol>
+    <li><strong>Height:</strong> Mount enclosure at 2.0–2.5 metres (above normal reach to prevent tampering)</li>
+    <li><strong>Position:</strong> Near the main entry point of the room, facing inward</li>
+    <li><strong>Radar coverage:</strong> LD2410C has ±60° horizontal and ±30° vertical beam. Aim it to cover the maximum floor area</li>
+    <li><strong>Solenoid lock:</strong> Mount at door frame, aligned with door edge latch position</li>
+    <li><strong>IR sensors:</strong> Mount at door/window frames at 1.0m height (chest level)</li>
+    <li><strong>Panic button:</strong> Accessible location behind counter/desk (hidden from intruder)</li>
+    <li><strong>Fog machine:</strong> Near ceiling, nozzle pointing downward for maximum coverage</li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════ SECTION 8: TESTING ═══════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+<div class="section section-dark" id="s8">
+  <h2><span class="sec-num">8</span> Testing & Calibration Protocol</h2>
+
+  <h3>8.1 Phase 1 — Individual Sensor Tests</h3>
+  <p>Test each sensor independently before connecting to the main system. Use Arduino Serial Monitor (115200 baud) to view output.</p>
+
+  <table>
+    <tr><th>Test</th><th>Procedure</th><th>Expected Result</th><th>If Fails</th></tr>
+    <tr>
+      <td><strong>LD2410C Radar</strong></td>
+      <td>Upload radar-only sketch. Stand 2m away. Wave hand, then stand still.</td>
+      <td>"MOVING" when waving, "STATIONARY" when still, energy values 30–80</td>
+      <td>Check TX/RX crossover. Verify 256000 baud. Check VCC is 5V.</td>
+    </tr>
+    <tr>
+      <td><strong>SIM800L SMS</strong></td>
+      <td>Upload GSM test sketch. Send "AT" then "AT+CMGS" to send test SMS.</td>
+      <td>Receive SMS on your phone within 10 seconds</td>
+      <td>Check SIM inserted correctly. Verify 4.0V supply. Check 1000µF cap. Wait 15s for registration.</td>
+    </tr>
+    <tr>
+      <td><strong>IR Sensors</strong></td>
+      <td>Place hand in front of sensor beam, then remove.</td>
+      <td>Serial shows LOW when blocked, HIGH when clear</td>
+      <td>Adjust potentiometer sensitivity. Check VCC is 3.3V.</td>
+    </tr>
+    <tr>
+      <td><strong>SW-420 Vibration</strong></td>
+      <td>Tap the sensor board, then leave still.</td>
+      <td>Serial shows rapid LOW pulses when tapping, stable HIGH when still</td>
+      <td>Check 10kΩ pull-down resistor. Adjust onboard potentiometer.</td>
+    </tr>
+    <tr>
+      <td><strong>NEO-6M GPS</strong></td>
+      <td>Take to window/outdoor. Wait 30–90 seconds.</td>
+      <td>Blue LED on module blinks = fix acquired. Serial shows lat/lng.</td>
+      <td>GPS needs sky view. Won't work indoors/basement. Check antenna orientation.</td>
+    </tr>
+    <tr>
+      <td><strong>OLED Display</strong></td>
+      <td>Upload I2C scanner sketch. Then OLED test sketch.</td>
+      <td>I2C scanner finds address 0x3C. OLED shows text.</td>
+      <td>Check SDA/SCL wiring. Try different I2C address (0x3D).</td>
+    </tr>
+    <tr>
+      <td><strong>SD Card</strong></td>
+      <td>Format card as FAT32. Upload SD test sketch. Check file creation.</td>
+      <td>"Card mounted" message. Test file written and readable.</td>
+      <td>Use Class 10 card. Check SPI wiring. Try different CS pin.</td>
+    </tr>
+    <tr>
+      <td><strong>Relay Module</strong></td>
+      <td>Toggle GPIO32 HIGH/LOW. Listen for relay click.</td>
+      <td>Audible click when LOW. LED on relay board lights up.</td>
+      <td>Check VCC is 5V (not 3.3V). Verify active-LOW wiring.</td>
+    </tr>
+  </table>
+
+  <h3>8.2 Phase 2 — LD2410C Radar Calibration</h3>
+  <p>The radar's energy threshold determines sensitivity. Too low = false triggers from fans/AC. Too high = misses real intruders.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <strong>Turn OFF all fans and AC in the room.</strong> Place radar at final mounting position. Monitor serial output for 5 minutes with <strong>nobody in the room</strong>.
+      <p>Record the maximum "Static Energy" value seen. This is your <strong>noise floor</strong>.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <strong>Turn ON fans and AC.</strong> Monitor again for 5 minutes with nobody in the room.
+      <p>Record the new maximum "Static Energy". This is your <strong>environmental noise ceiling</strong>.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <strong>Stand in the room motionless</strong> for 2 minutes. Record "Static Energy" values.
+      <p>This is your <strong>human signature level</strong>. Should be 50–80+.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+      <strong>Set RADAR_ENERGY_THRESHOLD</strong> to a value between your environmental noise ceiling and human signature level.
+      <p>Example: Noise ceiling = 25, Human = 60, set threshold = <strong>40</strong></p>
+    </div>
+  </div>
+
+  <h3>8.3 Phase 3 — End-to-End Intrusion Simulation</h3>
+  <p>With everything connected and firmware running:</p>
+  <ol>
+    <li>System shows "ARMED" on OLED</li>
+    <li>Walk through the IR beam at door → observe "IR_DOOR" logged, score = 2 (no lockdown yet)</li>
+    <li>Stand still in radar range → observe "RADAR" detected, score now = 2+3 = 5 → <strong>LOCKDOWN triggers!</strong></li>
+    <li>Verify: Relay clicks, solenoid pulls (you hear the magnetic lock engage)</li>
+    <li>Verify: Fog machine runs for 5 seconds</li>
+    <li>Verify: SMS arrives on your phone with GPS coordinates</li>
+    <li>Verify: WiFi scan on another phone shows "SOS ROBBERY ALERT CALL 100"</li>
+    <li>Verify: SD card has new entry in <code>trapnet_log.csv</code></li>
+    <li>Verify: OLED shows "LOCKDOWN!" status</li>
+  </ol>
+
+  <h3>8.4 Phase 4 — Power Failure Test</h3>
+  <ol>
+    <li>System running normally on mains power</li>
+    <li><strong>Unplug the 12V adapter</strong> from the wall</li>
+    <li>Verify: System continues running on battery (OLED stays on, radar active)</li>
+    <li>Trigger an intrusion → verify lockdown still works on battery power</li>
+    <li>Monitor for 30+ minutes to verify stable battery operation</li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════ SECTION 9: DEPLOYMENT SCENARIOS ═══════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+<div class="section" id="s9">
+  <h2><span class="sec-num">9</span> Real-World Deployment Scenarios</h2>
+
+  <h3>9.1 Scenario Configurations</h3>
+  <table>
+    <tr>
+      <th>Scenario</th>
+      <th>Key Sensors Used</th>
+      <th>Response Mechanisms</th>
+      <th>Special Config</th>
+    </tr>
+    <tr>
+      <td><strong>Jewellery Shop (After-Hours)</strong></td>
+      <td>Radar + IR (door/showcase) + Vibration (safe) + Camera</td>
+      <td>Solenoid lock + Fog + SMS + WiFi beacon</td>
+      <td>Low radar threshold (30). Vibration on showcase glass. GPS on cash/gold box.</td>
+    </tr>
+    <tr>
+      <td><strong>ATM Kiosk (Unmanned 24/7)</strong></td>
+      <td>Radar + Camera + Vibration (ATM body)</td>
+      <td>Solenoid on kiosk door + SMS to bank + ESP-NOW to nearby kiosks</td>
+      <td>Always-armed. Camera tamper = immediate lockdown. No fog (enclosed space).</td>
+    </tr>
+    <tr>
+      <td><strong>Remote Warehouse (No Internet)</strong></td>
+      <td>Radar + IR (all entries) + Vibration (walls)</td>
+      <td>Solenoid + Fog + GSM SMS only</td>
+      <td>No WiFi beacon (nobody nearby). GPS for location in SMS. SD card logging critical.</td>
+    </tr>
+    <tr>
+      <td><strong>Home Security (Travel Mode)</strong></td>
+      <td>Radar + IR (main door + windows) + Camera</td>
+      <td>Solenoid + SMS to owner + WiFi beacon for neighbours</td>
+      <td>Higher threshold (50) to avoid pet triggers. YOLO person confirmation required.</td>
+    </tr>
+    <tr>
+      <td><strong>Multi-Room Building</strong></td>
+      <td>Multiple ESP32 nodes per room, each with radar + IR</td>
+      <td>Per-room lockdown + ESP-NOW mesh cascading alerts</td>
+      <td>3-hop mesh relay. Each node has unique ID. Central node has GSM SIM.</td>
+    </tr>
+  </table>
+
+  <h3>9.2 Multi-Node Mesh Deployment</h3>
+  <p>For a 3-room setup (e.g., shop front, storage, office):</p>
+  <div class="schematic">
+    ┌───────────────────────────────────────────────────────────────────────────┐
+    │                        BUILDING FLOOR PLAN                               │
+    │                                                                          │
+    │   ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐    │
+    │   │   SHOP FRONT    │    │   STORAGE ROOM  │    │   BACK OFFICE   │    │
+    │   │                 │    │                 │    │                 │    │
+    │   │  [ESP32 Node 1] │    │ [ESP32 Node 2]  │    │ [ESP32 Node 3]  │    │
+    │   │  + Radar        │    │ + Radar          │    │ + Radar          │    │
+    │   │  + Camera (RPi) │    │ + Vibration×2    │    │ + IR×2           │    │
+    │   │  + IR (door)    │    │ + IR (door)      │    │ + Panic Button   │    │
+    │   │  + Solenoid     │    │ + Solenoid       │    │ + Solenoid       │    │
+    │   │  + Fog          │    │                 │    │ + GSM (SIM800L)  │    │
+    │   │  + OLED         │    │                 │    │ + GPS            │    │
+    │   │                 │    │                 │    │                 │    │
+    │   └────────┬────────┘    └────────┬────────┘    └────────┬────────┘    │
+    │            │                      │                      │             │
+    │            └──── ESP-NOW ─────────┴──── ESP-NOW ─────────┘             │
+    │                 (2.4GHz mesh, no router needed)                        │
+    │                                                                          │
+    │   If Node 1 detects intrusion → alerts Node 2 + Node 3                 │
+    │   Node 3 has GSM → sends SMS to owner + police                         │
+    │   All nodes independently lock their own doors                          │
+    └───────────────────────────────────────────────────────────────────────────┘
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════ SECTION 10: TROUBLESHOOTING ═══════════════════ -->
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+<div class="section section-dark" id="s10">
+  <h2><span class="sec-num">10</span> Troubleshooting & Known Issues</h2>
+
+  <h3>10.1 Common Problems & Solutions</h3>
+  <table>
+    <tr><th>Problem</th><th>Symptom</th><th>Root Cause</th><th>Solution</th></tr>
+    <tr>
+      <td><strong>ESP32 keeps resetting</strong></td>
+      <td>Serial shows repeated "rst:0x1" or "brownout detector"</td>
+      <td>SIM800L or solenoid drawing too much current from ESP32 power rail</td>
+      <td>Separate power supplies via LM2596. Add 100µF cap on ESP32 VIN.</td>
+    </tr>
+    <tr>
+      <td><strong>SIM800L won't register</strong></td>
+      <td>AT+CREG? returns +CREG: 0,2 (searching)</td>
+      <td>Low signal, wrong voltage, or SIM not inserted properly</td>
+      <td>Check 4.0V supply. Extend antenna outside enclosure. Try different SIM. Wait 30s after power-on.</td>
+    </tr>
+    <tr>
+      <td><strong>SIM800L resets during SMS</strong></td>
+      <td>Module blinks rapidly and loses registration</td>
+      <td>2A current burst without decoupling capacitor</td>
+      <td>Add 1000µF 16V electrolytic capacitor directly across SIM800L VCC/GND pins.</td>
+    </tr>
+    <tr>
+      <td><strong>Radar false triggers</strong></td>
+      <td>Shows "STATIONARY" with nobody in room</td>
+      <td>Ceiling fan, AC airflow, or curtain movement</td>
+      <td>Increase RADAR_ENERGY_THRESHOLD to 45-50. Point radar away from fan.</td>
+    </tr>
+    <tr>
+      <td><strong>GPS no fix indoors</strong></td>
+      <td>gps.location.isValid() always false</td>
+      <td>GPS signals don't penetrate buildings</td>
+      <td>Normal — GPS works near windows or outdoors. Use last known coordinates for SMS.</td>
+    </tr>
+    <tr>
+      <td><strong>SD card mount fails</strong></td>
+      <td>"Card mount failed" message</td>
+      <td>Wrong format, bad wiring, or high-speed card incompatibility</td>
+      <td>Format as FAT32 (not exFAT). Check CS pin wiring. Try different card.</td>
+    </tr>
+    <tr>
+      <td><strong>OLED blank</strong></td>
+      <td>No display, I2C scanner finds nothing</td>
+      <td>Wrong I2C address or SDA/SCL swapped</td>
+      <td>Try address 0x3D. Verify SDA=GPIO21, SCL=GPIO22. Check solder joints on OLED.</td>
+    </tr>
+    <tr>
+      <td><strong>WiFi beacon not visible</strong></td>
+      <td>SSIDs don't appear on phone WiFi list</td>
+      <td>Some phones hide "open" networks (iOS 14+)</td>
+      <td>Manually scan WiFi settings. iOS: Settings → WiFi → Other Networks. Use BLE as backup.</td>
+    </tr>
+    <tr>
+      <td><strong>ESP-NOW not relaying</strong></td>
+      <td>Alerts don't reach other nodes</td>
+      <td>WiFi channel mismatch between nodes</td>
+      <td>All nodes must be on same WiFi channel. Set channel=1 in ESP-NOW config.</td>
+    </tr>
+    <tr>
+      <td><strong>Relay clicks but solenoid doesn't lock</strong></td>
+      <td>Click sound but no magnetic pull</td>
+      <td>12V not reaching solenoid, or wiring on NO instead of NC</td>
+      <td>Check 12V supply to relay COM terminal. Verify wires are on NO (Normally Open) terminal.</td>
+    </tr>
+    <tr>
+      <td><strong>RPi camera connection drops</strong></td>
+      <td>OpenCV VideoCapture returns False</td>
+      <td>RTSP stream timeout, network change, or camera sleep mode</td>
+      <td>Auto-reconnect logic in Python (already in trapnet_vision.py). Disable camera sleep mode.</td>
+    </tr>
+    <tr>
+      <td><strong>Serial communication garbled</strong></td>
+      <td>Unreadable characters on ESP32↔RPi serial</td>
+      <td>Baud rate mismatch or ground not connected</td>
+      <td>Both sides must use 115200 baud. ALWAYS connect GND between ESP32 and RPi.</td>
+    </tr>
+  </table>
+
+  <h3>10.2 GPIO Conflict Reference</h3>
+  <div class="callout callout-warning">
+    These ESP32 GPIOs have special boot behavior. Do NOT use them for critical sensors:
+  </div>
+  <table>
+    <tr><th>GPIO</th><th>Boot Behavior</th><th>Safe to Use?</th></tr>
+    <tr><td>GPIO0</td><td>Must be HIGH for normal boot (LOW = flash mode)</td><td>❌ Avoid</td></tr>
+    <tr><td>GPIO2</td><td>Must be LOW during boot, connected to onboard LED</td><td>⚠️ Output only, not for sensors</td></tr>
+    <tr><td>GPIO12</td><td>Controls flash voltage (HIGH = 1.8V flash, may cause boot fail)</td><td>❌ Avoid</td></tr>
+    <tr><td>GPIO15</td><td>Controls serial debug output at boot (must be HIGH)</td><td>✅ After boot (used for Panic Button with pull-up)</td></tr>
+    <tr><td>GPIO6–11</td><td>Connected to internal SPI flash — NEVER use</td><td>❌ NEVER</td></tr>
+    <tr><td>GPIO34,35,36,39</td><td>Input-only, no pull-up/down</td><td>✅ Input with external resistor</td></tr>
+  </table>
+
+  <h3>10.3 Quick Diagnostic Checklist</h3>
+  <p>When something isn't working, go through this checklist in order:</p>
+  <ol>
+    <li>✅ Is the common GND connected between ALL modules?</li>
+    <li>✅ Is the correct voltage reaching each module? (Measure with multimeter)</li>
+    <li>✅ Are TX/RX wires crossed correctly? (TX→RX, RX→TX)</li>
+    <li>✅ Is the baud rate matching on both sides of each serial connection?</li>
+    <li>✅ Are input-only GPIOs (34, 35, 36, 39) used correctly with external pull-downs?</li>
+    <li>✅ Is the SIM card inserted with correct orientation (gold contacts down)?</li>
+    <li>✅ Is the SD card formatted as FAT32 (not exFAT)?</li>
+    <li>✅ Is the 1000µF capacitor polarity correct? (Longer lead = positive)</li>
+    <li>✅ Is the 1N4007 diode direction correct? (Stripe toward positive terminal)</li>
+    <li>✅ Open Serial Monitor at 115200 baud — what's the error message?</li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
+</div> <!-- container -->
+
+<!-- ═══════════════════════════════════════════ FOOTER ═══════════════════════════════════════════ -->
+<div class="footer">
+  <p><strong>TRAPNET — Autonomous Intruder Containment System</strong></p>
+  <p>Edge-AI Driven Physical Intrusion Response System with Radar-Vision Fusion and Resilient Mesh Communication</p>
+  <p style="margin-top:8px;">Sathyabama Institute of Science and Technology &nbsp;|&nbsp; Final Year Project 2025–2026 &nbsp;|&nbsp; Department of ECE</p>
+  <p style="margin-top:12px; font-size:11px; color:#475569;">
+    Build Guide v1.0 &nbsp;|&nbsp; Complete Implementation Reference &nbsp;|&nbsp; From Theory to Reality
+  </p>
+</div>
+
+</body>
+</html>
